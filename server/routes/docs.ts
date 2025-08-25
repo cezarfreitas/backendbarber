@@ -216,28 +216,54 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .nav-sub-items {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(0,0,0,0.2);
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0,0,0,0.15);
+            border-radius: 0 0 var(--border-radius-sm) 0;
+            margin: 0 var(--spacing-xs) var(--spacing-xs) 0;
         }
         .nav-sub-items.expanded { max-height: 600px; }
         .nav-sub-item {
             display: block;
             color: var(--gray-400);
             text-decoration: none;
-            padding: 8px 24px 8px 48px;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
+            padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-xs) var(--spacing-2xl);
+            transition: all 0.25s ease;
+            font-size: 0.8125rem;
             border-left: 3px solid transparent;
+            border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+            margin: 0 var(--spacing-sm) 1px 0;
+            position: relative;
+        }
+        .nav-sub-item::before {
+            content: "";
+            position: absolute;
+            left: var(--spacing-lg);
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            background: var(--gray-500);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: all 0.2s ease;
         }
         .nav-sub-item:hover {
             color: white;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             border-left-color: var(--secondary);
+            transform: translateX(2px);
+        }
+        .nav-sub-item:hover::before {
+            background: var(--secondary);
+            transform: translateY(-50%) scale(1.2);
         }
         .nav-sub-item.active {
             color: white;
-            background: rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.15);
             border-left-color: var(--secondary);
+        }
+        .nav-sub-item.active::before {
+            background: var(--secondary);
+            transform: translateY(-50%) scale(1.3);
         }
 
         /* Main Content */
@@ -589,7 +615,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             🎁 Combos
                         </div>
                         <div class="nav-sub-items" id="combos-tree">
-                            <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
+                            <a href="#endpoints-combos" class="nav-sub-item">���� Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
                             <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
@@ -1136,7 +1162,7 @@ function generateEndpointsDocumentation(): string {
                 
                 <!-- APIs de Diretório -->
                 <div class="section" id="endpoints-diretorio-barbearias">
-                    <h2>�� APIs de Diretório</h2>
+                    <h2>📂 APIs de Diretório</h2>
                     
                     <div class="endpoint">
                         <div class="endpoint-header">
