@@ -9,6 +9,13 @@ import {
   atualizarBarbearia,
   excluirBarbearia
 } from "./routes/barbearias";
+import {
+  listarBarbeiros,
+  buscarBarbeiro,
+  criarBarbeiro,
+  atualizarBarbeiro,
+  excluirBarbeiro
+} from "./routes/barbeiros";
 import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
