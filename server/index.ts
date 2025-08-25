@@ -183,9 +183,7 @@ if (process.env.NODE_ENV !== "test") {
         await initializeTables();
       } else {
         console.log("✅ Estrutura do banco de dados verificada");
-        // Força a criação das tabelas de combos se não existirem
-        console.log("🔄 Verificando tabelas de combos...");
-        await initializeTables();
+        console.log("ℹ️ Tabelas já existem, pulando inicialização para evitar conflitos");
       }
     } catch (error) {
       console.error("Falha ao inicializar banco de dados:", error);
