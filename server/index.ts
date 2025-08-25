@@ -32,6 +32,22 @@ import {
   atualizarCombo,
   excluirCombo
 } from "./routes/combos";
+import {
+  listarClientes,
+  buscarCliente,
+  criarCliente,
+  atualizarCliente,
+  excluirCliente,
+  buscarPerfilCliente
+} from "./routes/clientes";
+import {
+  loginCelular,
+  loginGoogle,
+  verificarTokenAuth,
+  alterarSenha,
+  refreshTokenAuth
+} from "./routes/auth";
+import { verificarAutenticacao } from "./utils/auth";
 import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
