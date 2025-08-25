@@ -793,6 +793,152 @@ export const alterarSenha: RequestHandler = async (req, res) => {
 };
 
 /**
+ * POST /api/auth/alterar-senha/barbearia
+ * Alterar senha da barbearia logada
+ */
+export const alterarSenhaBarbearia: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente; // Usando a mesma variável por compatibilidade
+    const { senhaAtual, novaSenha }: AlterarSenhaBarbeariaRequest = req.body;
+
+    if (!userJWT || userJWT.userType !== 'barbearia') {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Autenticação de barbearia requerida"
+      } as ApiResponse);
+    }
+
+    if (!senhaAtual || !novaSenha) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Senha atual e nova senha são obrigatórias"
+      } as ApiResponse);
+    }
+
+    if (novaSenha.length < 6) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Nova senha deve ter pelo menos 6 caracteres"
+      } as ApiResponse);
+    }
+
+    // Buscar barbearia
+    const barbearia = await executeQuerySingle(`
+      SELECT senha_hash FROM barbearias WHERE id = ?
+    `, [userJWT.userId]);
+
+    if (!barbearia || !barbearia.senha_hash) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Barbearia não possui senha cadastrada"
+      } as ApiResponse);
+    }
+
+    // Verificar senha atual
+    if (!await verificarSenha(senhaAtual, barbearia.senha_hash)) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Senha atual incorreta"
+      } as ApiResponse);
+    }
+
+    // Hash da nova senha
+    const novaSenhaHash = await hashSenha(novaSenha);
+
+    // Atualizar senha
+    await executeQuery(`
+      UPDATE barbearias SET senha_hash = ?, data_atualizacao = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [novaSenhaHash, userJWT.userId]);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Senha alterada com sucesso"
+    } as ApiResponse);
+
+  } catch (error) {
+    console.error("Erro ao alterar senha da barbearia:", error);
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro interno do servidor"
+    } as ApiResponse);
+  }
+};
+
+/**
+ * POST /api/auth/alterar-senha/barbeiro
+ * Alterar senha do barbeiro logado
+ */
+export const alterarSenhaBarbeiro: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente; // Usando a mesma variável por compatibilidade
+    const { senhaAtual, novaSenha }: AlterarSenhaBarbeiroRequest = req.body;
+
+    if (!userJWT || userJWT.userType !== 'barbeiro') {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Autenticação de barbeiro requerida"
+      } as ApiResponse);
+    }
+
+    if (!senhaAtual || !novaSenha) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Senha atual e nova senha são obrigatórias"
+      } as ApiResponse);
+    }
+
+    if (novaSenha.length < 6) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Nova senha deve ter pelo menos 6 caracteres"
+      } as ApiResponse);
+    }
+
+    // Buscar barbeiro
+    const barbeiro = await executeQuerySingle(`
+      SELECT senha_hash FROM barbeiros WHERE id = ?
+    `, [userJWT.userId]);
+
+    if (!barbeiro || !barbeiro.senha_hash) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Barbeiro não possui senha cadastrada"
+      } as ApiResponse);
+    }
+
+    // Verificar senha atual
+    if (!await verificarSenha(senhaAtual, barbeiro.senha_hash)) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Senha atual incorreta"
+      } as ApiResponse);
+    }
+
+    // Hash da nova senha
+    const novaSenhaHash = await hashSenha(novaSenha);
+
+    // Atualizar senha
+    await executeQuery(`
+      UPDATE barbeiros SET senha_hash = ?, data_atualizacao = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [novaSenhaHash, userJWT.userId]);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Senha alterada com sucesso"
+    } as ApiResponse);
+
+  } catch (error) {
+    console.error("Erro ao alterar senha do barbeiro:", error);
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro interno do servidor"
+    } as ApiResponse);
+  }
+};
+
+/**
  * POST /api/auth/refresh-token
  * Renovar token JWT usando refresh token
  */
