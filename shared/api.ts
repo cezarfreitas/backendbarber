@@ -229,6 +229,32 @@ export interface CriarComboRequest {
 }
 
 /**
+ * DTO para cadastro de novo cliente
+ */
+export interface CriarClienteRequest {
+  nome: string;
+  celular: string; // Obrigatório para login
+  email?: string;
+  senha?: string; // Obrigatório se tipoLogin for 'celular'
+  dataNascimento?: string;
+  endereco?: {
+    rua?: string;
+    numero?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    cep?: string;
+  };
+  preferencias?: {
+    barbeariaId?: string;
+    barbeiroId?: string;
+  };
+  tipoLogin: 'celular' | 'google';
+  googleId?: string; // Obrigatório se tipoLogin for 'google'
+  googleEmail?: string; // Email do Google OAuth
+}
+
+/**
  * DTO para atualização de barbearia
  */
 export interface AtualizarBarbeariaRequest {
@@ -290,7 +316,7 @@ export interface AtualizarBarbeiroRequest {
 }
 
 /**
- * DTO para atualização de serviço
+ * DTO para atualizaç��o de serviço
  */
 export interface AtualizarServicoRequest {
   nome?: string;
