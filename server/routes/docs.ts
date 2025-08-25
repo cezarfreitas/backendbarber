@@ -369,11 +369,17 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         /* Endpoints */
         .endpoint {
-            margin-bottom: 40px;
-            padding: 32px 0;
+            margin-bottom: var(--spacing-2xl);
+            padding: var(--spacing-xl) 0;
             background: var(--white);
             border-left: 4px solid var(--primary);
             position: relative;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            transition: all 0.2s ease;
+        }
+        .endpoint:hover {
+            border-left-width: 6px;
+            background: var(--gray-25);
         }
 
         .endpoint-header {
