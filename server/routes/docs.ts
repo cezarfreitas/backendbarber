@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 
 /**
  * GET /api/docs
- * Retorna a documentação HTML da API
+ * Retorna a documentação HTML da API melhorada
  */
 export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   const html = `
@@ -12,13 +12,42 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Barbearia SaaS - Documentação</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
+            color: var(--gray-800);
+            background: var(--gray-50);
             overflow-x: hidden;
         }
 
@@ -27,85 +56,127 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            width: 320px;
+            background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-800) 100%);
             color: white;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             z-index: 1000;
-            transform: translateX(-280px);
-            transition: transform 0.3s ease;
+            transform: translateX(-320px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--gray-700);
         }
         .sidebar.active { transform: translateX(0); }
 
         /* Toggle Button */
         .sidebar-toggle {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 24px;
+            left: 24px;
             z-index: 1001;
-            background: #2c3e50;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 15px;
-            border-radius: 6px;
+            padding: 12px 16px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
         }
-        .sidebar-toggle:hover { background: #34495e; }
-        .sidebar-toggle.active { left: 300px; }
+        .sidebar-toggle:hover { 
+            background: var(--primary-dark); 
+            transform: scale(1.05);
+        }
+        .sidebar-toggle.active { left: 344px; }
 
         /* Sidebar Content */
         .sidebar-header {
-            padding: 30px 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 32px 24px 24px;
+            border-bottom: 1px solid var(--gray-700);
         }
-        .sidebar-header h1 { font-size: 1.5rem; margin-bottom: 5px; }
-        .sidebar-header p { opacity: 0.8; font-size: 0.9rem; }
+        .sidebar-header h1 { 
+            font-size: 1.5rem; 
+            margin-bottom: 8px; 
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sidebar-header p { 
+            opacity: 0.8; 
+            font-size: 0.875rem; 
+            color: var(--gray-300);
+        }
 
-        .sidebar-nav { padding: 20px 0; }
-        .nav-section { margin-bottom: 25px; }
+        .postman-download {
+            margin: 16px 24px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            width: calc(100% - 48px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .postman-download:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar-nav { padding: 24px 0; }
+        .nav-section { margin-bottom: 32px; }
         .nav-section h3 {
-            color: #ecf0f1;
-            font-size: 0.8rem;
+            color: var(--gray-300);
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
-            padding: 0 20px;
+            margin-bottom: 16px;
+            padding: 0 24px;
+            font-weight: 600;
         }
 
         /* Tree Structure */
-        .nav-tree { margin-bottom: 15px; }
+        .nav-tree { margin-bottom: 8px; }
         .nav-tree-item {
             display: block;
-            color: rgba(255,255,255,0.8);
+            color: var(--gray-300);
             text-decoration: none;
-            padding: 8px 20px;
+            padding: 12px 24px;
             transition: all 0.2s ease;
             border-left: 3px solid transparent;
             cursor: pointer;
             position: relative;
+            font-weight: 500;
         }
         .nav-tree-item:hover {
             color: white;
             background: rgba(255,255,255,0.1);
-            border-left-color: #3498db;
+            border-left-color: var(--primary);
         }
         .nav-tree-item.active {
             color: white;
-            background: rgba(52, 152, 219, 0.2);
-            border-left-color: #3498db;
+            background: rgba(79, 70, 229, 0.2);
+            border-left-color: var(--primary);
         }
         .nav-tree-item.expandable::after {
             content: "▶";
             position: absolute;
-            right: 15px;
+            right: 24px;
             top: 50%;
             transform: translateY(-50%);
             transition: transform 0.2s ease;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         .nav-tree-item.expandable.expanded::after {
             transform: translateY(-50%) rotate(90deg);
@@ -115,1660 +186,603 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .nav-sub-items {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(0,0,0,0.2);
         }
-        .nav-sub-items.expanded {
-            max-height: 500px;
-        }
+        .nav-sub-items.expanded { max-height: 600px; }
         .nav-sub-item {
             display: block;
-            color: rgba(255,255,255,0.7);
+            color: var(--gray-400);
             text-decoration: none;
-            padding: 6px 20px 6px 40px;
+            padding: 8px 24px 8px 48px;
             transition: all 0.2s ease;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             border-left: 3px solid transparent;
         }
         .nav-sub-item:hover {
             color: white;
             background: rgba(255,255,255,0.1);
-            border-left-color: #3498db;
+            border-left-color: var(--secondary);
         }
         .nav-sub-item.active {
             color: white;
-            background: rgba(52, 152, 219, 0.2);
-            border-left-color: #3498db;
-        }
-
-        /* Simple nav items (non-expandable) */
-        .nav-item {
-            display: block;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            padding: 8px 20px;
-            transition: all 0.2s ease;
-            border-left: 3px solid transparent;
-        }
-        .nav-item:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-left-color: #3498db;
-        }
-        .nav-item.active {
-            color: white;
-            background: rgba(52, 152, 219, 0.2);
-            border-left-color: #3498db;
+            background: rgba(99, 102, 241, 0.2);
+            border-left-color: var(--secondary);
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 0;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding-top: 80px;
         }
-        .main-content.shifted { margin-left: 280px; }
+        .main-content.shifted { margin-left: 320px; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
 
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            padding: 60px 0;
+            padding: 80px 0;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 48px;
+            border-radius: 16px;
+            margin: 0 24px 48px 24px;
+            position: relative;
+            overflow: hidden;
         }
-        .hero h1 { font-size: 3rem; margin-bottom: 15px; }
-        .hero p { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="10" cy="50" r="1" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        .hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 16px; 
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        .hero p { 
+            font-size: 1.25rem; 
+            opacity: 0.9; 
+            max-width: 600px; 
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
 
         .section {
-            background: white;
-            margin-bottom: 30px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border: 1px solid #e9ecef;
+            background: var(--white);
+            margin-bottom: 32px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            position: relative;
         }
         .section h2 {
-            color: #2c3e50;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-            font-size: 1.8rem;
+            color: var(--gray-900);
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .section h3 {
-            color: #34495e;
-            margin: 30px 0 15px 0;
-            font-size: 1.3rem;
+            color: var(--gray-800);
+            margin: 32px 0 16px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
 
         /* Endpoints */
         .endpoint {
-            margin-bottom: 35px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            border-left: 5px solid #3498db;
-            transition: transform 0.2s ease;
+            margin-bottom: 40px;
+            padding: 32px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            border-left: 4px solid var(--primary);
+            transition: all 0.2s ease;
+            position: relative;
         }
-        .endpoint:hover { transform: translateY(-2px); }
+        .endpoint:hover { 
+            transform: translateY(-2px); 
+            box-shadow: var(--shadow-lg);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
 
         .method {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-right: 15px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            min-width: 70px;
+            justify-content: center;
         }
-        .get { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; }
-        .post { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .put { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
-        .delete { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .get { background: var(--success); color: white; }
+        .post { background: var(--warning); color: white; }
+        .put { background: var(--info); color: white; }
+        .delete { background: var(--danger); color: white; }
 
         .url {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 1.1rem;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-weight: 500;
+            color: var(--gray-800);
+            font-size: 1.125rem;
+            background: var(--gray-100);
+            padding: 8px 16px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 0;
         }
 
-        .params, .response { margin-top: 20px; }
+        .params, .response { margin-top: 24px; }
         .params h4, .response h4 {
-            margin-bottom: 15px;
-            color: #2c3e50;
-            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--gray-800);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .code-block {
+            position: relative;
+            margin: 16px 0;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        .copy-button.copied {
+            background: var(--success);
+            border-color: var(--success);
         }
 
         pre {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, var(--gray-900), var(--gray-800));
+            color: #e2e8f0;
+            padding: 24px;
+            border-radius: 12px;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            border: 1px solid #34495e;
-            margin: 10px 0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            border: 1px solid var(--gray-700);
+            margin: 0;
+            font-size: 0.875rem;
+            line-height: 1.6;
         }
 
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 8px;
+            margin-top: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
         }
         .table th, .table td {
-            border: 1px solid #dee2e6;
-            padding: 15px;
+            padding: 16px;
             text-align: left;
+            border-bottom: 1px solid var(--gray-200);
         }
         .table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             font-weight: 600;
+            font-size: 0.875rem;
         }
-        .table tr:nth-child(even) { background: #f8f9fa; }
+        .table tr:nth-child(even) { background: var(--gray-50); }
+        .table tr:hover { background: var(--gray-100); }
         .table code {
-            background: #e9ecef;
-            padding: 3px 6px;
+            background: var(--gray-100);
+            padding: 4px 8px;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #495057;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            color: var(--gray-800);
+            font-size: 0.8125rem;
         }
 
         /* Status badges */
         .status-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .status-success { background: #d4edda; color: #155724; }
-        .status-warning { background: #fff3cd; color: #856404; }
-        .status-danger { background: #f8d7da; color: #721c24; }
-        .status-info { background: #d1ecf1; color: #0c5460; }
+        .status-success { background: #dcfce7; color: #166534; }
+        .status-warning { background: #fef3c7; color: #92400e; }
+        .status-danger { background: #fee2e2; color: #991b1b; }
+        .status-info { background: #dbeafe; color: #1e40af; }
 
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { width: 100%; transform: translateX(-100%); }
-            .sidebar-toggle.active { left: 20px; }
+            .sidebar-toggle.active { left: 24px; }
             .main-content.shifted { margin-left: 0; }
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1.1rem; }
-            .container { padding: 15px; }
+            .hero h1 { font-size: 2.5rem; }
+            .container { padding: 16px; }
+            .section { padding: 24px; }
+            .endpoint { padding: 24px; }
+            .endpoint-header { flex-direction: column; align-items: flex-start; }
+            .url { font-size: 1rem; }
         }
 
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section { animation: fadeIn 0.6s ease-out; }
 
-        /* Custom scrollbar for sidebar */
-        .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
-            border-radius: 3px;
+        /* Copy feedback */
+        .copy-feedback {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--success);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .copy-feedback.show {
+            transform: translateX(0);
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar Toggle -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h1>🪒 API Docs</h1>
-            <p>Barbearia SaaS</p>
-        </div>
-
-        <div class="sidebar-nav">
-            <div class="nav-section">
-                <h3>Começar</h3>
-                <a href="#visao-geral" class="nav-item">Visão Geral</a>
-                <a href="#autenticacao" class="nav-item">Autenticação</a>
-                <a href="#banco-dados" class="nav-item">Banco de Dados</a>
-            </div>
-
-            <div class="nav-section">
-                <h3>Endpoints</h3>
-
-                <!-- Barbearias -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="barbearias-tree">
-                        🏪 Barbearias
-                    </div>
-                    <div class="nav-sub-items" id="barbearias-tree">
-                        <a href="#endpoints-barbearias" class="nav-sub-item">📋 Listar Barbearias</a>
-                        <a href="#endpoints-barbearias" class="nav-sub-item">🔍 Buscar por ID</a>
-                        <a href="#endpoints-barbearias" class="nav-sub-item">➕ Criar Barbearia</a>
-                        <a href="#endpoints-barbearias" class="nav-sub-item">✏️ Atualizar Barbearia</a>
-                        <a href="#endpoints-barbearias" class="nav-sub-item">🗑️ Excluir Barbearia</a>
-                    </div>
-                </div>
-
-                <!-- Barbeiros -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="barbeiros-tree">
-                        💇‍♂️ Barbeiros
-                    </div>
-                    <div class="nav-sub-items" id="barbeiros-tree">
-                        <a href="#endpoints-barbeiros" class="nav-sub-item">📋 Listar Barbeiros</a>
-                        <a href="#endpoints-barbeiros" class="nav-sub-item">🔍 Buscar por ID</a>
-                        <a href="#endpoints-barbeiros" class="nav-sub-item">➕ Criar Barbeiro</a>
-                        <a href="#endpoints-barbeiros" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
-                        <a href="#endpoints-barbeiros" class="nav-sub-item">🗑️ Excluir Barbeiro</a>
-                    </div>
-                </div>
-
-                <!-- Serviços -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="servicos-tree">
-                        ✂️ Serviços
-                    </div>
-                    <div class="nav-sub-items" id="servicos-tree">
-                        <a href="#endpoints-servicos" class="nav-sub-item">📋 Listar Serviços</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">🔍 Buscar por ID</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">➕ Criar Serviço</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">✏️ Atualizar Serviço</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">🗑️ Excluir Serviço</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">🏷️ Filtrar por Categoria</a>
-                        <a href="#endpoints-servicos" class="nav-sub-item">💰 Filtrar por Preço</a>
-                    </div>
-                </div>
-
-                <!-- Combos -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="combos-tree">
-                        🎁 Combos
-                    </div>
-                    <div class="nav-sub-items" id="combos-tree">
-                        <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">🔍 Buscar por ID</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">➕ Criar Combo</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">✏️ Atualizar Combo</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">🗑️ Excluir Combo</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">🔢 Incluir Serviços</a>
-                        <a href="#endpoints-combos" class="nav-sub-item">💯 Calcular Desconto</a>
-                    </div>
-                </div>
-
-                <!-- Clientes -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="clientes-tree">
-                        👥 Clientes
-                    </div>
-                    <div class="nav-sub-items" id="clientes-tree">
-                        <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
-                        <a href="#endpoints-clientes" class="nav-sub-item">👤 Meu Perfil</a>
-                        <a href="#endpoints-clientes" class="nav-sub-item">🔍 Buscar por ID</a>
-                        <a href="#endpoints-clientes" class="nav-sub-item">➕ Cadastrar Cliente</a>
-                        <a href="#endpoints-clientes" class="nav-sub-item">✏️ Atualizar Cliente</a>
-                        <a href="#endpoints-clientes" class="nav-sub-item">🗑️ Desativar Cliente</a>
-                    </div>
-                </div>
-
-                <!-- Autenticação -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="auth-tree">
-                        🔐 Autenticação
-                    </div>
-                    <div class="nav-sub-items" id="auth-tree">
-                        <a href="#endpoints-auth" class="nav-sub-item">📱 Login com Celular</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">🌐 Login com Google</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">🏪 Login Barbearia</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">💇‍♂�� Login Barbeiro</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">✅ Verificar Token</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">🔄 Renovar Token</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">🔑 Alterar Senha</a>
-                    </div>
-                </div>
-
-                <!-- APIs de Diretório -->
-                <div class="nav-tree">
-                    <div class="nav-tree-item expandable" data-target="diretorio-tree">
-                        📂 APIs de Diretório
-                    </div>
-                    <div class="nav-sub-items" id="diretorio-tree">
-                        <a href="#endpoints-diretorio" class="nav-sub-item">🔍 Busca Pública</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">🏙️ Buscar por Cidade</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">📍 Buscar por Localização</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">⭐ Buscar por Avaliação</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">🎯 Filtros Avançados</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">📊 Estatísticas</a>
-                        <a href="#endpoints-diretorio" class="nav-sub-item">🗺️ Cidades Disponíveis</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <h3>Referência</h3>
-                <a href="#modelos" class="nav-item">Modelos de Dados</a>
-                <a href="#codigos-resposta" class="nav-item">Códigos HTTP</a>
-                <a href="#exemplos" class="nav-item">Exemplos</a>
-            </div>
-
-            <div class="nav-section">
-                <h3>Suporte</h3>
-                <a href="#suporte" class="nav-item">Ajuda & Contato</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
+    <div class="copy-feedback" id="copyFeedback">📋 Código copiado!</div>
+    
     <div class="layout">
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>🪒 API Barbearia</h1>
+                <p>Sistema completo para gestão de barbearias</p>
+            </div>
+            
+            <button class="postman-download" onclick="downloadPostmanCollection()">
+                📥 Baixar Collection Postman
+            </button>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>Início</h3>
+                    <a href="#overview" class="nav-tree-item">📖 Visão Geral</a>
+                    <a href="#authentication" class="nav-tree-item">🔐 Autenticação</a>
+                    <a href="#errors" class="nav-tree-item">⚠️ Códigos de Erro</a>
+                </div>
+                
+                <div class="nav-section">
+                    <h3>Endpoints</h3>
+                    <!-- Barbearias -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="barbearias-tree">
+                            🏪 Barbearias
+                        </div>
+                        <div class="nav-sub-items" id="barbearias-tree">
+                            <a href="#endpoints-barbearias" class="nav-sub-item">📋 Listar Barbearias</a>
+                            <a href="#endpoints-barbearia-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-barbearias-create" class="nav-sub-item">➕ Criar Barbearia</a>
+                            <a href="#endpoints-barbearias-update" class="nav-sub-item">✏️ Atualizar Barbearia</a>
+                            <a href="#endpoints-barbearias-delete" class="nav-sub-item">🗑️ Excluir Barbearia</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Barbeiros -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="barbeiros-tree">
+                            💇‍♂️ Barbeiros
+                        </div>
+                        <div class="nav-sub-items" id="barbeiros-tree">
+                            <a href="#endpoints-barbeiros" class="nav-sub-item">📋 Listar Barbeiros</a>
+                            <a href="#endpoints-barbeiro-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-barbeiros-create" class="nav-sub-item">➕ Criar Barbeiro</a>
+                            <a href="#endpoints-barbeiros-update" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
+                            <a href="#endpoints-barbeiros-delete" class="nav-sub-item">🗑️ Excluir Barbeiro</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Serviços -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="servicos-tree">
+                            ✂️ Serviços
+                        </div>
+                        <div class="nav-sub-items" id="servicos-tree">
+                            <a href="#endpoints-servicos" class="nav-sub-item">📋 Listar Serviços</a>
+                            <a href="#endpoints-servico-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-servicos-create" class="nav-sub-item">➕ Criar Serviço</a>
+                            <a href="#endpoints-servicos-update" class="nav-sub-item">✏️ Atualizar Serviço</a>
+                            <a href="#endpoints-servicos-delete" class="nav-sub-item">🗑️ Excluir Serviço</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Combos -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="combos-tree">
+                            🎁 Combos
+                        </div>
+                        <div class="nav-sub-items" id="combos-tree">
+                            <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
+                            <a href="#endpoints-combo-id" class="nav-sub-item">�� Buscar por ID</a>
+                            <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
+                            <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
+                            <a href="#endpoints-combos-delete" class="nav-sub-item">🗑️ Excluir Combo</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Clientes -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="clientes-tree">
+                            👥 Clientes
+                        </div>
+                        <div class="nav-sub-items" id="clientes-tree">
+                            <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
+                            <a href="#endpoints-cliente-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-clientes-create" class="nav-sub-item">➕ Criar Cliente</a>
+                            <a href="#endpoints-clientes-update" class="nav-sub-item">✏️ Atualizar Cliente</a>
+                            <a href="#endpoints-clientes-delete" class="nav-sub-item">🗑️ Excluir Cliente</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Autenticação -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="auth-tree">
+                            🔐 Autenticação
+                        </div>
+                        <div class="nav-sub-items" id="auth-tree">
+                            <a href="#endpoints-auth-celular" class="nav-sub-item">📱 Login por Celular</a>
+                            <a href="#endpoints-auth-google" class="nav-sub-item">🔗 Login Google</a>
+                            <a href="#endpoints-auth-barbearia" class="nav-sub-item">🏪 Login Barbearia</a>
+                            <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
+                            <a href="#endpoints-auth-verify" class="nav-sub-item">✅ Verificar Token</a>
+                            <a href="#endpoints-auth-refresh" class="nav-sub-item">🔄 Refresh Token</a>
+                        </div>
+                    </div>
+                    
+                    <!-- APIs de Diretório -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="diretorio-tree">
+                            📂 APIs de Diretório
+                        </div>
+                        <div class="nav-sub-items" id="diretorio-tree">
+                            <a href="#endpoints-diretorio-barbearias" class="nav-sub-item">🔍 Busca Pública</a>
+                            <a href="#endpoints-diretorio-cidades" class="nav-sub-item">🏙️ Cidades</a>
+                            <a href="#endpoints-diretorio-estatisticas" class="nav-sub-item">📊 Estatísticas</a>
+                            <a href="#endpoints-diretorio-sugestoes" class="nav-sub-item">💡 Sugestões</a>
+                            <a href="#endpoints-diretorio-detalhes" class="nav-sub-item">📋 Detalhes Barbearia</a>
+                            <a href="#endpoints-diretorio-promocoes" class="nav-sub-item">🎯 Promoções</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
         <main class="main-content" id="mainContent">
-            <div class="hero">
-                <div class="container">
-                    <h1>🪒 API Barbearia SaaS</h1>
-                    <p>Documentação completa da API para sistema de gestão de barbearias com MySQL</p>
-                </div>
-            </div>
-
             <div class="container">
-
-        <div class="section" id="visao-geral">
-            <h2>🌟 Visão Geral</h2>
-            <p>A API Barbearia SaaS permite o gerenciamento completo de barbearias, incluindo cadastro, consulta, atualização e exclusão. Todas as respostas são retornadas em formato JSON.</p>
-            
-            <h3>Base URL</h3>
-            <pre>https://seu-dominio.com/api</pre>
-            
-            <h3>Formato das Respostas</h3>
-            <p>Todas as respostas seguem o padrão:</p>
-            <pre>{
-  "sucesso": boolean,
-  "dados": object | array,
-  "mensagem": string,
-  "erro": string
-}</pre>
-        </div>
-
-        <div class="section" id="autenticacao">
-            <h2>🔐 Autenticação</h2>
-            <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
-        </div>
-
-        <div class="section" id="banco-dados">
-            <h2>🗄️ Banco de Dados</h2>
-            <p>A API utiliza <strong>MySQL</strong> como banco de dados principal.</p>
-
-            <h3>Configuração</h3>
-            <div class="endpoint">
-                <h4>Informações de Conexão</h4>
-                <table class="table">
-                    <tr><th>Parâmetro</th><th>Valor</th></tr>
-                    <tr><td><strong>Servidor</strong></td><td>server.idenegociosdigitais.com.br</td></tr>
-                    <tr><td><strong>Porta</strong></td><td>3355</td></tr>
-                    <tr><td><strong>Database</strong></td><td>barbearia-db</td></tr>
-                    <tr><td><strong>Usuário</strong></td><td>barbearia</td></tr>
-                    <tr><td><strong>Engine</strong></td><td>MySQL 8.0+</td></tr>
-                </table>
-            </div>
-
-            <h3>Estrutura das Tabelas</h3>
-            <p>O banco de dados possui 3 tabelas principais:</p>
-            <ul>
-                <li><strong>barbearias</strong> - Dados das barbearias</li>
-                <li><strong>barbeiros</strong> - Profissionais das barbearias</li>
-                <li><strong>servicos</strong> - Serviços oferecidos</li>
-            </ul>
-
-            <div class="endpoint">
-                <h4>📊 Status da Conexão</h4>
-                <p><span class="status-badge status-success">✅ Conectado</span> - Banco MySQL operacional</p>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-barbearias">
-            <h2>�� Endpoints - Barbearias</h2>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/barbearias</span>
-                <h4>Listar barbearias</h4>
-                <p>Retorna lista paginada de barbearias com filtros opcionais.</p>
+                <div class="hero">
+                    <h1>🪒 API Barbearia SaaS</h1>
+                    <p>Sistema completo para gestão de barbearias, barbeiros, serviços e clientes com autenticação robusta e APIs públicas.</p>
+                </div>
                 
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
-                        <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativa, inativa, pendente</td></tr>
-                        <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
-                        <tr><td><code>incluirBarbeiros</code></td><td>boolean</td><td>Não</td><td>Incluir lista de barbeiros (padrão: false)</td></tr>
-                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de serviços (padrão: false)</td></tr>
-                    </table>
+                <!-- Visão Geral -->
+                <div class="section" id="overview">
+                    <h2>📖 Visão Geral</h2>
+                    <p>Esta API fornece um sistema completo para gestão de barbearias, incluindo:</p>
+                    <ul style="margin: 20px 0; padding-left: 30px;">
+                        <li><strong>Gestão de Barbearias</strong> - CRUD completo para barbearias</li>
+                        <li><strong>Gestão de Barbeiros</strong> - Controle de barbeiros e suas especialidades</li>
+                        <li><strong>Gestão de Serviços</strong> - Catálogo de serviços com preços e duração</li>
+                        <li><strong>Sistema de Combos</strong> - Pacotes de serviços com desconto</li>
+                        <li><strong>Gestão de Clientes</strong> - Registro e preferências de clientes</li>
+                        <li><strong>Autenticação Múltipla</strong> - Login por celular, Google, barbearia e barbeiro</li>
+                        <li><strong>APIs Públicas</strong> - Busca e listagem para o público geral</li>
+                    </ul>
+                    
+                    <h3>🌐 Base URL</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyToClipboard(this, 'https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev')">📋 Copiar</button>
+                        <pre>https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev</pre>
+                    </div>
                 </div>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "barbearias": [/* array de barbearias */],
-  "total": 15,
-  "pagina": 1,
-  "totalPaginas": 2
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/barbearias/{id}</span>
-                <h4>Buscar barbearia por ID</h4>
-                <p>Retorna dados detalhados de uma barbearia específica, incluindo barbeiros e serviços por padrão.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>incluirBarbeiros</code></td><td>boolean</td><td>Não</td><td>Incluir barbeiros (padrão: true)</td></tr>
-                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir serviços (padrão: true)</td></tr>
-                    </table>
-                </div>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "sucesso": true,
-  "dados": {
-    "id": "1",
-    "nome": "Barbearia do João",
-    "endereco": {...},
-    "barbeiros": [...],
-    "servicos": [...]
-  }
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/barbearias</span>
-                <h4>Criar nova barbearia</h4>
-                <p>Cadastra uma nova barbearia no sistema.</p>
                 
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "nome": "Nome da Barbearia",
-  "descricao": "Descrição opcional",
-  "endereco": {
-    "rua": "Rua Exemplo",
-    "numero": "123",
-    "bairro": "Centro",
-    "cidade": "São Paulo",
-    "estado": "SP",
-    "cep": "01234-567"
-  },
-  "contato": {
-    "telefone": "(11) 99999-9999",
-    "email": "contato@barbearia.com",
-    "whatsapp": "(11) 99999-9999"
-  },
-  "proprietario": {
-    "nome": "João Silva",
-    "cpf": "123.456.789-00",
-    "email": "joao@barbearia.com"
-  },
-  "horarioFuncionamento": {
-    "segunda": { "abertura": "08:00", "fechamento": "18:00" },
-    "terca": { "abertura": "08:00", "fechamento": "18:00" }
-  },
-  "servicos": ["Corte", "Barba", "Bigode"]
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <span class="url">/api/barbearias/{id}</span>
-                <h4>Atualizar barbearia</h4>
-                <p>Atualiza dados de uma barbearia existente. Apenas os campos enviados serão atualizados.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <span class="url">/api/barbearias/{id}</span>
-                <h4>Excluir barbearia</h4>
-                <p>Remove permanentemente uma barbearia do sistema.</p>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "sucesso": true,
-  "mensagem": "Barbearia excluída com sucesso"
-}</pre>
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-barbeiros">
-            <h2>💇‍♂️ Endpoints - Barbeiros</h2>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/barbeiros</span>
-                <h4>Listar barbeiros</h4>
-                <p>Retorna lista paginada de barbeiros com filtros opcionais.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
+                <!-- Autenticação -->
+                <div class="section" id="authentication">
+                    <h2>🔐 Autenticação</h2>
+                    <p>A API suporta múltiplos tipos de autenticação usando JWT tokens:</p>
+                    
+                    <h3>Headers de Autenticação</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyToClipboard(this, 'Authorization: Bearer {token}')">📋 Copiar</button>
+                        <pre>Authorization: Bearer {token}</pre>
+                    </div>
+                    
+                    <h3>Tipos de Login</h3>
                     <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
-                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
-                        <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativo, inativo, afastado</td></tr>
-                        <tr><td><code>tipo</code></td><td>string</td><td>Não</td><td>Filtrar por tipo: comissionado, funcionario, freelancer</td></tr>
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Endpoint</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Cliente</code></td>
+                                <td><code>POST /api/auth/login/celular</code></td>
+                                <td>Login de clientes usando celular + senha</td>
+                            </tr>
+                            <tr>
+                                <td><code>Google</code></td>
+                                <td><code>POST /api/auth/login/google</code></td>
+                                <td>Login social via Google OAuth</td>
+                            </tr>
+                            <tr>
+                                <td><code>Barbearia</code></td>
+                                <td><code>POST /api/auth/login/barbearia</code></td>
+                                <td>Login de administradores de barbearia</td>
+                            </tr>
+                            <tr>
+                                <td><code>Barbeiro</code></td>
+                                <td><code>POST /api/auth/login/barbeiro</code></td>
+                                <td>Login de barbeiros funcionários</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/barbeiros/{id}</span>
-                <h4>Buscar barbeiro por ID</h4>
-                <p>Retorna dados detalhados de um barbeiro específico.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/barbeiros</span>
-                <h4>Criar novo barbeiro</h4>
-                <p>Cadastra um novo barbeiro no sistema.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "nome": "Carlos Silva",
-  "email": "carlos@barbearia.com",
-  "telefone": "(11) 99999-9999",
-  "cpf": "111.222.333-44",
-  "tipo": "comissionado",
-  "porcentagemComissao": 40,
-  "barbeariaId": "1",
-  "especialidades": ["Corte masculino", "Barba"],
-  "horarioTrabalho": {
-    "segunda": { "inicio": "08:00", "fim": "18:00" },
-    "terca": { "inicio": "08:00", "fim": "18:00" }
-  }
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <span class="url">/api/barbeiros/{id}</span>
-                <h4>Atualizar barbeiro</h4>
-                <p>Atualiza dados de um barbeiro existente.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <span class="url">/api/barbeiros/{id}</span>
-                <h4>Excluir barbeiro</h4>
-                <p>Remove permanentemente um barbeiro do sistema.</p>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-servicos">
-            <h2>✂️ Endpoints - Serviços</h2>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/servicos</span>
-                <h4>Listar serviços</h4>
-                <p>Retorna lista paginada de serviços com filtros opcionais.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
+                
+                <!-- Códigos de Erro -->
+                <div class="section" id="errors">
+                    <h2>⚠️ Códigos de Erro</h2>
                     <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
-                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
-                        <tr><td><code>categoria</code></td><td>string</td><td>Não</td><td>Filtrar por categoria (corte, barba, tratamento, etc.)</td></tr>
-                        <tr><td><code>ativo</code></td><td>boolean</td><td>Não</td><td>Filtrar por status ativo/inativo</td></tr>
-                        <tr><td><code>precoMin</code></td><td>number</td><td>Não</td><td>Preço mínimo</td></tr>
-                        <tr><td><code>precoMax</code></td><td>number</td><td>Não</td><td>Preço máximo</td></tr>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-badge status-success">200</span></td>
+                                <td>OK</td>
+                                <td>Requisição bem-sucedida</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-success">201</span></td>
+                                <td>Created</td>
+                                <td>Recurso criado com sucesso</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">400</span></td>
+                                <td>Bad Request</td>
+                                <td>Dados inválidos na requisição</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">401</span></td>
+                                <td>Unauthorized</td>
+                                <td>Token de autenticação inválido ou ausente</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">403</span></td>
+                                <td>Forbidden</td>
+                                <td>Acesso negado para o recurso</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">404</span></td>
+                                <td>Not Found</td>
+                                <td>Recurso não encontrado</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-danger">500</span></td>
+                                <td>Internal Server Error</td>
+                                <td>Erro interno do servidor</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/servicos/{id}</span>
-                <h4>Buscar serviço por ID</h4>
-                <p>Retorna dados detalhados de um serviço específico.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/servicos</span>
-                <h4>Criar novo serviço</h4>
-                <p>Cadastra um novo serviço no sistema.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "nome": "Corte Masculino",
-  "descricao": "Corte tradicional masculino",
-  "preco": 35.00,
-  "duracaoMinutos": 45,
-  "barbeariaId": "1",
-  "categoria": "corte"
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <span class="url">/api/servicos/{id}</span>
-                <h4>Atualizar serviço</h4>
-                <p>Atualiza dados de um serviço existente.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <span class="url">/api/servicos/{id}</span>
-                <h4>Excluir serviço</h4>
-                <p>Remove permanentemente um serviço do sistema.</p>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-combos">
-            <h2>🎁 Endpoints - Combos</h2>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/combos</span>
-                <h4>Listar combos</h4>
-                <p>Retorna lista paginada de combos com filtros opcionais.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
-                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
-                        <tr><td><code>ativo</code></td><td>boolean</td><td>Não</td><td>Filtrar por status ativo/inativo</td></tr>
-                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de servi��os (padrão: true)</td></tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/combos/{id}</span>
-                <h4>Buscar combo por ID</h4>
-                <p>Retorna dados detalhados de um combo específico com serviços incluídos.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir serviços completos (padrão: true)</td></tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/combos</span>
-                <h4>Criar novo combo</h4>
-                <p>Cadastra um novo combo de serviços com desconto automático.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "nome": "Corte + Barba Tradicional",
-  "descricao": "Combo clássico com desconto especial",
-  "barbeariaId": "1",
-  "servicoIds": ["1", "2"],
-  "tipoDesconto": "valor",
-  "valorDesconto": 10.00
-}</pre>
-
-                    <h4>Observações importantes:</h4>
-                    <ul>
-                        <li><strong>servicoIds:</strong> Deve conter pelo menos 2 serviços</li>
-                        <li><strong>tipoDesconto:</strong> "valor" (desconto fixo) ou "percentual" (% de desconto)</li>
-                        <li><strong>valorDesconto:</strong> Valor absoluto ou percentual (0-100 para percentual)</li>
-                        <li><strong>Valores automáticos:</strong> valorOriginal, valorCombo e duração são calculados automaticamente</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <span class="url">/api/combos/{id}</span>
-                <h4>Atualizar combo</h4>
-                <p>Atualiza dados de um combo existente. Valores são recalculados automaticamente.</p>
-
-                <div class="params">
-                    <h4>Body (JSON) - Campos opcionais</h4>
-                    <pre>{
-  "nome": "Novo nome do combo",
-  "servicoIds": ["1", "2", "4"],
-  "tipoDesconto": "percentual",
-  "valorDesconto": 15.00,
-  "ativo": true
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <span class="url">/api/combos/{id}</span>
-                <h4>Excluir combo</h4>
-                <p>Remove permanentemente um combo do sistema.</p>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-clientes">
-            <h2>👥 Endpoints - Clientes</h2>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/clientes</span>
-                <h4>Listar clientes</h4>
-                <p>Retorna lista paginada de clientes. <strong>Requer autenticação de admin.</strong></p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
-                        <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativo, inativo, suspenso</td></tr>
-                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia preferida</td></tr>
-                        <tr><td><code>barbeiroId</code></td><td>string</td><td>Não</td><td>Filtrar por barbeiro preferido</td></tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/clientes/me</span>
-                <h4>Buscar perfil do cliente logado</h4>
-                <p>Retorna dados do cliente autenticado. <strong>Requer autenticação.</strong></p>
-
-                <div class="params">
-                    <h4>Headers</h4>
-                    <table class="table">
-                        <tr><th>Header</th><th>Valor</th><th>Descrição</th></tr>
-                        <tr><td><code>Authorization</code></td><td>Bearer {token}</td><td>Token JWT obtido no login</td></tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/clientes/{id}</span>
-                <h4>Buscar cliente por ID</h4>
-                <p>Retorna dados detalhados de um cliente específico.</p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/clientes</span>
-                <h4>Cadastrar novo cliente</h4>
-                <p>Cria uma nova conta de cliente (endpoint público).</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "nome": "João Silva",
-  "celular": "11987654321",
-  "senha": "minhasenha123",
-  "email": "joao@email.com",
-  "tipoLogin": "celular",
-  "dataNascimento": "1990-01-01",
-  "endereco": {
-    "rua": "Rua Exemplo",
-    "numero": "123",
-    "bairro": "Centro",
-    "cidade": "São Paulo",
-    "estado": "SP",
-    "cep": "01234-567"
-  },
-  "preferencias": {
-    "barbeariaId": "1",
-    "barbeiroId": "2"
-  }
-}</pre>
-
-                    <h4>Observações:</h4>
-                    <ul>
-                        <li><strong>nome, celular, tipoLogin:</strong> Obrigatórios</li>
-                        <li><strong>senha:</strong> Obrigatória para tipoLogin "celular"</li>
-                        <li><strong>celular:</strong> Aceita formatos: "11987654321" ou "(11) 98765-4321"</li>
-                        <li><strong>tipoLogin:</strong> "celular" ou "google"</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <span class="url">/api/clientes/{id}</span>
-                <h4>Atualizar cliente</h4>
-                <p>Atualiza dados de um cliente. <strong>Requer autenticação.</strong></p>
-            </div>
-
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <span class="url">/api/clientes/{id}</span>
-                <h4>Desativar cliente</h4>
-                <p>Marca cliente como inativo (soft delete). <strong>Requer autenticação.</strong></p>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-diretorio">
-            <h2>📂 APIs de Diretório</h2>
-            <p>APIs públicas especializadas para catálogo e busca de barbearias. Estes endpoints não requerem autenticação e são otimizados para aplicações de diretório e busca pública.</p>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/barbearias</span>
-                <h4>Busca pública de barbearias</h4>
-                <p>Endpoint otimizado para busca pública com filtros específicos para diretórios.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>q</code></td><td>string</td><td>Não</td><td>Busca por nome, descrição ou bairro</td></tr>
-                        <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
-                        <tr><td><code>bairro</code></td><td>string</td><td>Não</td><td>Filtrar por bairro</td></tr>
-                        <tr><td><code>servicos</code></td><td>array</td><td>Não</td><td>IDs dos serviços desejados</td></tr>
-                        <tr><td><code>avaliacaoMin</code></td><td>number</td><td>Não</td><td>Avaliação mínima (1-5)</td></tr>
-                        <tr><td><code>aberto</code></td><td>boolean</td><td>Não</td><td>Apenas barbearias abertas no momento</td></tr>
-                        <tr><td><code>raio</code></td><td>number</td><td>Não</td><td>Raio em km (requer lat/lng)</td></tr>
-                        <tr><td><code>lat</code></td><td>number</td><td>Não</td><td>Latitude para busca por proximidade</td></tr>
-                        <tr><td><code>lng</code></td><td>number</td><td>Não</td><td>Longitude para busca por proximidade</td></tr>
-                        <tr><td><code>ordenacao</code></td><td>string</td><td>Não</td><td>Ordenar por: distancia, avaliacao, preco, nome</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Máximo 50 resultados (padrão: 20)</td></tr>
-                    </table>
-                </div>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "barbearias": [
-    {
-      "id": "1",
-      "nome": "Barbearia do João",
-      "descricao": "Barbearia tradicional",
-      "endereco": {...},
-      "contato": {...},
-      "avaliacaoMedia": 4.8,
-      "totalAvaliacoes": 124,
-      "distancia": 2.5, // em km (se lat/lng fornecidos)
-      "aberta": true,
-      "proximoHorario": "08:00",
-      "servicosPopulares": [
-        { "nome": "Corte Masculino", "preco": 35.00 },
-        { "nome": "Barba", "preco": 25.00 }
-      ]
-    }
-  ],
-  "total": 15,
-  "filtrosAplicados": {...},
-  "sugestoes": ["Centro", "Vila Madalena"]
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/cidades</span>
-                <h4>Listar cidades disponíveis</h4>
-                <p>Retorna lista de cidades com barbearias cadastradas.</p>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "cidades": [
-    {
-      "nome": "São Paulo",
-      "estado": "SP",
-      "totalBarbearias": 25,
-      "bairros": ["Centro", "Vila Madalena", "Jardins"]
-    },
-    {
-      "nome": "Rio de Janeiro",
-      "estado": "RJ",
-      "totalBarbearias": 18,
-      "bairros": ["Copacabana", "Ipanema", "Tijuca"]
-    }
-  ]
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/estatisticas</span>
-                <h4>Estatísticas do diretório</h4>
-                <p>Informações gerais sobre o diretório de barbearias.</p>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "totalBarbearias": 156,
-  "totalCidades": 12,
-  "totalEstados": 5,
-  "avaliacaoGeral": 4.7,
-  "servicosMaisPopulares": [
-    { "servico": "Corte Masculino", "frequencia": 89 },
-    { "servico": "Barba", "frequencia": 72 },
-    { "servico": "Corte + Barba", "frequencia": 65 }
-  ],
-  "cidadesComMaisBarbearias": [
-    { "cidade": "São Paulo", "total": 45 },
-    { "cidade": "Rio de Janeiro", "total": 32 }
-  ],
-  "faixaPrecos": {
-    "min": 15.00,
-    "max": 150.00,
-    "media": 42.50
-  }
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/sugestoes</span>
-                <h4>Sugestões de busca</h4>
-                <p>Autocomplete para busca com base no termo digitado.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>termo</code></td><td>string</td><td>Sim</td><td>Termo para autocompletar (mín. 2 chars)</td></tr>
-                        <tr><td><code>tipo</code></td><td>string</td><td>Não</td><td>Tipo: barbearia, cidade, bairro, servico</td></tr>
-                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Máximo 10 sugestões (padrão: 5)</td></tr>
-                    </table>
-                </div>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "sugestoes": [
-    {
-      "tipo": "barbearia",
-      "texto": "Barbearia do João",
-      "complemento": "Centro, São Paulo",
-      "id": "1"
-    },
-    {
-      "tipo": "cidade",
-      "texto": "São Paulo",
-      "complemento": "45 barbearias",
-      "id": "sao-paulo"
-    },
-    {
-      "tipo": "servico",
-      "texto": "Corte Masculino",
-      "complemento": "89 barbearias oferecem",
-      "id": "corte-masculino"
-    }
-  ]
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/barbearia/{id}/detalhes</span>
-                <h4>Detalhes públicos da barbearia</h4>
-                <p>Versão pública com informações otimizadas para diretório.</p>
-
-                <div class="response">
-                    <h4>Resposta</h4>
-                    <pre>{
-  "barbearia": {
-    "id": "1",
-    "nome": "Barbearia do João",
-    "descricao": "A melhor barbearia do bairro",
-    "endereco": {...},
-    "contato": {...},
-    "horarioFuncionamento": {...},
-    "avaliacaoMedia": 4.8,
-    "totalAvaliacoes": 124,
-    "foto": "https://exemplo.com/foto.jpg",
-    "galeria": ["url1", "url2"],
-    "especialidades": ["Corte clássico", "Barba tradicional"],
-    "servicos": [
-      {
-        "nome": "Corte Masculino",
-        "preco": 35.00,
-        "duracao": 45,
-        "categoria": "corte"
-      }
-    ],
-    "barbeiros": [
-      {
-        "nome": "Carlos",
-        "especialidades": ["Corte", "Barba"],
-        "avaliacaoMedia": 4.9
-      }
-    ],
-    "promocoes": [
-      {
-        "titulo": "Corte + Barba",
-        "desconto": 15,
-        "validoAte": "2024-12-31"
-      }
-    ]
-  }
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <span class="url">/api/diretorio/promocoes</span>
-                <h4>Promoções ativas</h4>
-                <p>Lista promoções e combos ativos de todas as barbearias.</p>
-
-                <div class="params">
-                    <h4>Parâmetros de Query</h4>
-                    <table class="table">
-                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
-                        <tr><td><code>descontoMin</code></td><td>number</td><td>Não</td><td>Desconto mínimo (%)</td></tr>
-                        <tr><td><code>categoria</code></td><td>string</td><td>Não</td><td>Categoria do serviço</td></tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="endpoints-auth">
-            <h2>🔐 Endpoints - Autenticação</h2>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/auth/login/celular</span>
-                <h4>Login com celular + senha</h4>
-                <p>Autentica cliente usando celular e senha.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "celular": "11987654321",
-  "senha": "minhasenha123"
-}</pre>
-                </div>
-
-                <div class="response">
-                    <h4>Resposta de Sucesso</h4>
-                    <pre>{
-  "sucesso": true,
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "cliente": {/* dados do cliente */},
-  "expiresIn": 604800,
-  "mensagem": "Login realizado com sucesso"
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/auth/login/google</span>
-                <h4>Login/Cadastro com Google OAuth</h4>
-                <p>Autentica ou cria conta usando Google OAuth.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "googleToken": "google_oauth_token_here",
-  "googleId": "google_user_id",
-  "email": "usuario@gmail.com",
-  "nome": "Nome Usuario",
-  "foto": "https://foto_url.jpg"
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/auth/verificar-token</span>
-                <h4>Verificar token JWT</h4>
-                <p>Valida se um token JWT ainda é válido.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/auth/refresh-token</span>
-                <h4>Renovar token</h4>
-                <p>Gera um novo token usando refresh token.</p>
-
-                <div class="params">
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}</pre>
-                </div>
-            </div>
-
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <span class="url">/api/auth/alterar-senha</span>
-                <h4>Alterar senha</h4>
-                <p>Altera senha do cliente logado. <strong>Requer autenticação.</strong></p>
-
-                <div class="params">
-                    <h4>Headers</h4>
-                    <table class="table">
-                        <tr><th>Header</th><th>Valor</th></tr>
-                        <tr><td><code>Authorization</code></td><td>Bearer {token}</td></tr>
-                    </table>
-
-                    <h4>Body (JSON)</h4>
-                    <pre>{
-  "senhaAtual": "senha_atual",
-  "novaSenha": "nova_senha_123"
-}</pre>
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="modelos">
-            <h2>📋 Modelos de Dados</h2>
-
-            <h3>🏪 Barbearia</h3>
-            <p>Estrutura completa do objeto barbearia:</p>
-            <pre>{
-  "id": "string",
-  "nome": "string",
-  "descricao": "string",
-  "endereco": {
-    "rua": "string",
-    "numero": "string", 
-    "bairro": "string",
-    "cidade": "string",
-    "estado": "string",
-    "cep": "string"
-  },
-  "contato": {
-    "telefone": "string",
-    "email": "string",
-    "whatsapp": "string"
-  },
-  "proprietario": {
-    "nome": "string",
-    "cpf": "string",
-    "email": "string"
-  },
-  "horarioFuncionamento": {
-    "segunda": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "terca": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "quarta": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "quinta": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "sexta": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "sabado": { "abertura": "HH:mm", "fechamento": "HH:mm" },
-    "domingo": { "abertura": "HH:mm", "fechamento": "HH:mm" }
-  },
-  "servicos": [/* array de objetos Servico */],
-  "barbeiros": [/* array de objetos Barbeiro */],
-  "status": "ativa" | "inativa" | "pendente",
-  "dataCadastro": "ISO 8601",
-  "dataAtualizacao": "ISO 8601"
-}</pre>
-
-            <h3>💇‍♂️ Barbeiro</h3>
-            <p>Estrutura do objeto barbeiro:</p>
-            <pre>{
-  "id": "string",
-  "nome": "string",
-  "email": "string",
-  "telefone": "string",
-  "cpf": "string",
-  "tipo": "comissionado" | "funcionario" | "freelancer",
-  "porcentagemComissao": number, // Apenas para comissionados
-  "salarioFixo": number, // Apenas para funcionários
-  "valorHora": number, // Apenas para freelancers
-  "barbeariaId": "string",
-  "especialidades": ["string"],
-  "horarioTrabalho": {
-    "segunda": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "terca": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "quarta": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "quinta": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "sexta": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "sabado": { "inicio": "HH:mm", "fim": "HH:mm" },
-    "domingo": { "inicio": "HH:mm", "fim": "HH:mm" }
-  },
-  "status": "ativo" | "inativo" | "afastado",
-  "dataCadastro": "ISO 8601",
-  "dataAtualizacao": "ISO 8601"
-}</pre>
-
-            <h3>✂️ Serviço</h3>
-            <p>Estrutura do objeto serviço:</p>
-            <pre>{
-  "id": "string",
-  "nome": "string",
-  "descricao": "string",
-  "preco": number,
-  "duracaoMinutos": number,
-  "barbeariaId": "string",
-  "categoria": "string",
-  "ativo": boolean,
-  "dataCadastro": "ISO 8601",
-  "dataAtualizacao": "ISO 8601"
-}</pre>
-
-            <h3>🎁 Combo</h3>
-            <p>Estrutura do objeto combo de serviços:</p>
-            <pre>{
-  "id": "string",
-  "nome": "string",
-  "descricao": "string",
-  "barbeariaId": "string",
-  "servicoIds": ["string"], // IDs dos serviços incluídos
-  "servicos": [/* array de objetos Servico */], // Carregado quando solicitado
-  "valorOriginal": number, // Soma dos preços individuais
-  "valorCombo": number, // Preço final com desconto
-  "tipoDesconto": "valor" | "percentual",
-  "valorDesconto": number, // Valor do desconto aplicado
-  "duracaoTotalMinutos": number, // Soma das durações
-  "ativo": boolean,
-  "dataCadastro": "ISO 8601",
-  "dataAtualizacao": "ISO 8601"
-}</pre>
-
-            <h3>💡 Observações sobre Tipos de Barbeiro</h3>
-            <ul>
-                <li><strong>Comissionado:</strong> Recebe percentual sobre vendas (requer porcentagemComissao)</li>
-                <li><strong>Funcionário:</strong> Recebe salário fixo mensal (requer salarioFixo)</li>
-                <li><strong>Freelancer:</strong> Recebe por hora trabalhada (requer valorHora)</li>
-            </ul>
-
-            <h3>👥 Cliente</h3>
-            <p>Estrutura do objeto cliente:</p>
-            <pre>{
-  "id": "string",
-  "nome": "string",
-  "email": "string",
-  "celular": "string", // Campo principal para login
-  "dataNascimento": "ISO 8601",
-  "foto": "string", // URL da foto de perfil
-  "endereco": {
-    "rua": "string",
-    "numero": "string",
-    "bairro": "string",
-    "cidade": "string",
-    "estado": "string",
-    "cep": "string"
-  },
-  "preferencias": {
-    "barbeariaId": "string", // Barbearia preferida
-    "barbeiroId": "string", // Barbeiro preferido
-    "servicosPreferidos": ["string"] // IDs dos serviços preferidos
-  },
-  "tipoLogin": "celular" | "google" | "ambos",
-  "googleId": "string", // ID do Google OAuth
-  "emailVerificado": boolean,
-  "celularVerificado": boolean,
-  "status": "ativo" | "inativo" | "suspenso",
-  "dataCadastro": "ISO 8601",
-  "dataAtualizacao": "ISO 8601",
-  "ultimoLogin": "ISO 8601"
-}</pre>
-
-            <h3>🎁 Observações sobre Combos</h3>
-            <ul>
-                <li><strong>Desconto por valor:</strong> Desconto fixo em reais (ex: R$ 10,00 de desconto)</li>
-                <li><strong>Desconto percentual:</strong> Percentual de desconto sobre o valor original (ex: 15% de desconto)</li>
-                <li><strong>Valor original:</strong> Soma dos preços individuais dos serviços</li>
-                <li><strong>Valor combo:</strong> Preço final após aplicação do desconto</li>
-                <li><strong>Mínimo de serviços:</strong> Um combo deve ter pelo menos 2 serviços</li>
-            </ul>
-
-            <h3>🔐 Observações sobre Autenticação</h3>
-            <ul>
-                <li><strong>Token JWT:</strong> Válido por 7 dias, deve ser enviado no header Authorization</li>
-                <li><strong>Refresh Token:</strong> Válido por 30 dias, usado para renovar o token principal</li>
-                <li><strong>Login por celular:</strong> Requer senha cadastrada</li>
-                <li><strong>Login por Google:</strong> Cria conta automaticamente se não existir</li>
-                <li><strong>Formato do header:</strong> Authorization: Bearer {token}</li>
-            </ul>
-        </div>
-
-        <div class="section" id="codigos-resposta">
-            <h2>📊 Códigos de Resposta HTTP</h2>
-            <table class="table">
-                <tr><th>Código</th><th>Descrição</th></tr>
-                <tr><td>200</td><td>Sucesso</td></tr>
-                <tr><td>201</td><td>Criado com sucesso</td></tr>
-                <tr><td>400</td><td>Dados inválidos</td></tr>
-                <tr><td>404</td><td>Recurso não encontrado</td></tr>
-                <tr><td>500</td><td>Erro interno do servidor</td></tr>
-            </table>
-        </div>
-
-        <div class="section" id="exemplos">
-            <h2>💡 Exemplos de Uso</h2>
-
-            <h3>🏪 Barbearias</h3>
-            <h4>Listar barbearias ativas em São Paulo com barbeiros e serviços</h4>
-            <pre>GET /api/barbearias?status=ativa&cidade=São Paulo&incluirBarbeiros=true&incluirServicos=true&limite=5</pre>
-
-            <h4>Buscar barbearia específica com todos os dados</h4>
-            <pre>GET /api/barbearias/1</pre>
-
-            <h4>Criar nova barbearia</h4>
-            <pre>POST /api/barbearias
-Content-Type: application/json
-
-{
-  "nome": "Barbearia Exemplo",
-  "endereco": {
-    "rua": "Rua das Flores",
-    "numero": "123",
-    "bairro": "Centro",
-    "cidade": "São Paulo",
-    "estado": "SP",
-    "cep": "01234-567"
-  },
-  "contato": {
-    "telefone": "(11) 99999-9999",
-    "email": "contato@exemplo.com"
-  },
-  "proprietario": {
-    "nome": "João Silva",
-    "cpf": "123.456.789-00",
-    "email": "joao@exemplo.com"
-  }
-}</pre>
-
-            <h3>💇‍♂️ Barbeiros</h3>
-            <h4>Listar barbeiros comissionados de uma barbearia</h4>
-            <pre>GET /api/barbeiros?barbeariaId=1&tipo=comissionado</pre>
-
-            <h4>Criar barbeiro comissionado</h4>
-            <pre>POST /api/barbeiros
-Content-Type: application/json
-
-{
-  "nome": "Carlos Silva",
-  "email": "carlos@barbearia.com",
-  "telefone": "(11) 99999-9999",
-  "cpf": "111.222.333-44",
-  "tipo": "comissionado",
-  "porcentagemComissao": 40,
-  "barbeariaId": "1",
-  "especialidades": ["Corte masculino", "Barba"]
-}</pre>
-
-            <h4>Criar barbeiro funcionário</h4>
-            <pre>POST /api/barbeiros
-Content-Type: application/json
-
-{
-  "nome": "Ana Santos",
-  "email": "ana@barbearia.com",
-  "telefone": "(11) 88888-8888",
-  "cpf": "222.333.444-55",
-  "tipo": "funcionario",
-  "salarioFixo": 3500,
-  "barbeariaId": "1"
-}</pre>
-
-            <h3>✂️ Serviços</h3>
-            <h4>Listar serviços ativos de uma barbearia por faixa de preço</h4>
-            <pre>GET /api/servicos?barbeariaId=1&ativo=true&precoMin=20&precoMax=50</pre>
-
-            <h4>Criar novo serviço</h4>
-            <pre>POST /api/servicos
-Content-Type: application/json
-
-{
-  "nome": "Corte + Barba",
-  "descricao": "Pacote completo de corte e barba",
-  "preco": 55.00,
-  "duracaoMinutos": 75,
-  "barbeariaId": "1",
-  "categoria": "combo"
-}</pre>
-
-            <h4>Atualizar preço de um serviço</h4>
-            <pre>PUT /api/servicos/123
-Content-Type: application/json
-
-{
-  "preco": 40.00
-}</pre>
-
-            <h3>🎁 Combos</h3>
-            <h4>Listar combos ativos de uma barbearia</h4>
-            <pre>GET /api/combos?barbeariaId=1&ativo=true&incluirServicos=true</pre>
-
-            <h4>Criar combo com desconto fixo</h4>
-            <pre>POST /api/combos
-Content-Type: application/json
-
-{
-  "nome": "Corte + Barba Tradicional",
-  "descricao": "Combo clássico com desconto especial",
-  "barbeariaId": "1",
-  "servicoIds": ["1", "2"],
-  "tipoDesconto": "valor",
-  "valorDesconto": 10.00
-}</pre>
-
-            <h4>Criar combo com desconto percentual</h4>
-            <pre>POST /api/combos
-Content-Type: application/json
-
-{
-  "nome": "Pacote Completo Masculino",
-  "descricao": "Corte + barba + sobrancelha com 15% de desconto",
-  "barbeariaId": "1",
-  "servicoIds": ["1", "2", "4"],
-  "tipoDesconto": "percentual",
-  "valorDesconto": 15.00
-}</pre>
-
-            <h4>Atualizar serviços de um combo</h4>
-            <pre>PUT /api/combos/combo1
-Content-Type: application/json
-
-{
-  "servicoIds": ["1", "2", "4", "8"],
-  "valorDesconto": 20.00
-}</pre>
-
-            <h4>Buscar combo específico com todos os serviços</h4>
-            <pre>GET /api/combos/combo1?incluirServicos=true</pre>
-
-            <h3>👥 Clientes</h3>
-            <h4>Cadastrar novo cliente</h4>
-            <pre>POST /api/clientes
-Content-Type: application/json
-
-{
-  "nome": "João Silva",
-  "celular": "11987654321",
-  "senha": "minhasenha123",
-  "email": "joao@email.com",
-  "tipoLogin": "celular",
-  "preferencias": {
-    "barbeariaId": "1",
-    "barbeiroId": "2"
-  }
-}</pre>
-
-            <h4>Buscar perfil do cliente logado</h4>
-            <pre>GET /api/clientes/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</pre>
-
-            <h4>Atualizar preferências do cliente</h4>
-            <pre>PUT /api/clientes/{clienteId}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-Content-Type: application/json
-
-{
-  "preferencias": {
-    "barbeariaId": "2",
-    "barbeiroId": "3",
-    "servicosPreferidos": ["1", "2", "combo1"]
-  }
-}</pre>
-
-            <h3>🔐 Autenticação</h3>
-            <h4>Login com celular e senha</h4>
-            <pre>POST /api/auth/login/celular
-Content-Type: application/json
-
-{
-  "celular": "11987654321",
-  "senha": "minhasenha123"
-}</pre>
-
-            <h4>Login com Google OAuth</h4>
-            <pre>POST /api/auth/login/google
-Content-Type: application/json
-
-{
-  "googleToken": "google_oauth_token_aqui",
-  "googleId": "google_user_id_123",
-  "email": "usuario@gmail.com",
-  "nome": "Nome do Usuario",
-  "foto": "https://lh3.googleusercontent.com/..."
-}</pre>
-
-            <h4>Verificar se token é válido</h4>
-            <pre>POST /api/auth/verificar-token
-Content-Type: application/json
-
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}</pre>
-
-            <h4>Alterar senha</h4>
-            <pre>POST /api/auth/alterar-senha
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-Content-Type: application/json
-
-{
-  "senhaAtual": "senha_atual",
-  "novaSenha": "nova_senha_123"
-}</pre>
-
-            <h4>Renovar token expirado</h4>
-            <pre>POST /api/auth/refresh-token
-Content-Type: application/json
-
-{
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}</pre>
-        </div>
-
-        <div class="section" id="suporte">
-            <h2>🔧 Suporte</h2>
-            <p>Para suporte técnico ou dúvidas sobre a API, entre em contato:</p>
-            <ul>
-                <li>📧 Email: suporte@barbeariasaas.com</li>
-                <li>📱 WhatsApp: (11) 99999-9999</li>
-                <li>🌐 Website: www.barbeariasaas.com</li>
-            </ul>
-
-            <div class="endpoint">
-                <h4>🚀 Versão da API</h4>
-                <p><span class="status-badge status-info">v1.0.0</span> - Versão atual</p>
-                <p><strong>Última atualização:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
-            </div>
-        </div>
+`;
+
+  // Continue with the endpoints sections...
+  const endpointsHtml = generateEndpointsDocumentation();
+  
+  const footerHtml = `
             </div>
         </main>
     </div>
-
+    
     <script>
-        // Sidebar functionality
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const toggle = document.querySelector('.sidebar-toggle');
-
+        // Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        
+        sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('active');
+            sidebarToggle.classList.toggle('active');
             mainContent.classList.toggle('shifted');
-            toggle.classList.toggle('active');
-        }
-
-        // Tree navigation functionality
-        function initializeTreeNavigation() {
-            const treeItems = document.querySelectorAll('.nav-tree-item.expandable');
-
-            treeItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const targetId = this.getAttribute('data-target');
-                    const targetTree = document.getElementById(targetId);
-
-                    if (targetTree) {
-                        // Toggle expanded state
-                        const isExpanded = this.classList.contains('expanded');
-
-                        if (isExpanded) {
-                            // Collapse
-                            this.classList.remove('expanded');
-                            targetTree.classList.remove('expanded');
-                        } else {
-                            // Expand
-                            this.classList.add('expanded');
-                            targetTree.classList.add('expanded');
-                        }
-                    }
-                });
+        });
+        
+        // Expandable Navigation
+        document.querySelectorAll('.nav-tree-item.expandable').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('data-target');
+                const target = document.getElementById(targetId);
+                
+                item.classList.toggle('expanded');
+                target.classList.toggle('expanded');
             });
-        }
-
-        // Auto-highlight current section in sidebar
-        function highlightCurrentSection() {
+        });
+        
+        // Active Navigation
+        function setActiveNav() {
             const sections = document.querySelectorAll('.section[id]');
-            const navItems = document.querySelectorAll('.nav-item, .nav-sub-item');
-
+            const navItems = document.querySelectorAll('.nav-tree-item, .nav-sub-item');
+            
             let currentSection = '';
-            const scrollPosition = window.scrollY + 100;
-
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 100) {
                     currentSection = section.id;
                 }
             });
-
+            
             navItems.forEach(item => {
                 item.classList.remove('active');
-                if (item.getAttribute('href') === '#' + currentSection) {
+                const href = item.getAttribute('href');
+                if (href && href === '#' + currentSection) {
                     item.classList.add('active');
-
-                    // Auto-expand parent tree if this is a sub-item
+                    
+                    // Expand parent if it's a sub-item
                     const parentTree = item.closest('.nav-sub-items');
                     if (parentTree) {
                         const parentItem = document.querySelector('[data-target="' + parentTree.id + '"]');
@@ -1780,116 +794,1115 @@ Content-Type: application/json
                 }
             });
         }
-
-        // Smooth scroll for navigation links
-        function initializeSmoothScroll() {
-            document.querySelectorAll('.nav-item, .nav-sub-item').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        const targetId = this.getAttribute('href').substring(1);
-                        const targetSection = document.getElementById(targetId);
-
-                        if (targetSection) {
-                            targetSection.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
+        
+        window.addEventListener('scroll', setActiveNav);
+        setActiveNav();
+        
+        // Copy to Clipboard
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copiado!';
+                button.classList.add('copied');
+                
+                showCopyFeedback();
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
             });
         }
-
-        // Auto-expand tree items based on current section
-        function autoExpandCurrentSection() {
-            const currentHash = window.location.hash.substring(1);
-            if (currentHash) {
-                const targetElement = document.querySelector('[href="#' + currentHash + '"]');
-                if (targetElement && targetElement.closest('.nav-sub-items')) {
-                    const parentTree = targetElement.closest('.nav-sub-items');
-                    const parentItem = document.querySelector('[data-target="' + parentTree.id + '"]');
-                    if (parentItem) {
-                        parentItem.classList.add('expanded');
-                        parentTree.classList.add('expanded');
-                    }
-                }
-            }
+        
+        function showCopyFeedback() {
+            const feedback = document.getElementById('copyFeedback');
+            feedback.classList.add('show');
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 2000);
         }
-
-        // Keyboard navigation
-        function initializeKeyboardNavigation() {
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === '/') {
-                    e.preventDefault();
-                    toggleSidebar();
-                }
-
-                // Expand/collapse with Enter or Space
-                if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('nav-tree-item')) {
-                    e.preventDefault();
-                    e.target.click();
+        
+        // Download Postman Collection
+        function downloadPostmanCollection() {
+            window.location.href = '/api/docs/postman-collection';
+        }
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
-        }
-
-        // Highlight current section on scroll
-        window.addEventListener('scroll', highlightCurrentSection);
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeTreeNavigation();
-            initializeSmoothScroll();
-            initializeKeyboardNavigation();
-            highlightCurrentSection();
-            autoExpandCurrentSection();
-
-            // Auto-open sidebar on larger screens
-            if (window.innerWidth > 768) {
-                toggleSidebar();
-            }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const toggle = document.querySelector('.sidebar-toggle');
-
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
-                mainContent.classList.remove('shifted');
-                toggle.classList.remove('active');
-            } else if (!sidebar.classList.contains('active')) {
-                toggleSidebar();
-            }
-        });
-
-        // Close sidebar when clicking on main content (mobile)
-        document.getElementById('mainContent').addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                const mainContent = document.getElementById('mainContent');
-                const toggle = document.querySelector('.sidebar-toggle');
-
-                if (sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                    mainContent.classList.remove('shifted');
-                    toggle.classList.remove('active');
-                }
-            }
-        });
-
-        // Handle hash changes for deep linking
-        window.addEventListener('hashchange', function() {
-            autoExpandCurrentSection();
-            highlightCurrentSection();
         });
     </script>
 </body>
 </html>
   `;
 
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(html);
+  res.setHeader('Content-Type', 'text/html');
+  res.send(html + endpointsHtml + footerHtml);
+};
+
+function generateEndpointsDocumentation(): string {
+  return `
+                <!-- Barbearias Endpoints -->
+                <div class="section" id="endpoints-barbearias">
+                    <h2>🏪 Barbearias</h2>
+                    
+                    <div class="endpoint" id="endpoints-barbearias">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/barbearias</span>
+                        </div>
+                        <h4>Listar todas as barbearias</h4>
+                        <p>Retorna uma lista paginada de barbearias com opções de filtro.</p>
+                        
+                        <div class="params">
+                            <h4>Query Parameters</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Exemplo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>limite</code></td>
+                                        <td>number</td>
+                                        <td>Limite de resultados por página</td>
+                                        <td>10</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>pagina</code></td>
+                                        <td>number</td>
+                                        <td>Número da página</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>status</code></td>
+                                        <td>string</td>
+                                        <td>Filtrar por status</td>
+                                        <td>ativa</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>cidade</code></td>
+                                        <td>string</td>
+                                        <td>Filtrar por cidade</td>
+                                        <td>São Paulo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "barbearias": [
+    {
+      "id": "1",
+      "nome": "Barbearia do João",
+      "descricao": "A melhor barbearia do bairro",
+      "endereco": {
+        "rua": "Rua das Flores",
+        "numero": "123",
+        "bairro": "Centro",
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "cep": "01234-567"
+      },
+      "contato": {
+        "telefone": "(11) 99999-9999",
+        "email": "contato@barbeariadoroao.com"
+      },
+      "status": "ativa"
+    }
+  ]
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "barbearias": [
+    {
+      "id": "1",
+      "nome": "Barbearia do João",
+      "descricao": "A melhor barbearia do bairro",
+      "endereco": {
+        "rua": "Rua das Flores",
+        "numero": "123",
+        "bairro": "Centro",
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "cep": "01234-567"
+      },
+      "contato": {
+        "telefone": "(11) 99999-9999",
+        "email": "contato@barbeariadoroao.com"
+      },
+      "status": "ativa"
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint" id="endpoints-barbearia-id">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/barbearias/{id}</span>
+                        </div>
+                        <h4>Buscar barbearia por ID</h4>
+                        <p>Retorna os detalhes completos de uma barbearia específica.</p>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "id": "1",
+    "nome": "Barbearia do João",
+    "descricao": "A melhor barbearia do bairro",
+    "endereco": {
+      "rua": "Rua das Flores",
+      "numero": "123",
+      "bairro": "Centro",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01234-567"
+    },
+    "contato": {
+      "telefone": "(11) 99999-9999",
+      "email": "contato@barbeariadoroao.com"
+    },
+    "horario_funcionamento": {
+      "segunda": {"inicio": "08:00", "fim": "18:00"},
+      "terca": {"inicio": "08:00", "fim": "18:00"}
+    },
+    "barbeiros": [...],
+    "servicos": [...]
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "id": "1",
+    "nome": "Barbearia do João",
+    "descricao": "A melhor barbearia do bairro",
+    "endereco": {
+      "rua": "Rua das Flores",
+      "numero": "123",
+      "bairro": "Centro",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01234-567"
+    },
+    "contato": {
+      "telefone": "(11) 99999-9999",
+      "email": "contato@barbeariadoroao.com"
+    },
+    "horario_funcionamento": {
+      "segunda": {"inicio": "08:00", "fim": "18:00"},
+      "terca": {"inicio": "08:00", "fim": "18:00"}
+    },
+    "barbeiros": [...],
+    "servicos": [...]
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint" id="endpoints-barbearias-create">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/barbearias</span>
+                        </div>
+                        <h4>Criar nova barbearia</h4>
+                        <p>Cria uma nova barbearia no sistema.</p>
+                        
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "nome": "Nova Barbearia",
+  "descricao": "Descrição da barbearia",
+  "endereco": {
+    "rua": "Rua Exemplo",
+    "numero": "456",
+    "bairro": "Bairro",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "12345-678"
+  },
+  "contato": {
+    "telefone": "(11) 88888-8888",
+    "email": "nova@barbearia.com"
+  },
+  "proprietario": {
+    "nome": "João Silva",
+    "cpf": "123.456.789-00",
+    "email": "joao@proprietario.com"
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "nome": "Nova Barbearia",
+  "descricao": "Descrição da barbearia",
+  "endereco": {
+    "rua": "Rua Exemplo",
+    "numero": "456",
+    "bairro": "Bairro",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "12345-678"
+  },
+  "contato": {
+    "telefone": "(11) 88888-8888",
+    "email": "nova@barbearia.com"
+  },
+  "proprietario": {
+    "nome": "João Silva",
+    "cpf": "123.456.789-00",
+    "email": "joao@proprietario.com"
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- APIs de Diretório -->
+                <div class="section" id="endpoints-diretorio-barbearias">
+                    <h2>📂 APIs de Diretório</h2>
+                    
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/diretorio/barbearias</span>
+                        </div>
+                        <h4>Busca pública de barbearias</h4>
+                        <p>API pública para buscar barbearias com filtros avançados.</p>
+                        
+                        <div class="params">
+                            <h4>Query Parameters</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Exemplo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>q</code></td>
+                                        <td>string</td>
+                                        <td>Termo de busca</td>
+                                        <td>João</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>cidade</code></td>
+                                        <td>string</td>
+                                        <td>Filtrar por cidade</td>
+                                        <td>São Paulo</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>estado</code></td>
+                                        <td>string</td>
+                                        <td>Filtrar por estado</td>
+                                        <td>SP</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ordenar</code></td>
+                                        <td>string</td>
+                                        <td>Ordenação (relevancia, distancia, avaliacao)</td>
+                                        <td>relevancia</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia do João",
+        "endereco": {
+          "cidade": "São Paulo",
+          "estado": "SP"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999"
+        }
+      }
+    ],
+    "pagina": 1,
+    "limite": 20,
+    "total": 1
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia do João",
+        "endereco": {
+          "cidade": "São Paulo",
+          "estado": "SP"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999"
+        }
+      }
+    ],
+    "pagina": 1,
+    "limite": 20,
+    "total": 1
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint" id="endpoints-diretorio-cidades">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/diretorio/cidades</span>
+                        </div>
+                        <h4>Listar cidades disponíveis</h4>
+                        <p>Retorna lista de cidades onde há barbearias cadastradas.</p>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "cidades": [
+      {
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "total_barbearias": 2
+      }
+    ]
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "cidades": [
+      {
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "total_barbearias": 2
+      }
+    ]
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint" id="endpoints-diretorio-estatisticas">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/diretorio/estatisticas</span>
+                        </div>
+                        <h4>Estatísticas do diretório</h4>
+                        <p>Retorna estatísticas gerais do sistema.</p>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "estatisticas": {
+      "total_barbearias": 2,
+      "total_barbeiros": 3,
+      "total_servicos": 9,
+      "preco_medio_servicos": 42.22,
+      "cidades_populares": [
+        {
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "total_barbearias": 2
+        }
+      ]
+    }
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "estatisticas": {
+      "total_barbearias": 2,
+      "total_barbeiros": 3,
+      "total_servicos": 9,
+      "preco_medio_servicos": 42.22,
+      "cidades_populares": [
+        {
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "total_barbearias": 2
+        }
+      ]
+    }
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Autenticação Endpoints -->
+                <div class="section" id="endpoints-auth-celular">
+                    <h2>🔐 Autenticação</h2>
+                    
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/login/celular</span>
+                        </div>
+                        <h4>Login por celular</h4>
+                        <p>Autentica cliente usando celular e senha.</p>
+                        
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "celular": "11987654321",
+  "senha": "minhasenha123"
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "celular": "11987654321",
+  "senha": "minhasenha123"
+}</pre>
+                            </div>
+                        </div>
+                        
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "usuario": {
+      "id": "cliente1",
+      "nome": "João Silva",
+      "email": "joao@email.com",
+      "userType": "cliente"
+    }
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "usuario": {
+      "id": "cliente1",
+      "nome": "João Silva",
+      "email": "joao@email.com",
+      "userType": "cliente"
+    }
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="endpoint" id="endpoints-auth-verify">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/verificar-token</span>
+                        </div>
+                        <h4>Verificar token</h4>
+                        <p>Verifica se um token JWT é válido.</p>
+                        
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+  `;
+}
+
+/**
+ * GET /api/docs/postman-collection
+ * Retorna a collection do Postman em formato JSON
+ */
+export const downloadPostmanCollection: RequestHandler = (_req, res) => {
+  const collection = {
+    "info": {
+      "name": "API Barbearia SaaS",
+      "description": "Collection completa da API de gestão de barbearias",
+      "version": "1.0.0",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "key": "token",
+          "value": "{{auth_token}}",
+          "type": "string"
+        }
+      ]
+    },
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev",
+        "type": "string"
+      },
+      {
+        "key": "auth_token",
+        "value": "",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "🏪 Barbearias",
+        "item": [
+          {
+            "name": "Listar Barbearias",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/barbearias?limite=10&pagina=1",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbearias"],
+                "query": [
+                  {"key": "limite", "value": "10"},
+                  {"key": "pagina", "value": "1"},
+                  {"key": "status", "value": "ativa", "disabled": true},
+                  {"key": "cidade", "value": "São Paulo", "disabled": true}
+                ]
+              }
+            }
+          },
+          {
+            "name": "Buscar Barbearia por ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/barbearias/1",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbearias", "1"]
+              }
+            }
+          },
+          {
+            "name": "Criar Barbearia",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"Nova Barbearia\",\n  \"descricao\": \"Descrição da barbearia\",\n  \"endereco\": {\n    \"rua\": \"Rua Exemplo\",\n    \"numero\": \"456\",\n    \"bairro\": \"Bairro\",\n    \"cidade\": \"São Paulo\",\n    \"estado\": \"SP\",\n    \"cep\": \"12345-678\"\n  },\n  \"contato\": {\n    \"telefone\": \"(11) 88888-8888\",\n    \"email\": \"nova@barbearia.com\"\n  },\n  \"proprietario\": {\n    \"nome\": \"João Silva\",\n    \"cpf\": \"123.456.789-00\",\n    \"email\": \"joao@proprietario.com\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/barbearias",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbearias"]
+              }
+            }
+          },
+          {
+            "name": "Atualizar Barbearia",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"Barbearia Atualizada\",\n  \"descricao\": \"Nova descrição\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/barbearias/1",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbearias", "1"]
+              }
+            }
+          },
+          {
+            "name": "Excluir Barbearia",
+            "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/barbearias/1",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbearias", "1"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "💇‍♂️ Barbeiros",
+        "item": [
+          {
+            "name": "Listar Barbeiros",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/barbeiros",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbeiros"]
+              }
+            }
+          },
+          {
+            "name": "Buscar Barbeiro por ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/barbeiros/1",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbeiros", "1"]
+              }
+            }
+          },
+          {
+            "name": "Criar Barbeiro",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"Carlos Silva\",\n  \"email\": \"carlos@barbearia.com\",\n  \"telefone\": \"(11) 99999-9999\",\n  \"cpf\": \"111.222.333-44\",\n  \"tipo\": \"comissionado\",\n  \"porcentagemComissao\": 40,\n  \"barbeariaId\": \"1\",\n  \"especialidades\": [\"Corte masculino\", \"Barba\"]\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/barbeiros",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "barbeiros"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "✂️ Serviços",
+        "item": [
+          {
+            "name": "Listar Serviços",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/servicos",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "servicos"]
+              }
+            }
+          },
+          {
+            "name": "Criar Serviço",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"Corte + Barba\",\n  \"descricao\": \"Pacote completo de corte e barba\",\n  \"preco\": 55.00,\n  \"duracaoMinutos\": 75,\n  \"barbeariaId\": \"1\",\n  \"categoria\": \"combo\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/servicos",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "servicos"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "🎁 Combos",
+        "item": [
+          {
+            "name": "Listar Combos",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/combos",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "combos"]
+              }
+            }
+          },
+          {
+            "name": "Criar Combo",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"Combo Completo\",\n  \"descricao\": \"Corte + barba + sobrancelha\",\n  \"barbeariaId\": \"1\",\n  \"servicoIds\": [\"1\", \"2\", \"4\"],\n  \"tipoDesconto\": \"percentual\",\n  \"valorDesconto\": 15.00\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/combos",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "combos"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "👥 Clientes",
+        "item": [
+          {
+            "name": "Listar Clientes",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/clientes",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "clientes"]
+              }
+            }
+          },
+          {
+            "name": "Criar Cliente",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"nome\": \"João Silva\",\n  \"celular\": \"11987654321\",\n  \"senha\": \"minhasenha123\",\n  \"email\": \"joao@email.com\",\n  \"tipoLogin\": \"celular\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/clientes",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "clientes"]
+              }
+            }
+          },
+          {
+            "name": "Perfil do Cliente (Me)",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{auth_token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/api/clientes/me",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "clientes", "me"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "🔐 Autenticação",
+        "item": [
+          {
+            "name": "Login por Celular",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 200) {",
+                    "    const response = pm.response.json();",
+                    "    if (response.sucesso && response.dados.token) {",
+                    "        pm.collectionVariables.set('auth_token', response.dados.token);",
+                    "        console.log('Token salvo automaticamente');",
+                    "    }",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"celular\": \"11987654321\",\n  \"senha\": \"minhasenha123\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/login/celular",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "login", "celular"]
+              }
+            }
+          },
+          {
+            "name": "Login Google",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"googleToken\": \"google_oauth_token_aqui\",\n  \"googleId\": \"google_user_id_123\",\n  \"email\": \"usuario@gmail.com\",\n  \"nome\": \"Nome do Usuario\",\n  \"foto\": \"https://lh3.googleusercontent.com/...\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/login/google",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "login", "google"]
+              }
+            }
+          },
+          {
+            "name": "Login Barbearia",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"admin@barbeariadoroao.com\",\n  \"senha\": \"senha123\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/login/barbearia",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "login", "barbearia"]
+              }
+            }
+          },
+          {
+            "name": "Login Barbeiro",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"carlos@barbeariadoroao.com\",\n  \"senha\": \"senha123\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/login/barbeiro",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "login", "barbeiro"]
+              }
+            }
+          },
+          {
+            "name": "Verificar Token",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"token\": \"{{auth_token}}\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/verificar-token",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "verificar-token"]
+              }
+            }
+          },
+          {
+            "name": "Refresh Token",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"refreshToken\": \"rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/auth/refresh-token",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "auth", "refresh-token"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "📂 APIs de Diretório",
+        "item": [
+          {
+            "name": "Busca Pública de Barbearias",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/barbearias?q=João&cidade=São Paulo&ordenar=relevancia&limite=10",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "barbearias"],
+                "query": [
+                  {"key": "q", "value": "João"},
+                  {"key": "cidade", "value": "São Paulo"},
+                  {"key": "estado", "value": "SP", "disabled": true},
+                  {"key": "ordenar", "value": "relevancia"},
+                  {"key": "limite", "value": "10"},
+                  {"key": "pagina", "value": "1", "disabled": true}
+                ]
+              }
+            }
+          },
+          {
+            "name": "Listar Cidades",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/cidades",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "cidades"]
+              }
+            }
+          },
+          {
+            "name": "Estatísticas do Diretório",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/estatisticas",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "estatisticas"]
+              }
+            }
+          },
+          {
+            "name": "Sugestões de Busca",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/sugestoes?q=bar",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "sugestoes"],
+                "query": [
+                  {"key": "q", "value": "bar"}
+                ]
+              }
+            }
+          },
+          {
+            "name": "Detalhes da Barbearia",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/barbearia/1/detalhes",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "barbearia", "1", "detalhes"]
+              }
+            }
+          },
+          {
+            "name": "Promoções Ativas",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/promocoes?cidade=São Paulo",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "promocoes"],
+                "query": [
+                  {"key": "cidade", "value": "São Paulo"},
+                  {"key": "estado", "value": "SP", "disabled": true}
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', 'attachment; filename="Barbearia-API-Collection.json"');
+  res.json(collection);
 };
