@@ -395,19 +395,41 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .method {
             display: inline-flex;
             align-items: center;
-            padding: 8px 16px;
-            border-radius: 24px;
-            font-weight: 600;
-            font-size: 0.875rem;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-xl);
+            font-weight: 700;
+            font-size: 0.8125rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            min-width: 70px;
+            letter-spacing: 0.75px;
+            min-width: 75px;
             justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
         }
-        .get { background: var(--success); color: white; }
-        .post { background: var(--warning); color: white; }
-        .put { background: var(--info); color: white; }
-        .delete { background: var(--danger); color: white; }
+        .method:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .get {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            border: 1px solid #10b981;
+        }
+        .post {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+            border: 1px solid #f59e0b;
+        }
+        .put {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+            color: white;
+            border: 1px solid #3b82f6;
+        }
+        .delete {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            border: 1px solid #ef4444;
+        }
 
         .url {
             font-family: 'JetBrains Mono', 'Courier New', monospace;
@@ -1341,7 +1363,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/diretorio/estatisticas</span>
                         </div>
                         <h4>Estatísticas do diretório</h4>
-                        <p>Retorna estatísticas gerais do sistema.</p>
+                        <p>Retorna estat��sticas gerais do sistema.</p>
                         
                         <div class="response">
                             <h4>Exemplo de Resposta</h4>
