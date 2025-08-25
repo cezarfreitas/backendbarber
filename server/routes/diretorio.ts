@@ -118,7 +118,7 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
     sql += ` LIMIT ? OFFSET ?`;
     params.push(parseInt(limite as string), offset);
 
-    const [rows] = await connection.execute<Barbearia[]>(sql, params);
+    const [rows] = await getPool().execute<Barbearia[]>(sql, params);
 
     // Parse JSON fields
     const barbearias = rows.map(barbearia => ({
@@ -164,7 +164,7 @@ export async function listarCidades(req: Request, res: Response) {
       ORDER BY total_barbearias DESC, cidade ASC
     `;
 
-    const [rows] = await connection.execute<Cidade[]>(sql);
+    const [rows] = await getPool().execute<Cidade[]>(sql);
 
     const cidades = rows.map(row => ({
       cidade: row.cidade?.toString().replace(/"/g, ''),
@@ -193,22 +193,22 @@ export async function listarCidades(req: Request, res: Response) {
 export async function obterEstatisticas(req: Request, res: Response) {
   try {
     // Total de barbearias ativas
-    const [totalBarbearias] = await connection.execute<RowDataPacket[]>(
+    const [totalBarbearias] = await getPool().execute<RowDataPacket[]>(
       'SELECT COUNT(*) as total FROM barbearias WHERE status = "ativa"'
     );
 
     // Total de barbeiros
-    const [totalBarbeiros] = await connection.execute<RowDataPacket[]>(
+    const [totalBarbeiros] = await getPool().execute<RowDataPacket[]>(
       'SELECT COUNT(*) as total FROM barbeiros'
     );
 
     // Total de serviços
-    const [totalServicos] = await connection.execute<RowDataPacket[]>(
+    const [totalServicos] = await getPool().execute<RowDataPacket[]>(
       'SELECT COUNT(*) as total FROM servicos WHERE ativo = 1'
     );
 
     // Cidades com mais barbearias
-    const [cidadesTop] = await connection.execute<RowDataPacket[]>(`
+    const [cidadesTop] = await getPool().execute<RowDataPacket[]>(`
       SELECT 
         JSON_EXTRACT(endereco, '$.cidade') as cidade,
         JSON_EXTRACT(endereco, '$.estado') as estado,
@@ -222,7 +222,7 @@ export async function obterEstatisticas(req: Request, res: Response) {
     `);
 
     // Preço médio dos serviços
-    const [precoMedio] = await connection.execute<RowDataPacket[]>(
+    const [precoMedio] = await getPool().execute<RowDataPacket[]>(
       'SELECT AVG(preco) as preco_medio FROM servicos WHERE ativo = 1'
     );
 
@@ -268,7 +268,7 @@ export async function obterSugestoes(req: Request, res: Response) {
     }
 
     // Sugestões de nomes de barbearias
-    const [barbearias] = await connection.execute<RowDataPacket[]>(
+    const [barbearias] = await getPool().execute<RowDataPacket[]>(
       `SELECT DISTINCT nome 
        FROM barbearias 
        WHERE status = 'ativa' AND nome LIKE ? 
@@ -277,7 +277,7 @@ export async function obterSugestoes(req: Request, res: Response) {
     );
 
     // Sugestões de cidades
-    const [cidades] = await connection.execute<RowDataPacket[]>(
+    const [cidades] = await getPool().execute<RowDataPacket[]>(
       `SELECT DISTINCT JSON_EXTRACT(endereco, '$.cidade') as cidade
        FROM barbearias 
        WHERE status = 'ativa' 
@@ -316,7 +316,7 @@ export async function obterDetalhesBarbearia(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const [rows] = await connection.execute<Barbearia[]>(
+    const [rows] = await getPool().execute<Barbearia[]>(
       `SELECT 
         b.id,
         b.nome,
@@ -344,13 +344,13 @@ export async function obterDetalhesBarbearia(req: Request, res: Response) {
     const barbearia = rows[0];
 
     // Buscar barbeiros da barbearia
-    const [barbeiros] = await connection.execute<RowDataPacket[]>(
+    const [barbeiros] = await getPool().execute<RowDataPacket[]>(
       `SELECT nome, especialidades FROM barbeiros WHERE barbeariaId = ?`,
       [id]
     );
 
     // Buscar serviços da barbearia
-    const [servicos] = await connection.execute<RowDataPacket[]>(
+    const [servicos] = await getPool().execute<RowDataPacket[]>(
       `SELECT nome, preco, duracaoMinutos, categoria FROM servicos WHERE barbeariaId = ? AND ativo = 1`,
       [id]
     );
@@ -422,7 +422,7 @@ export async function listarPromocoes(req: Request, res: Response) {
 
     sql += ` ORDER BY c.valorDesconto DESC LIMIT 20`;
 
-    const [rows] = await connection.execute<RowDataPacket[]>(sql, params);
+    const [rows] = await getPool().execute<RowDataPacket[]>(sql, params);
 
     const promocoes = rows.map(promo => ({
       ...promo,
