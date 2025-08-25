@@ -63,34 +63,14 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             height: 100vh;
             overflow-y: auto;
             z-index: 1000;
-            transform: translateX(-320px);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
             border-right: 1px solid var(--gray-700);
         }
-        .sidebar.active { transform: translateX(0); }
 
-        /* Toggle Button */
+        /* Toggle Button - Hidden */
         .sidebar-toggle {
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            z-index: 1001;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-md);
+            display: none;
         }
-        .sidebar-toggle:hover { 
-            background: var(--primary-dark); 
-            transform: scale(1.05);
-        }
-        .sidebar-toggle.active { left: 344px; }
 
         /* Sidebar Content */
         .sidebar-header {
@@ -552,7 +532,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="combos-tree">
                             <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
-                            <a href="#endpoints-combo-id" class="nav-sub-item">�� Buscar por ID</a>
+                            <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
                             <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
                             <a href="#endpoints-combos-delete" class="nav-sub-item">🗑️ Excluir Combo</a>
@@ -582,7 +562,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-auth-celular" class="nav-sub-item">📱 Login por Celular</a>
                             <a href="#endpoints-auth-google" class="nav-sub-item">🔗 Login Google</a>
                             <a href="#endpoints-auth-barbearia" class="nav-sub-item">🏪 Login Barbearia</a>
-                            <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
+                            <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍���️ Login Barbeiro</a>
                             <a href="#endpoints-auth-verify" class="nav-sub-item">✅ Verificar Token</a>
                             <a href="#endpoints-auth-refresh" class="nav-sub-item">🔄 Refresh Token</a>
                         </div>
@@ -1336,7 +1316,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/auth/verificar-token</span>
                         </div>
                         <h4>Verificar token</h4>
-                        <p>Verifica se um token JWT é válido.</p>
+                        <p>Verifica se um token JWT é v��lido.</p>
                         
                         <div class="params">
                             <h4>Body (JSON)</h4>
