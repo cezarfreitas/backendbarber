@@ -33,6 +33,8 @@ export default defineConfig({
         "express",
         "cors",
         "mysql2",
+        "jsonwebtoken",
+        "bcryptjs",
       ],
       output: {
         format: "es",
