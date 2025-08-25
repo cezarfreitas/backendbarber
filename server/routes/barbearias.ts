@@ -38,7 +38,9 @@ const mapBarbeariaFromDB = (row: any): Barbearia => {
       cpf: row.proprietario_cpf,
       email: row.proprietario_email
     },
-    horarioFuncionamento: row.horario_funcionamento ? JSON.parse(row.horario_funcionamento) : {},
+    horarioFuncionamento: typeof row.horario_funcionamento === 'string'
+      ? JSON.parse(row.horario_funcionamento)
+      : row.horario_funcionamento || {},
     status: row.status,
     dataCadastro: row.data_cadastro,
     dataAtualizacao: row.data_atualizacao
