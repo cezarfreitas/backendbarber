@@ -57,7 +57,7 @@ export interface Barbeiro {
   cpf: string;
   tipo: 'comissionado' | 'funcionario' | 'freelancer';
   porcentagemComissao?: number; // Apenas para comissionados (0-100)
-  salarioFixo?: number; // Apenas para funcion��rios
+  salarioFixo?: number; // Apenas para funcionários
   valorHora?: number; // Apenas para freelancers
   barbeariaId: string;
   especialidades?: string[]; // Ex: ["corte masculino", "barba", "coloração"]
@@ -241,6 +241,26 @@ export interface AtualizarServicoRequest {
  */
 export interface ListarBarbeariasResponse {
   barbearias: Barbearia[];
+  total: number;
+  pagina: number;
+  totalPaginas: number;
+}
+
+/**
+ * Resposta para listar barbeiros
+ */
+export interface ListarBarbeirosResponse {
+  barbeiros: Barbeiro[];
+  total: number;
+  pagina: number;
+  totalPaginas: number;
+}
+
+/**
+ * Resposta para listar serviços
+ */
+export interface ListarServicosResponse {
+  servicos: Servico[];
   total: number;
   pagina: number;
   totalPaginas: number;
