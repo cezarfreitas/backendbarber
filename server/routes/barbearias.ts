@@ -284,6 +284,9 @@ export const listarBarbearias: RequestHandler = (req, res) => {
 export const buscarBarbearia: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
+    const incluirBarbeiros = req.query.incluirBarbeiros !== 'false'; // Incluir por padrão
+    const incluirServicos = req.query.incluirServicos !== 'false'; // Incluir por padrão
+
     const barbearia = barbearias.find(b => b.id === id);
 
     if (!barbearia) {
@@ -293,9 +296,20 @@ export const buscarBarbearia: RequestHandler = (req, res) => {
       } as ApiResponse);
     }
 
+    // Criar cópia da barbearia com relacionamentos
+    const barbeariaCompleta: Barbearia = { ...barbearia };
+
+    if (incluirBarbeiros) {
+      barbeariaCompleta.barbeiros = buscarBarbeirosPorBarbearia(barbearia.id);
+    }
+
+    if (incluirServicos) {
+      barbeariaCompleta.servicos = buscarServicosPorBarbearia(barbearia.id);
+    }
+
     res.json({
       sucesso: true,
-      dados: barbearia
+      dados: barbeariaCompleta
     } as ApiResponse<Barbearia>);
   } catch (error) {
     console.error("Erro ao buscar barbearia:", error);
