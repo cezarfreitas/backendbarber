@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connection } from "../config/database";
+import { getPool } from "../config/database";
 import { RowDataPacket } from "mysql2";
 
 // Interface para Barbearia
