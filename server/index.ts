@@ -113,6 +113,8 @@ export function createServer() {
   // Rotas de autenticação (públicas)
   app.post("/api/auth/login/celular", loginCelular);
   app.post("/api/auth/login/google", loginGoogle);
+  app.post("/api/auth/login/barbearia", loginBarbearia);
+  app.post("/api/auth/login/barbeiro", loginBarbeiro);
   app.post("/api/auth/verificar-token", verificarTokenAuth);
   app.post("/api/auth/refresh-token", refreshTokenAuth);
 
@@ -124,7 +126,7 @@ export function createServer() {
   app.put("/api/clientes/:id", verificarAutenticacao, atualizarCliente); // TODO: Verificar se é o próprio cliente ou admin
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente); // TODO: Verificar se é o próprio cliente ou admin
 
-  // Rotas de autenticaç��o (privadas - requer login)
+  // Rotas de autenticação (privadas - requer login)
   app.post("/api/auth/alterar-senha", verificarAutenticacao, alterarSenha);
 
   return app;
