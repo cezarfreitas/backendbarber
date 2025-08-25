@@ -429,6 +429,22 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <a href="#endpoints-auth" class="nav-sub-item">🔑 Alterar Senha</a>
                     </div>
                 </div>
+
+                <!-- APIs de Diretório -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="diretorio-tree">
+                        📂 APIs de Diretório
+                    </div>
+                    <div class="nav-sub-items" id="diretorio-tree">
+                        <a href="#endpoints-diretorio" class="nav-sub-item">🔍 Busca Pública</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">🏙️ Buscar por Cidade</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">📍 Buscar por Localização</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">⭐ Buscar por Avaliação</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">🎯 Filtros Avançados</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">📊 Estatísticas</a>
+                        <a href="#endpoints-diretorio" class="nav-sub-item">🗺️ Cidades Disponíveis</a>
+                    </div>
+                </div>
             </div>
 
             <div class="nav-section">
@@ -1264,7 +1280,7 @@ Content-Type: application/json
   }
 }</pre>
 
-            <h3>💇���♂️ Barbeiros</h3>
+            <h3>💇‍♂️ Barbeiros</h3>
             <h4>Listar barbeiros comissionados de uma barbearia</h4>
             <pre>GET /api/barbeiros?barbeariaId=1&tipo=comissionado</pre>
 
