@@ -118,8 +118,13 @@ const gerarId = (): string => {
  */
 export const listarBarbearias: RequestHandler = async (req, res) => {
   try {
-    const pagina = parseInt(req.query.pagina as string) || 1;
-    const limite = parseInt(req.query.limite as string) || 10;
+    // Validar e garantir que pagina e limite sejam números válidos
+    const paginaParam = req.query.pagina as string;
+    const limiteParam = req.query.limite as string;
+
+    const pagina = Math.max(1, parseInt(paginaParam) || 1);
+    const limite = Math.max(1, Math.min(50, parseInt(limiteParam) || 10)); // Máximo de 50 por página
+
     const status = req.query.status as string;
     const cidade = req.query.cidade as string;
     const incluirBarbeiros = req.query.incluirBarbeiros === 'true';
