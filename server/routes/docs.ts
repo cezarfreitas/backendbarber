@@ -14,90 +14,240 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     <title>API Barbearia SaaS - Documentação</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6; 
-            color: #333; 
+            line-height: 1.6;
+            color: #333;
             background: #f8f9fa;
+            overflow-x: hidden;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { 
-            background: linear-gradient(135deg, #2c3e50, #34495e); 
-            color: white; 
-            padding: 40px 0; 
+
+        /* Layout Principal */
+        .layout { display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transform: translateX(-280px);
+            transition: transform 0.3s ease;
+        }
+        .sidebar.active { transform: translateX(0); }
+
+        /* Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .sidebar-toggle:hover { background: #34495e; }
+        .sidebar-toggle.active { left: 300px; }
+
+        /* Sidebar Content */
+        .sidebar-header {
+            padding: 30px 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        .sidebar-header p { opacity: 0.8; font-size: 0.9rem; }
+
+        .sidebar-nav { padding: 20px 0; }
+        .nav-section { margin-bottom: 25px; }
+        .nav-section h3 {
+            color: #ecf0f1;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding: 0 20px;
+        }
+        .nav-item {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 8px 20px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #3498db;
+        }
+        .nav-item.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding-top: 80px;
+        }
+        .main-content.shifted { margin-left: 280px; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .header p { font-size: 1.2rem; opacity: 0.9; }
-        .section { 
-            background: white; 
-            margin-bottom: 20px; 
-            padding: 25px; 
-            border-radius: 8px; 
+        .hero h1 { font-size: 3rem; margin-bottom: 15px; }
+        .hero p { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            font-size: 1.8rem;
+        }
+        .section h3 {
+            color: #34495e;
+            margin: 30px 0 15px 0;
+            font-size: 1.3rem;
+        }
+
+        /* Endpoints */
+        .endpoint {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            transition: transform 0.2s ease;
+        }
+        .endpoint:hover { transform: translateY(-2px); }
+
+        .method {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .get { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; }
+        .post { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .put { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        .delete { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+
+        .url {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .params, .response { margin-top: 20px; }
+        .params h4, .response h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        pre {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #34495e;
+            margin: 10px 0;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .section h2 { 
-            color: #2c3e50; 
-            margin-bottom: 20px; 
-            padding-bottom: 10px; 
-            border-bottom: 2px solid #ecf0f1;
+        .table th, .table td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: left;
         }
-        .endpoint { 
-            margin-bottom: 30px; 
-            padding: 20px; 
-            background: #f8f9fa; 
-            border-radius: 6px; 
-            border-left: 4px solid #3498db;
+        .table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
         }
-        .method { 
-            display: inline-block; 
-            padding: 4px 12px; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            font-size: 0.8rem; 
-            margin-right: 10px;
-        }
-        .get { background: #27ae60; color: white; }
-        .post { background: #f39c12; color: white; }
-        .put { background: #3498db; color: white; }
-        .delete { background: #e74c3c; color: white; }
-        .url { font-family: 'Courier New', monospace; font-weight: bold; }
-        .params, .response { margin-top: 15px; }
-        .params h4, .response h4 { margin-bottom: 10px; color: #2c3e50; }
-        pre { 
-            background: #2c3e50; 
-            color: #ecf0f1; 
-            padding: 15px; 
-            border-radius: 4px; 
-            overflow-x: auto; 
+        .table tr:nth-child(even) { background: #f8f9fa; }
+        .table code {
+            background: #e9ecef;
+            padding: 3px 6px;
+            border-radius: 4px;
             font-family: 'Courier New', monospace;
+            color: #495057;
         }
-        .example { margin-top: 10px; }
-        .table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .table th, .table td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: left; 
+
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
-        .table th { background: #f8f9fa; font-weight: bold; }
-        .table code { 
-            background: #f8f9fa; 
-            padding: 2px 4px; 
-            border-radius: 3px; 
-            font-family: 'Courier New', monospace;
+        .status-success { background: #d4edda; color: #155724; }
+        .status-warning { background: #fff3cd; color: #856404; }
+        .status-danger { background: #f8d7da; color: #721c24; }
+        .status-info { background: #d1ecf1; color: #0c5460; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; transform: translateX(-100%); }
+            .sidebar-toggle.active { left: 20px; }
+            .main-content.shifted { margin-left: 0; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .container { padding: 15px; }
         }
-        .toc { 
-            background: #ecf0f1; 
-            padding: 20px; 
-            border-radius: 6px; 
-            margin-bottom: 20px;
+
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Custom scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
         }
-        .toc h3 { margin-bottom: 15px; color: #2c3e50; }
-        .toc ul { list-style: none; }
-        .toc li { margin-bottom: 8px; }
-        .toc a { color: #3498db; text-decoration: none; }
-        .toc a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
