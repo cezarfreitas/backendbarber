@@ -429,6 +429,121 @@ export const loginGoogle: RequestHandler = async (req, res) => {
 };
 
 /**
+ * POST /api/auth/login/barbeiro
+ * Login para barbeiros com email + senha
+ */
+export const loginBarbeiro: RequestHandler = async (req, res) => {
+  try {
+    const { email, senha }: LoginBarbeiroRequest = req.body;
+
+    // Validações básicas
+    if (!email || !senha) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Email e senha são obrigatórios"
+      } as LoginBarbeiroResponse);
+    }
+
+    if (!validarEmail(email)) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Formato de email inválido"
+      } as LoginBarbeiroResponse);
+    }
+
+    // Buscar barbeiro no banco
+    const barbeiro = await executeQuerySingle(`
+      SELECT id, nome, email, senha_hash, status, barbearia_id
+      FROM barbeiros
+      WHERE email = ?
+    `, [email]);
+
+    if (!barbeiro) {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Email não encontrado"
+      } as LoginBarbeiroResponse);
+    }
+
+    // Verificar status do barbeiro
+    if (barbeiro.status !== 'ativo') {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Barbeiro inativo ou afastado"
+      } as LoginBarbeiroResponse);
+    }
+
+    // Verificar senha
+    if (!barbeiro.senha_hash || !await verificarSenha(senha, barbeiro.senha_hash)) {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Senha incorreta"
+      } as LoginBarbeiroResponse);
+    }
+
+    // Gerar tokens
+    const token = gerarToken({
+      userId: barbeiro.id,
+      userType: 'barbeiro',
+      email: barbeiro.email,
+      nome: barbeiro.nome,
+      tipoLogin: 'email',
+      barbeariaId: barbeiro.barbearia_id
+    });
+
+    const refreshToken = gerarRefreshToken(barbeiro.id);
+
+    // Atualizar último login
+    await executeQuery(`
+      UPDATE barbeiros SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?
+    `, [barbeiro.id]);
+
+    // Buscar dados completos do barbeiro
+    const barbeiroCompleto = await executeQuerySingle(`
+      SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao,
+             salario_fixo, valor_hora, barbearia_id, especialidades,
+             horario_trabalho, status, data_cadastro, data_atualizacao, ultimo_login
+      FROM barbeiros
+      WHERE id = ?
+    `, [barbeiro.id]);
+
+    const response: LoginBarbeiroResponse = {
+      sucesso: true,
+      token,
+      refreshToken,
+      barbeiro: barbeiroCompleto ? {
+        id: barbeiroCompleto.id,
+        nome: barbeiroCompleto.nome,
+        email: barbeiroCompleto.email,
+        telefone: barbeiroCompleto.telefone,
+        cpf: barbeiroCompleto.cpf,
+        tipo: barbeiroCompleto.tipo,
+        porcentagemComissao: barbeiroCompleto.porcentagem_comissao,
+        salarioFixo: barbeiroCompleto.salario_fixo,
+        valorHora: barbeiroCompleto.valor_hora,
+        barbeariaId: barbeiroCompleto.barbearia_id,
+        especialidades: barbeiroCompleto.especialidades ? JSON.parse(barbeiroCompleto.especialidades) : [],
+        horarioTrabalho: barbeiroCompleto.horario_trabalho ? JSON.parse(barbeiroCompleto.horario_trabalho) : {},
+        status: barbeiroCompleto.status,
+        dataCadastro: barbeiroCompleto.data_cadastro,
+        dataAtualizacao: barbeiroCompleto.data_atualizacao
+      } : undefined,
+      expiresIn: 7 * 24 * 60 * 60,
+      mensagem: "Login realizado com sucesso"
+    };
+
+    res.json(response);
+
+  } catch (error) {
+    console.error("Erro no login de barbeiro:", error);
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro interno do servidor"
+    } as LoginBarbeiroResponse);
+  }
+};
+
+/**
  * POST /api/auth/verificar-token
  * Verificar se o token JWT é válido
  */
