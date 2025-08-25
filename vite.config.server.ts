@@ -31,13 +31,13 @@ export default defineConfig({
         "child_process",
         // External dependencies that should not be bundled
         "express",
-        "cors",
         "mysql2",
         "jsonwebtoken",
         "bcryptjs",
         "uuid",
         "dotenv",
         "zod",
+        // Note: Removed "cors" to bundle it and avoid runtime issues
       ],
       output: {
         format: "es",
