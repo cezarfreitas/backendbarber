@@ -498,11 +498,13 @@ export interface LoginResponse {
  * Payload do JWT Token
  */
 export interface JWTPayload {
-  clienteId: string;
-  celular: string;
+  userId: string; // ID do usuário (cliente, barbearia ou barbeiro)
+  userType: 'cliente' | 'barbearia' | 'barbeiro'; // Tipo do usuário
   email?: string;
+  celular?: string; // Apenas para clientes
   nome: string;
-  tipoLogin: 'celular' | 'google';
+  tipoLogin?: 'celular' | 'google' | 'email'; // Como foi feito o login
+  barbeariaId?: string; // Para barbeiros, ID da barbearia onde trabalham
   iat: number; // Issued at
   exp: number; // Expires at
 }
