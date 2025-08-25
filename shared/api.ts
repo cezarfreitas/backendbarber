@@ -400,6 +400,38 @@ export interface ResetSenhaRequest {
 }
 
 /**
+ * DTO para login de barbearia
+ */
+export interface LoginBarbeariaRequest {
+  email: string;
+  senha: string;
+}
+
+/**
+ * DTO para login de barbeiro
+ */
+export interface LoginBarbeiroRequest {
+  email: string;
+  senha: string;
+}
+
+/**
+ * DTO para alterar senha de barbearia
+ */
+export interface AlterarSenhaBarbeariaRequest {
+  senhaAtual: string;
+  novaSenha: string;
+}
+
+/**
+ * DTO para alterar senha de barbeiro
+ */
+export interface AlterarSenhaBarbeiroRequest {
+  senhaAtual: string;
+  novaSenha: string;
+}
+
+/**
  * Resposta para listar barbearias
  */
 export interface ListarBarbeariasResponse {
