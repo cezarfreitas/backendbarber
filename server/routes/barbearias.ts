@@ -203,35 +203,44 @@ export const listarBarbearias: RequestHandler = async (req, res) => {
  * GET /api/barbearias/:id
  * Buscar barbearia por ID
  */
-export const buscarBarbearia: RequestHandler = (req, res) => {
+export const buscarBarbearia: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const incluirBarbeiros = req.query.incluirBarbeiros !== 'false'; // Incluir por padrão
     const incluirServicos = req.query.incluirServicos !== 'false'; // Incluir por padrão
 
-    const barbearia = barbearias.find(b => b.id === id);
+    const selectQuery = `
+      SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+             endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+             contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+             proprietario_email, horario_funcionamento, status, data_cadastro, data_atualizacao
+      FROM barbearias
+      WHERE id = ?
+    `;
 
-    if (!barbearia) {
+    const row = await executeQuerySingle(selectQuery, [id]);
+
+    if (!row) {
       return res.status(404).json({
         sucesso: false,
         erro: "Barbearia não encontrada"
       } as ApiResponse);
     }
 
-    // Criar cópia da barbearia com relacionamentos
-    const barbeariaCompleta: Barbearia = { ...barbearia };
+    // Criar barbearia completa com relacionamentos
+    const barbearia = mapBarbeariaFromDB(row);
 
     if (incluirBarbeiros) {
-      barbeariaCompleta.barbeiros = buscarBarbeirosPorBarbearia(barbearia.id);
+      barbearia.barbeiros = await buscarBarbeirosPorBarbearia(barbearia.id);
     }
 
     if (incluirServicos) {
-      barbeariaCompleta.servicos = buscarServicosPorBarbearia(barbearia.id);
+      barbearia.servicos = await buscarServicosPorBarbearia(barbearia.id);
     }
 
     res.json({
       sucesso: true,
-      dados: barbeariaCompleta
+      dados: barbearia
     } as ApiResponse<Barbearia>);
   } catch (error) {
     console.error("Erro ao buscar barbearia:", error);
