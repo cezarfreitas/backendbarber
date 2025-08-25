@@ -96,6 +96,11 @@ export function createServer() {
     });
   });
 
+  // Simple status endpoint (no dependencies)
+  app.get("/api/status", (_req, res) => {
+    res.status(200).send("OK");
+  });
+
   app.get("/api/demo", handleDemo);
 
   // Rotas das barbearias
