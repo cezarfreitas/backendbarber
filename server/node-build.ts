@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
     message: "🚀 API Barbearia SaaS",
     status: "online",
     version: "1.0.0",
-    docs: "/api/docs"
+    docs: "/api/docs",
   });
 });
 
