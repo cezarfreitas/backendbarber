@@ -160,6 +160,132 @@ export const loginCelular: RequestHandler = async (req, res) => {
 };
 
 /**
+ * POST /api/auth/login/barbearia
+ * Login para barbearias com email + senha
+ */
+export const loginBarbearia: RequestHandler = async (req, res) => {
+  try {
+    const { email, senha }: LoginBarbeariaRequest = req.body;
+
+    // Validações básicas
+    if (!email || !senha) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Email e senha são obrigatórios"
+      } as LoginBarbeariaResponse);
+    }
+
+    if (!validarEmail(email)) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Formato de email inválido"
+      } as LoginBarbeariaResponse);
+    }
+
+    // Buscar barbearia no banco
+    const barbearia = await executeQuerySingle(`
+      SELECT id, nome, contato_email, senha_hash, status
+      FROM barbearias
+      WHERE contato_email = ?
+    `, [email]);
+
+    if (!barbearia) {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Email não encontrado"
+      } as LoginBarbeariaResponse);
+    }
+
+    // Verificar status da barbearia
+    if (barbearia.status !== 'ativa') {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Barbearia inativa ou pendente"
+      } as LoginBarbeariaResponse);
+    }
+
+    // Verificar senha
+    if (!barbearia.senha_hash || !await verificarSenha(senha, barbearia.senha_hash)) {
+      return res.status(401).json({
+        sucesso: false,
+        erro: "Senha incorreta"
+      } as LoginBarbeariaResponse);
+    }
+
+    // Gerar tokens
+    const token = gerarToken({
+      userId: barbearia.id,
+      userType: 'barbearia',
+      email: barbearia.contato_email,
+      nome: barbearia.nome,
+      tipoLogin: 'email'
+    });
+
+    const refreshToken = gerarRefreshToken(barbearia.id);
+
+    // Atualizar último login
+    await executeQuery(`
+      UPDATE barbearias SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?
+    `, [barbearia.id]);
+
+    // Buscar dados completos da barbearia
+    const barbeariaCompleta = await executeQuerySingle(`
+      SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+             endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+             contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+             proprietario_email, horario_funcionamento, status, data_cadastro,
+             data_atualizacao, ultimo_login
+      FROM barbearias
+      WHERE id = ?
+    `, [barbearia.id]);
+
+    const response: LoginBarbeariaResponse = {
+      sucesso: true,
+      token,
+      refreshToken,
+      barbearia: barbeariaCompleta ? {
+        id: barbeariaCompleta.id,
+        nome: barbeariaCompleta.nome,
+        descricao: barbeariaCompleta.descricao,
+        endereco: {
+          rua: barbeariaCompleta.endereco_rua,
+          numero: barbeariaCompleta.endereco_numero,
+          bairro: barbeariaCompleta.endereco_bairro,
+          cidade: barbeariaCompleta.endereco_cidade,
+          estado: barbeariaCompleta.endereco_estado,
+          cep: barbeariaCompleta.endereco_cep
+        },
+        contato: {
+          telefone: barbeariaCompleta.contato_telefone,
+          email: barbeariaCompleta.contato_email,
+          whatsapp: barbeariaCompleta.contato_whatsapp
+        },
+        proprietario: {
+          nome: barbeariaCompleta.proprietario_nome,
+          cpf: barbeariaCompleta.proprietario_cpf,
+          email: barbeariaCompleta.proprietario_email
+        },
+        horarioFuncionamento: barbeariaCompleta.horario_funcionamento ? JSON.parse(barbeariaCompleta.horario_funcionamento) : {},
+        status: barbeariaCompleta.status,
+        dataCadastro: barbeariaCompleta.data_cadastro,
+        dataAtualizacao: barbeariaCompleta.data_atualizacao
+      } : undefined,
+      expiresIn: 7 * 24 * 60 * 60,
+      mensagem: "Login realizado com sucesso"
+    };
+
+    res.json(response);
+
+  } catch (error) {
+    console.error("Erro no login de barbearia:", error);
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro interno do servidor"
+    } as LoginBarbeariaResponse);
+  }
+};
+
+/**
  * POST /api/auth/login/google
  * Login/Cadastro com Google OAuth
  */
