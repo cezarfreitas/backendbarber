@@ -3,6 +3,7 @@
 ## EasyPanel Deploy
 
 ### 1. Environment Variables
+
 Configure estas variáveis no EasyPanel:
 
 ```
@@ -20,17 +21,20 @@ JWT_REFRESH_EXPIRES_IN=7d
 ```
 
 ### 2. Deploy
+
 - Push código para repositório
 - Deploy no EasyPanel
 - Aguarde 5-10 minutos
 
 ### 3. Teste
+
 - https://seu-dominio.com/health
 - https://seu-dominio.com/api/ping
 
 ## Outras Plataformas
 
 Este Dockerfile funciona em:
+
 - EasyPanel
 - Railway
 - Fly.io

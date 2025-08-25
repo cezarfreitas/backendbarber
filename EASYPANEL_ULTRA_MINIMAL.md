@@ -13,6 +13,7 @@ Este é a abordagem mais simples possível para resolver o problema do serviço 
 ### 1. Configurar no EasyPanel:
 
 **Build Configuration:**
+
 - Build Command: `pnpm install && npx vite build --config vite.config.simple.ts`
 - Build Directory: `/`
 - Port: `80`

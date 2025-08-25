@@ -9,6 +9,7 @@
 ## ✅ Opções corrigidas:
 
 ### 1. **Dockerfile.corrected** (com health check)
+
 ```dockerfile
 # Exposição na porta 80
 EXPOSE 80
@@ -22,6 +23,7 @@ CMD ["node", "dist/server/production.mjs"]
 ```
 
 ### 2. **Dockerfile.safe** (SEM health check - RECOMENDADO)
+
 ```dockerfile
 # Exposição na porta 80
 EXPOSE 80
@@ -32,6 +34,7 @@ CMD ["node", "dist/server/production.mjs"]
 ```
 
 ### 3. **Dockerfile.ultra-minimal** (mais simples)
+
 ```dockerfile
 # Build otimizado + servidor básico
 RUN pnpm run build:simple
@@ -43,6 +46,7 @@ CMD ["node", "dist/server/simple.mjs"]
 **RECOMENDADO: Use `Dockerfile.safe`**
 
 **Configuração:**
+
 - Dockerfile: `Dockerfile.safe`
 - Port: `80`
 - Environment Variables:

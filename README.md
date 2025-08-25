@@ -5,6 +5,7 @@ API REST para sistema de gerenciamento de barbearias.
 ## 🚀 Quick Start
 
 ### Desenvolvimento
+
 ```bash
 # 1. Instalar dependências
 pnpm install
@@ -17,6 +18,7 @@ http://localhost:8080
 ```
 
 ### Deploy
+
 ```bash
 # 1. Configure variáveis (veja ENV_TEMPLATE.txt)
 # 2. Deploy no EasyPanel/Railway/Fly.io
@@ -33,6 +35,7 @@ http://localhost:8080
 ## 🗄️ Database
 
 MySQL configurado e funcionando:
+
 - Host: server.idenegociosdigitais.com.br
 - Database: barbearia-db
 
