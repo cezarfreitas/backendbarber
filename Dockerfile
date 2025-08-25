@@ -7,14 +7,13 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install -g pnpm && \
-    pnpm install --frozen-lockfile
+RUN npm install
 
 # Copy source code
 COPY . .
 
-# Build the server
-RUN pnpm run build:server
+# Build the project
+RUN npm run build
 
 # Expose port 80
 EXPOSE 80
