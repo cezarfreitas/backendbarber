@@ -76,8 +76,22 @@ export function createServer() {
 
 // Inicializar banco de dados ao iniciar o servidor
 if (process.env.NODE_ENV !== 'test') {
-  initDatabase().catch(error => {
-    console.error('Falha ao inicializar banco de dados:', error);
-    process.exit(1);
-  });
+  (async () => {
+    try {
+      await initDatabase();
+
+      // Verificar se as tabelas existem
+      const tablesExist = await checkTables();
+      if (!tablesExist) {
+        console.log('🔧 Tabelas não encontradas, criando estrutura do banco...');
+        await initializeTables();
+      } else {
+        console.log('✅ Estrutura do banco de dados verificada');
+      }
+
+    } catch (error) {
+      console.error('Falha ao inicializar banco de dados:', error);
+      process.exit(1);
+    }
+  })();
 }
