@@ -174,7 +174,7 @@ mysql -h SEU_HOST -P 3306 -u SEU_USER -p
 
 ### **Problema: API não Responde**
 
-1. Verifique se a porta 3000 está exposta
+1. Verifique se a porta 80 está exposta
 2. Confirme que `NODE_ENV=production`
 3. Veja os logs da aplicação no painel
 
