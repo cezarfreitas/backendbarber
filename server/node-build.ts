@@ -3,21 +3,12 @@ import { createServer } from "./index";
 const app = createServer();
 const port = process.env.PORT || 80;
 
-// Backend-only server - no frontend serving
-// Just handle API routes
-app.get("/", (req, res) => {
-  res.json({
-    message: "🚀 API Barbearia SaaS",
-    status: "online",
-    version: "1.0.0",
-    docs: "/api/docs",
-  });
-});
-
-app.listen(port, () => {
+// Start the server - all routes are defined in ./index.ts
+app.listen(port, "0.0.0.0", () => {
   console.log(`🚀 API Barbearia SaaS running on port ${port}`);
   console.log(`🔧 API: http://localhost:${port}/api`);
   console.log(`📚 Docs: http://localhost:${port}/api/docs`);
+  console.log(`🌐 Health: http://localhost:${port}/api/ping`);
 });
 
 // Graceful shutdown
