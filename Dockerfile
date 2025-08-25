@@ -90,14 +90,19 @@ USER nextjs
 # Expose port
 EXPOSE 80
 
-# Health check using curl - try simple health endpoint first, then api/ping
-# Extended timing for EasyPanel reliability
-HEALTHCHECK --interval=30s --timeout=20s --start-period=180s --retries=10 \
-    CMD curl -f -s http://localhost:80/health || curl -f -s http://localhost:80/api/ping || curl -f -s http://0.0.0.0:80/health || exit 1
+# EasyPanel-optimized health check - more lenient timing
+# Increased timeouts and retries for better stability
+HEALTHCHECK --interval=30s --timeout=30s --start-period=300s --retries=15 \
+    CMD curl -f http://localhost:80/health || curl -f http://localhost:80/api/ping || exit 1
 
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=80
 
-# Start the application
-CMD ["node", "dist/server/production.mjs"]
+# Add startup logging and verification
+RUN echo "🔍 Pre-startup verification..." && \
+    ls -la dist/server/production.mjs && \
+    echo "✅ Ready for deployment"
+
+# Start the application with logging
+CMD ["sh", "-c", "echo '🚀 Starting Barbearia SaaS API...' && node dist/server/production.mjs"]

@@ -1,0 +1,119 @@
+# EasyPanel Optimized Dockerfile for Barbearia SaaS API
+# Use Node.js 22 LTS (Alpine for smaller image size)
+FROM node:22-alpine AS base
+
+# Install pnpm globally and essential tools
+RUN npm install -g pnpm@10.14.0
+
+# Install system dependencies (as root)
+RUN apk add --no-cache \
+    curl \
+    python3 \
+    make \
+    g++ \
+    bash \
+    && ln -sf python3 /usr/bin/python
+
+# Set working directory
+WORKDIR /app
+
+# ================================
+# Dependencies stage
+# ================================
+FROM base AS deps
+
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install ALL dependencies (including dev dependencies for build)
+RUN pnpm install --frozen-lockfile --prefer-offline || \
+    (echo "❌ pnpm install failed, retrying..." && pnpm install --frozen-lockfile)
+
+# ================================
+# Build stage  
+# ================================
+FROM base AS builder
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile --prefer-offline
+
+# Copy source files needed for build
+COPY server/ ./server/
+COPY shared/ ./shared/
+COPY vite.config.server.ts ./
+COPY tsconfig.json ./
+
+# Build the server with verbose logging
+RUN echo "🔨 Starting build process..." && \
+    pnpm run build:server && \
+    echo "✅ Build completed"
+
+# Verify build output with detailed check
+RUN echo "🔍 Verifying build output..." && \
+    ls -la dist/server/ && \
+    if [ -f dist/server/production.mjs ]; then \
+        echo "✅ production.mjs found ($(stat -c%s dist/server/production.mjs) bytes)"; \
+        head -5 dist/server/production.mjs; \
+    else \
+        echo "❌ production.mjs not found"; \
+        exit 1; \
+    fi
+
+# ================================
+# Production stage
+# ================================
+FROM node:22-alpine AS production
+
+# Install tools needed for runtime and debugging
+RUN npm install -g pnpm@10.14.0 && \
+    apk add --no-cache curl bash
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install ALL dependencies (production needs devDependencies for some packages)
+RUN echo "📦 Installing production dependencies..." && \
+    pnpm install --frozen-lockfile --prefer-offline && \
+    pnpm store prune && \
+    rm -rf ~/.pnpm-store && \
+    echo "✅ Dependencies installed"
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Copy shared folder and startup scripts
+COPY shared ./shared
+COPY scripts/easypanel-startup-debug.sh ./startup-debug.sh
+
+# Make scripts executable
+RUN chmod +x ./startup-debug.sh
+
+# Create .env file with default values
+RUN echo "NODE_ENV=production" > .env && \
+    echo "PORT=80" >> .env
+
+# Expose port
+EXPOSE 80
+
+# More lenient health check for EasyPanel
+# Simplified health check with longer timeouts and more retries
+HEALTHCHECK --interval=30s --timeout=30s --start-period=300s --retries=15 \
+    CMD curl -f http://localhost:80/health || curl -f http://localhost:80/api/ping || exit 1
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=80
+
+# Add startup verification
+RUN echo "🔍 Final verification..." && \
+    ls -la dist/server/production.mjs && \
+    echo "✅ Ready for deployment"
+
+# Use the diagnostic startup script by default, fallback to direct start
+CMD ["sh", "-c", "if [ -f ./startup-debug.sh ]; then ./startup-debug.sh; else node dist/server/production.mjs; fi"]
