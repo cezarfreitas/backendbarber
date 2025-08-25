@@ -311,6 +311,16 @@ export interface ListarServicosResponse {
 }
 
 /**
+ * Resposta para listar combos
+ */
+export interface ListarCombosResponse {
+  combos: Combo[];
+  total: number;
+  pagina: number;
+  totalPaginas: number;
+}
+
+/**
  * Resposta para operações de sucesso
  */
 export interface ApiResponse<T = any> {
