@@ -269,6 +269,18 @@ export interface AtualizarServicoRequest {
 }
 
 /**
+ * DTO para atualização de combo
+ */
+export interface AtualizarComboRequest {
+  nome?: string;
+  descricao?: string;
+  servicoIds?: string[];
+  tipoDesconto?: 'valor' | 'percentual';
+  valorDesconto?: number;
+  ativo?: boolean;
+}
+
+/**
  * Resposta para listar barbearias
  */
 export interface ListarBarbeariasResponse {
