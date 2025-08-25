@@ -216,15 +216,16 @@ INSERT IGNORE INTO barbearias (
 // Dados iniciais para barbeiros
 const insertInitialBarbeiros = `
 INSERT IGNORE INTO barbeiros (
-  id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, 
+  id, nome, email, telefone, cpf, senha_hash, tipo, porcentagem_comissao, salario_fixo,
   valor_hora, barbearia_id, especialidades, horario_trabalho, status
-) VALUES 
+) VALUES
 (
   '1',
   'Carlos Silva',
   'carlos@barbeariadoroao.com',
   '(11) 98888-7777',
   '111.222.333-44',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
   'comissionado',
   40.00,
   NULL,
@@ -240,6 +241,7 @@ INSERT IGNORE INTO barbeiros (
   'ricardo@barbeariadoroao.com',
   '(11) 97777-6666',
   '222.333.444-55',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
   'funcionario',
   NULL,
   3500.00,
@@ -255,6 +257,7 @@ INSERT IGNORE INTO barbeiros (
   'ana@barbershoppremium.com',
   '(11) 96666-5555',
   '333.444.555-66',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
   'freelancer',
   NULL,
   NULL,
