@@ -275,6 +275,8 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <a href="#endpoints-barbeiros" class="nav-item">💇‍♂️ Barbeiros</a>
                 <a href="#endpoints-servicos" class="nav-item">✂️ Serviços</a>
                 <a href="#endpoints-combos" class="nav-item">🎁 Combos</a>
+                <a href="#endpoints-clientes" class="nav-item">👥 Clientes</a>
+                <a href="#endpoints-auth" class="nav-item">🔐 Autenticação</a>
             </div>
 
             <div class="nav-section">
