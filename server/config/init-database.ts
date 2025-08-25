@@ -354,6 +354,83 @@ INSERT IGNORE INTO combo_servicos (combo_id, servico_id, ordem) VALUES
 ('combo4', '9', 3); -- Relaxamento
 `;
 
+// Dados iniciais para clientes
+const insertInitialClientes = `
+INSERT IGNORE INTO clientes (
+  id, nome, email, celular, senha_hash, data_nascimento, endereco_cidade,
+  endereco_estado, barbearia_preferida, barbeiro_preferido,
+  servicos_preferidos, tipo_login, email_verificado, celular_verificado, status
+) VALUES
+(
+  'cliente1',
+  'João Santos',
+  'joao.santos@email.com',
+  '(11) 98765-4321',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
+  '1990-05-15',
+  'São Paulo',
+  'SP',
+  '1',
+  '1',
+  '["1", "2"]',
+  'celular',
+  true,
+  true,
+  'ativo'
+),
+(
+  'cliente2',
+  'Maria Silva',
+  'maria.silva@gmail.com',
+  '(11) 97654-3210',
+  NULL, -- Login apenas por Google
+  '1985-12-03',
+  'São Paulo',
+  'SP',
+  '2',
+  '3',
+  '["5", "6", "7"]',
+  'google',
+  true,
+  false,
+  'ativo'
+),
+(
+  'cliente3',
+  'Pedro Oliveira',
+  'pedro.oliveira@email.com',
+  '(11) 96543-2109',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
+  '1992-08-20',
+  'São Paulo',
+  'SP',
+  '1',
+  '2',
+  '["1", "4"]',
+  'celular',
+  true,
+  true,
+  'ativo'
+),
+(
+  'cliente4',
+  'Ana Costa',
+  'ana.costa@email.com',
+  '(11) 95432-1098',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
+  '1988-11-10',
+  'São Paulo',
+  'SP',
+  '2',
+  NULL,
+  '["combo1", "combo3"]',
+  'ambos',
+  true,
+  true,
+  'ativo'
+);
+`;
+
 /**
  * Função principal para inicializar o banco de dados
  */
