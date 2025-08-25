@@ -143,7 +143,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         </div>
 
         <div class="section" id="autenticacao">
-            <h2>���� Autenticação</h2>
+            <h2>🔐 Autenticação</h2>
             <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
         </div>
 
@@ -160,7 +160,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <h4>Parâmetros de Query</h4>
                     <table class="table">
                         <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padr��o: 1)</td></tr>
                         <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
                         <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativa, inativa, pendente</td></tr>
                         <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
@@ -260,7 +260,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <span class="url">/api/barbearias/{id}</span>
                 <h4>Excluir barbearia</h4>
                 <p>Remove permanentemente uma barbearia do sistema.</p>
-                
+
                 <div class="response">
                     <h4>Resposta</h4>
                     <pre>{
@@ -268,6 +268,140 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   "mensagem": "Barbearia excluída com sucesso"
 }</pre>
                 </div>
+            </div>
+        </div>
+
+        <div class="section" id="endpoints-barbeiros">
+            <h2>💇‍♂️ Endpoints - Barbeiros</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/barbeiros</span>
+                <h4>Listar barbeiros</h4>
+                <p>Retorna lista paginada de barbeiros com filtros opcionais.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
+                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
+                        <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativo, inativo, afastado</td></tr>
+                        <tr><td><code>tipo</code></td><td>string</td><td>Não</td><td>Filtrar por tipo: comissionado, funcionario, freelancer</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/barbeiros/{id}</span>
+                <h4>Buscar barbeiro por ID</h4>
+                <p>Retorna dados detalhados de um barbeiro específico.</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/barbeiros</span>
+                <h4>Criar novo barbeiro</h4>
+                <p>Cadastra um novo barbeiro no sistema.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "nome": "Carlos Silva",
+  "email": "carlos@barbearia.com",
+  "telefone": "(11) 99999-9999",
+  "cpf": "111.222.333-44",
+  "tipo": "comissionado",
+  "porcentagemComissao": 40,
+  "barbeariaId": "1",
+  "especialidades": ["Corte masculino", "Barba"],
+  "horarioTrabalho": {
+    "segunda": { "inicio": "08:00", "fim": "18:00" },
+    "terca": { "inicio": "08:00", "fim": "18:00" }
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="url">/api/barbeiros/{id}</span>
+                <h4>Atualizar barbeiro</h4>
+                <p>Atualiza dados de um barbeiro existente.</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="url">/api/barbeiros/{id}</span>
+                <h4>Excluir barbeiro</h4>
+                <p>Remove permanentemente um barbeiro do sistema.</p>
+            </div>
+        </div>
+
+        <div class="section" id="endpoints-servicos">
+            <h2>✂️ Endpoints - Serviços</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/servicos</span>
+                <h4>Listar serviços</h4>
+                <p>Retorna lista paginada de serviços com filtros opcionais.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
+                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
+                        <tr><td><code>categoria</code></td><td>string</td><td>Não</td><td>Filtrar por categoria (corte, barba, tratamento, etc.)</td></tr>
+                        <tr><td><code>ativo</code></td><td>boolean</td><td>Não</td><td>Filtrar por status ativo/inativo</td></tr>
+                        <tr><td><code>precoMin</code></td><td>number</td><td>Não</td><td>Preço mínimo</td></tr>
+                        <tr><td><code>precoMax</code></td><td>number</td><td>Não</td><td>Preço máximo</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/servicos/{id}</span>
+                <h4>Buscar serviço por ID</h4>
+                <p>Retorna dados detalhados de um serviço específico.</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/servicos</span>
+                <h4>Criar novo serviço</h4>
+                <p>Cadastra um novo serviço no sistema.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "nome": "Corte Masculino",
+  "descricao": "Corte tradicional masculino",
+  "preco": 35.00,
+  "duracaoMinutos": 45,
+  "barbeariaId": "1",
+  "categoria": "corte"
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="url">/api/servicos/{id}</span>
+                <h4>Atualizar serviço</h4>
+                <p>Atualiza dados de um serviço existente.</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="url">/api/servicos/{id}</span>
+                <h4>Excluir serviço</h4>
+                <p>Remove permanentemente um serviço do sistema.</p>
             </div>
         </div>
 
