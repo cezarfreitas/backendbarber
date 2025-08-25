@@ -101,6 +101,11 @@ export function createServer() {
     res.status(200).send("OK");
   });
 
+  // Ultra-simple health endpoint for container health checks
+  app.get("/health", (_req, res) => {
+    res.status(200).send("OK");
+  });
+
   app.get("/api/demo", handleDemo);
 
   // Rotas das barbearias
