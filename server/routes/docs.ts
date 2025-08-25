@@ -404,13 +404,33 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { width: 100%; transform: translateX(-100%); }
-            .sidebar-toggle.active { left: 24px; }
-            .main-content.shifted { margin-left: 0; }
+            .sidebar {
+                width: 280px;
+                transform: translateX(-280px);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar.mobile-active { transform: translateX(0); }
+            .sidebar-toggle {
+                display: block;
+                position: fixed;
+                top: 24px;
+                left: 24px;
+                z-index: 1001;
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 12px 16px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                box-shadow: var(--shadow-md);
+            }
+            .main-content { margin-left: 0; }
             .hero h1 { font-size: 2.5rem; }
             .container { padding: 16px; }
-            .section { padding: 24px; }
-            .endpoint { padding: 24px; }
+            .section { padding: 24px 16px; }
+            .endpoint { padding: 24px 16px; }
             .endpoint-header { flex-direction: column; align-items: flex-start; }
             .url { font-size: 1rem; }
         }
@@ -530,7 +550,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="clientes-tree">
                             <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
-                            <a href="#endpoints-cliente-id" class="nav-sub-item">�� Buscar por ID</a>
+                            <a href="#endpoints-cliente-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-clientes-create" class="nav-sub-item">➕ Criar Cliente</a>
                             <a href="#endpoints-clientes-update" class="nav-sub-item">✏️ Atualizar Cliente</a>
                             <a href="#endpoints-clientes-delete" class="nav-sub-item">🗑️ Excluir Cliente</a>
