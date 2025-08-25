@@ -338,12 +338,97 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
             <div class="nav-section">
                 <h3>Endpoints</h3>
-                <a href="#endpoints-barbearias" class="nav-item">🏪 Barbearias</a>
-                <a href="#endpoints-barbeiros" class="nav-item">💇‍♂️ Barbeiros</a>
-                <a href="#endpoints-servicos" class="nav-item">✂️ Serviços</a>
-                <a href="#endpoints-combos" class="nav-item">🎁 Combos</a>
-                <a href="#endpoints-clientes" class="nav-item">👥 Clientes</a>
-                <a href="#endpoints-auth" class="nav-item">🔐 Autenticação</a>
+
+                <!-- Barbearias -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="barbearias-tree">
+                        🏪 Barbearias
+                    </div>
+                    <div class="nav-sub-items" id="barbearias-tree">
+                        <a href="#endpoints-barbearias" class="nav-sub-item">📋 Listar Barbearias</a>
+                        <a href="#endpoints-barbearias" class="nav-sub-item">🔍 Buscar por ID</a>
+                        <a href="#endpoints-barbearias" class="nav-sub-item">➕ Criar Barbearia</a>
+                        <a href="#endpoints-barbearias" class="nav-sub-item">✏️ Atualizar Barbearia</a>
+                        <a href="#endpoints-barbearias" class="nav-sub-item">🗑️ Excluir Barbearia</a>
+                    </div>
+                </div>
+
+                <!-- Barbeiros -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="barbeiros-tree">
+                        💇‍♂️ Barbeiros
+                    </div>
+                    <div class="nav-sub-items" id="barbeiros-tree">
+                        <a href="#endpoints-barbeiros" class="nav-sub-item">📋 Listar Barbeiros</a>
+                        <a href="#endpoints-barbeiros" class="nav-sub-item">🔍 Buscar por ID</a>
+                        <a href="#endpoints-barbeiros" class="nav-sub-item">➕ Criar Barbeiro</a>
+                        <a href="#endpoints-barbeiros" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
+                        <a href="#endpoints-barbeiros" class="nav-sub-item">🗑️ Excluir Barbeiro</a>
+                    </div>
+                </div>
+
+                <!-- Serviços -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="servicos-tree">
+                        ✂️ Serviços
+                    </div>
+                    <div class="nav-sub-items" id="servicos-tree">
+                        <a href="#endpoints-servicos" class="nav-sub-item">📋 Listar Serviços</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">🔍 Buscar por ID</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">➕ Criar Serviço</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">✏️ Atualizar Serviço</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">🗑️ Excluir Serviço</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">🏷️ Filtrar por Categoria</a>
+                        <a href="#endpoints-servicos" class="nav-sub-item">💰 Filtrar por Preço</a>
+                    </div>
+                </div>
+
+                <!-- Combos -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="combos-tree">
+                        🎁 Combos
+                    </div>
+                    <div class="nav-sub-items" id="combos-tree">
+                        <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">🔍 Buscar por ID</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">➕ Criar Combo</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">✏️ Atualizar Combo</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">🗑️ Excluir Combo</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">🔢 Incluir Serviços</a>
+                        <a href="#endpoints-combos" class="nav-sub-item">💯 Calcular Desconto</a>
+                    </div>
+                </div>
+
+                <!-- Clientes -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="clientes-tree">
+                        👥 Clientes
+                    </div>
+                    <div class="nav-sub-items" id="clientes-tree">
+                        <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
+                        <a href="#endpoints-clientes" class="nav-sub-item">👤 Meu Perfil</a>
+                        <a href="#endpoints-clientes" class="nav-sub-item">🔍 Buscar por ID</a>
+                        <a href="#endpoints-clientes" class="nav-sub-item">➕ Cadastrar Cliente</a>
+                        <a href="#endpoints-clientes" class="nav-sub-item">✏️ Atualizar Cliente</a>
+                        <a href="#endpoints-clientes" class="nav-sub-item">🗑️ Desativar Cliente</a>
+                    </div>
+                </div>
+
+                <!-- Autenticação -->
+                <div class="nav-tree">
+                    <div class="nav-tree-item expandable" data-target="auth-tree">
+                        🔐 Autenticação
+                    </div>
+                    <div class="nav-sub-items" id="auth-tree">
+                        <a href="#endpoints-auth" class="nav-sub-item">📱 Login com Celular</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">🌐 Login com Google</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">🏪 Login Barbearia</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">✅ Verificar Token</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">🔄 Renovar Token</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">🔑 Alterar Senha</a>
+                    </div>
+                </div>
             </div>
 
             <div class="nav-section">
@@ -826,7 +911,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <div class="params">
                     <h4>Body (JSON)</h4>
                     <pre>{
-  "nome": "João Silva",
+  "nome": "Jo��o Silva",
   "celular": "11987654321",
   "senha": "minhasenha123",
   "email": "joao@email.com",
