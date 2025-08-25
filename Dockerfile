@@ -89,9 +89,10 @@ USER nextjs
 # Expose port
 EXPOSE 80
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD node -e "fetch('http://localhost:80/api/ping').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"
+# Health check using curl (more reliable)
+RUN apk add --no-cache curl
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:80/api/ping || exit 1
 
 # Set environment variables
 ENV NODE_ENV=production
