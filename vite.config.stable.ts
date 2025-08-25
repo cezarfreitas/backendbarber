@@ -16,16 +16,35 @@ export default defineConfig({
     rollupOptions: {
       external: [
         // Node.js built-ins
-        "fs", "path", "url", "http", "https", "os", "crypto", "stream", 
-        "util", "events", "buffer", "querystring", "child_process",
+        "fs",
+        "path",
+        "url",
+        "http",
+        "https",
+        "os",
+        "crypto",
+        "stream",
+        "util",
+        "events",
+        "buffer",
+        "querystring",
+        "child_process",
         // External dependencies
-        "express", "cors", "mysql2", "jsonwebtoken", "bcryptjs", 
-        "uuid", "dotenv", "zod",
+        "express",
+        "cors",
+        "mysql2",
+        "jsonwebtoken",
+        "bcryptjs",
+        "uuid",
+        "dotenv",
+        "zod",
       ],
       output: {
         format: "es",
         entryFileNames: "production.mjs",
-        banner: "// Barbearia SaaS - Stable Build (No Health Check)\n// Built: " + new Date().toISOString(),
+        banner:
+          "// Barbearia SaaS - Stable Build (No Health Check)\n// Built: " +
+          new Date().toISOString(),
       },
     },
     minify: false, // Keep readable for debugging

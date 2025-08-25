@@ -1,16 +1,19 @@
 # 🚀 EasyPanel Deployment - Step by Step
 
 ## Current Problem
+
 Service showing "Service is not reachable" at: https://ide-barbearia.jzo3qo.easypanel.host/api/ping
 
 ## ✅ SOLUTION: 3 Simple Steps
 
 ### STEP 1: Update Dockerfile in EasyPanel
+
 1. Go to your EasyPanel application settings
 2. Change Dockerfile to: `Dockerfile.simple`
 3. OR copy the content from `Dockerfile.simple` to your main `Dockerfile`
 
 ### STEP 2: Set Environment Variables
+
 1. Go to **Settings** → **Environment Variables** in EasyPanel
 2. Copy ALL variables from `EASYPANEL_ENV_VARS.txt`
 3. **IMPORTANT:** Generate secure JWT keys:
@@ -22,6 +25,7 @@ node -e "console.log('JWT_REFRESH_SECRET=' + require('crypto').randomBytes(32).t
 ```
 
 **Required Variables:**
+
 ```
 NODE_ENV=production
 PORT=80
@@ -37,6 +41,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 ```
 
 ### STEP 3: Deploy
+
 1. Push any code changes to your repository
 2. In EasyPanel, click **"Deploy"**
 3. **Wait 5-10 minutes** (be patient!)
@@ -63,42 +68,55 @@ JWT_REFRESH_EXPIRES_IN=7d
 ## 🚨 If Still Not Working
 
 ### Check EasyPanel Logs
+
 Look for these specific error messages:
 
 **Missing Environment Variables:**
+
 ```
 DB_HOST: NOT_SET
 ❌ Error: connect ECONNREFUSED
 ```
+
 **Solution:** Double-check all environment variables are set
 
 **Port Issues:**
+
 ```
 ❌ SERVER ERROR: EADDRINUSE
 ```
+
 **Solution:** EasyPanel should handle this automatically
 
 **Build Issues:**
+
 ```
 Build failed
 ```
+
 **Solution:** Make sure all dependencies are in package.json
 
 ### Alternative: Use Dockerfile.simple
+
 If the main Dockerfile doesn't work:
+
 1. Rename `Dockerfile` to `Dockerfile.old`
 2. Rename `Dockerfile.simple` to `Dockerfile`
 3. Deploy again
 
 ### Last Resort: Check These Files
+
 Ensure these files exist and are correct:
+
 - ✅ `package.json` has all dependencies
 - ✅ `server/index.ts` exports `createServer`
 - ✅ `dist/server/production.mjs` exists after build
 - ✅ All environment variables set in EasyPanel
 
 ## 📞 Support
+
 If nothing works:
+
 1. Copy the complete EasyPanel logs
 2. Verify all environment variables are exactly as specified
 3. Try deploying to an alternative platform (Fly.io, Railway)

@@ -1,6 +1,7 @@
 # 🔄 CORRIGIR LOOP DE RESTART - EasyPanel
 
 ## 🚨 PROBLEMA ATUAL
+
 Servidor inicia mas **reinicia infinitamente** porque health check falha.
 
 ## ✅ SOLUÇÃO IMEDIATA
@@ -9,8 +10,8 @@ Servidor inicia mas **reinicia infinitamente** porque health check falha.
 
 1. **No EasyPanel**, altere a configuração:
    - Dockerfile: `Dockerfile.nohealthcheck`
-   
 2. **Configure Environment Variables** (se não fez ainda):
+
 ```bash
 NODE_ENV=production
 PORT=80
@@ -40,6 +41,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 ### **OPÇÃO 3: Build Estável**
 
 1. **Use o build estável**:
+
 ```bash
 pnpm run build:stable
 ```
@@ -51,17 +53,20 @@ pnpm run build:stable
 ## 🔍 VERIFICAÇÃO
 
 Após o deploy, o serviço deve:
+
 - ✅ Parar de reiniciar constantemente
 - ✅ Ficar estável (logs param de repetir)
 - ✅ Responder nos endpoints após alguns minutos
 
 **Teste:**
+
 - https://ide-barbearia.jzo3qo.easypanel.host/api/ping
 - https://ide-barbearia.jzo3qo.easypanel.host/health
 
 ## 💡 POR QUE ISSO FUNCIONA
 
 O problema era que:
+
 1. ❌ Servidor iniciava corretamente
 2. ❌ Health check de 15-30s não conseguia acessar endpoints
 3. ❌ EasyPanel matava o container
@@ -74,20 +79,24 @@ A solução remove o health check problemático, deixando o container estável.
 Tente estas alternativas:
 
 ### **1. Verificar Resources**
-- CPU: Mínimo 0.5 cores  
+
+- CPU: Mínimo 0.5 cores
 - Memory: Mínimo 512MB
 
 ### **2. Aguardar Mais Tempo**
+
 - Deixe 10-15 minutos após deploy
 - Monitor logs até parar de repetir
 
 ### **3. Alternativa: Railway**
+
 ```bash
 # Railway é mais tolerante com health checks
 # Mesmo Dockerfile funciona lá
 ```
 
 ### **4. Alternativa: Fly.io**
+
 ```bash
 # Fly.io tem health check mais flexível
 # Deploy direto do GitHub
