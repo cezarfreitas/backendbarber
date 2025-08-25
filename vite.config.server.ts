@@ -35,6 +35,9 @@ export default defineConfig({
         "mysql2",
         "jsonwebtoken",
         "bcryptjs",
+        "uuid",
+        "dotenv",
+        "zod",
       ],
       output: {
         format: "es",
