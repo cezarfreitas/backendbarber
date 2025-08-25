@@ -90,8 +90,7 @@ USER nextjs
 # Expose port
 EXPOSE 80
 
-# Health check using curl (more reliable)
-RUN apk add --no-cache curl
+# Health check using curl (installed earlier as root)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:80/api/ping || exit 1
 
