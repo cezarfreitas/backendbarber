@@ -977,6 +977,12 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 mainContent.classList.add('shifted');
                 mainContent.style.marginLeft = '280px';
             }
+
+            // Garantir que o feedback de cópia esteja oculto
+            const copyFeedback = document.getElementById('copyFeedback');
+            if (copyFeedback) {
+                copyFeedback.classList.remove('show');
+            }
         });
         
         // Expandable Navigation
