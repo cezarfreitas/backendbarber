@@ -324,6 +324,37 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
         </div>
 
+        <div class="section" id="banco-dados">
+            <h2>🗄️ Banco de Dados</h2>
+            <p>A API utiliza <strong>MySQL</strong> como banco de dados principal.</p>
+
+            <h3>Configuração</h3>
+            <div class="endpoint">
+                <h4>Informações de Conexão</h4>
+                <table class="table">
+                    <tr><th>Parâmetro</th><th>Valor</th></tr>
+                    <tr><td><strong>Servidor</strong></td><td>server.idenegociosdigitais.com.br</td></tr>
+                    <tr><td><strong>Porta</strong></td><td>3355</td></tr>
+                    <tr><td><strong>Database</strong></td><td>barbearia-db</td></tr>
+                    <tr><td><strong>Usuário</strong></td><td>barbearia</td></tr>
+                    <tr><td><strong>Engine</strong></td><td>MySQL 8.0+</td></tr>
+                </table>
+            </div>
+
+            <h3>Estrutura das Tabelas</h3>
+            <p>O banco de dados possui 3 tabelas principais:</p>
+            <ul>
+                <li><strong>barbearias</strong> - Dados das barbearias</li>
+                <li><strong>barbeiros</strong> - Profissionais das barbearias</li>
+                <li><strong>servicos</strong> - Serviços oferecidos</li>
+            </ul>
+
+            <div class="endpoint">
+                <h4>📊 Status da Conexão</h4>
+                <p><span class="status-badge status-success">✅ Conectado</span> - Banco MySQL operacional</p>
+            </div>
+        </div>
+
         <div class="section" id="endpoints-barbearias">
             <h2>🏪 Endpoints - Barbearias</h2>
 
