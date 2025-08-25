@@ -911,7 +911,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <div class="params">
                     <h4>Body (JSON)</h4>
                     <pre>{
-  "nome": "Jo��o Silva",
+  "nome": "João Silva",
   "celular": "11987654321",
   "senha": "minhasenha123",
   "email": "joao@email.com",
@@ -1264,7 +1264,7 @@ Content-Type: application/json
   }
 }</pre>
 
-            <h3>💇‍♂️ Barbeiros</h3>
+            <h3>💇���♂️ Barbeiros</h3>
             <h4>Listar barbeiros comissionados de uma barbearia</h4>
             <pre>GET /api/barbeiros?barbeariaId=1&tipo=comissionado</pre>
 
@@ -1478,10 +1478,39 @@ Content-Type: application/json
             toggle.classList.toggle('active');
         }
 
+        // Tree navigation functionality
+        function initializeTreeNavigation() {
+            const treeItems = document.querySelectorAll('.nav-tree-item.expandable');
+
+            treeItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('data-target');
+                    const targetTree = document.getElementById(targetId);
+
+                    if (targetTree) {
+                        // Toggle expanded state
+                        const isExpanded = this.classList.contains('expanded');
+
+                        if (isExpanded) {
+                            // Collapse
+                            this.classList.remove('expanded');
+                            targetTree.classList.remove('expanded');
+                        } else {
+                            // Expand
+                            this.classList.add('expanded');
+                            targetTree.classList.add('expanded');
+                        }
+                    }
+                });
+            });
+        }
+
         // Auto-highlight current section in sidebar
         function highlightCurrentSection() {
             const sections = document.querySelectorAll('.section[id]');
-            const navItems = document.querySelectorAll('.nav-item');
+            const navItems = document.querySelectorAll('.nav-item, .nav-sub-item');
 
             let currentSection = '';
             const scrollPosition = window.scrollY + 100;
@@ -1499,32 +1528,82 @@ Content-Type: application/json
                 item.classList.remove('active');
                 if (item.getAttribute('href') === '#' + currentSection) {
                     item.classList.add('active');
+
+                    // Auto-expand parent tree if this is a sub-item
+                    const parentTree = item.closest('.nav-sub-items');
+                    if (parentTree) {
+                        const parentItem = document.querySelector('[data-target="' + parentTree.id + '"]');
+                        if (parentItem) {
+                            parentItem.classList.add('expanded');
+                            parentTree.classList.add('expanded');
+                        }
+                    }
                 }
             });
         }
 
         // Smooth scroll for navigation links
-        document.querySelectorAll('.nav-item').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
+        function initializeSmoothScroll() {
+            document.querySelectorAll('.nav-item, .nav-sub-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetSection = document.getElementById(targetId);
 
-                if (targetSection) {
-                    targetSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                        if (targetSection) {
+                            targetSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        // Auto-expand tree items based on current section
+        function autoExpandCurrentSection() {
+            const currentHash = window.location.hash.substring(1);
+            if (currentHash) {
+                const targetElement = document.querySelector('[href="#' + currentHash + '"]');
+                if (targetElement && targetElement.closest('.nav-sub-items')) {
+                    const parentTree = targetElement.closest('.nav-sub-items');
+                    const parentItem = document.querySelector('[data-target="' + parentTree.id + '"]');
+                    if (parentItem) {
+                        parentItem.classList.add('expanded');
+                        parentTree.classList.add('expanded');
+                    }
+                }
+            }
+        }
+
+        // Keyboard navigation
+        function initializeKeyboardNavigation() {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === '/') {
+                    e.preventDefault();
+                    toggleSidebar();
+                }
+
+                // Expand/collapse with Enter or Space
+                if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('nav-tree-item')) {
+                    e.preventDefault();
+                    e.target.click();
                 }
             });
-        });
+        }
 
         // Highlight current section on scroll
         window.addEventListener('scroll', highlightCurrentSection);
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
+            initializeTreeNavigation();
+            initializeSmoothScroll();
+            initializeKeyboardNavigation();
             highlightCurrentSection();
+            autoExpandCurrentSection();
 
             // Auto-open sidebar on larger screens
             if (window.innerWidth > 768) {
@@ -1560,6 +1639,12 @@ Content-Type: application/json
                     toggle.classList.remove('active');
                 }
             }
+        });
+
+        // Handle hash changes for deep linking
+        window.addEventListener('hashchange', function() {
+            autoExpandCurrentSection();
+            highlightCurrentSection();
         });
     </script>
 </body>
