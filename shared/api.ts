@@ -112,6 +112,39 @@ export interface Combo {
 }
 
 /**
+ * Interface para dados do cliente
+ */
+export interface Cliente {
+  id: string;
+  nome: string;
+  email?: string;
+  celular: string; // Campo principal para login
+  dataNascimento?: string;
+  foto?: string; // URL da foto de perfil
+  endereco?: {
+    rua?: string;
+    numero?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    cep?: string;
+  };
+  preferencias: {
+    barbeariaId?: string; // Barbearia preferida
+    barbeiroId?: string; // Barbeiro preferido
+    servicosPreferidos?: string[]; // IDs dos serviços preferidos
+  };
+  tipoLogin: 'celular' | 'google' | 'ambos'; // Como o cliente se cadastrou/faz login
+  googleId?: string; // ID do Google OAuth
+  emailVerificado: boolean;
+  celularVerificado: boolean;
+  status: 'ativo' | 'inativo' | 'suspenso';
+  dataCadastro: string;
+  dataAtualizacao: string;
+  ultimoLogin?: string;
+}
+
+/**
  * DTO para criação de nova barbearia
  */
 export interface CriarBarbeariaRequest {
