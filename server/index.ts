@@ -43,11 +43,20 @@ import {
 import {
   loginCelular,
   loginGoogle,
+  loginBarbearia,
+  loginBarbeiro,
   verificarTokenAuth,
   alterarSenha,
+  alterarSenhaBarbearia,
+  alterarSenhaBarbeiro,
   refreshTokenAuth
 } from "./routes/auth";
-import { verificarAutenticacao } from "./utils/auth";
+import {
+  verificarAutenticacao,
+  verificarBarbearia,
+  verificarBarbeiro,
+  verificarCliente
+} from "./utils/auth";
 import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
@@ -115,7 +124,7 @@ export function createServer() {
   app.put("/api/clientes/:id", verificarAutenticacao, atualizarCliente); // TODO: Verificar se é o próprio cliente ou admin
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente); // TODO: Verificar se é o próprio cliente ou admin
 
-  // Rotas de autenticação (privadas - requer login)
+  // Rotas de autenticaç��o (privadas - requer login)
   app.post("/api/auth/alterar-senha", verificarAutenticacao, alterarSenha);
 
   return app;
