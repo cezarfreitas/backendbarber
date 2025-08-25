@@ -1,0 +1,27 @@
+# COPY THESE ENVIRONMENT VARIABLES TO EASYPANEL
+# Go to: Settings → Environment Variables
+
+NODE_ENV=production
+PORT=80
+
+# Database (MySQL) - MANDATORY
+DB_HOST=server.idenegociosdigitais.com.br
+DB_PORT=3355
+DB_USER=barbearia
+DB_PASSWORD=5f8dab8402afe2a6e043
+DB_NAME=barbearia-db
+
+# JWT Security - GENERATE NEW SECURE KEYS!
+# Use: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=generate_a_secure_256_bit_key_here
+JWT_EXPIRES_IN=24h
+JWT_REFRESH_SECRET=generate_a_different_256_bit_key_here  
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Optional
+PING_MESSAGE=API Barbearia EasyPanel Online
+
+# IMPORTANT NOTES:
+# 1. Replace JWT_SECRET and JWT_REFRESH_SECRET with actual secure random keys
+# 2. All variables above are REQUIRED for the service to start
+# 3. Make sure to copy ALL variables to EasyPanel
