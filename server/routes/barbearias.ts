@@ -1,11 +1,138 @@
 import { RequestHandler } from "express";
-import { 
-  Barbearia, 
-  CriarBarbeariaRequest, 
+import {
+  Barbearia,
+  Barbeiro,
+  Servico,
+  CriarBarbeariaRequest,
   AtualizarBarbeariaRequest,
   ListarBarbeariasResponse,
-  ApiResponse 
+  ApiResponse
 } from "@shared/api";
+
+// Importar dados dos outros módulos para relacionamentos
+// Em produção, essas consultas seriam feitas no banco de dados
+let barbeiros: Barbeiro[] = [];
+let servicos: Servico[] = [];
+
+// Função para importar dados dos outros módulos
+const importarDados = async () => {
+  try {
+    const { barbeiros: barbeirosImportados } = await import("./barbeiros");
+    const { servicos: servicosImportados } = await import("./servicos");
+    // Como são arrays exportados diretamente, precisamos acessar de forma diferente
+    // Por enquanto, vamos simular a busca
+  } catch (error) {
+    // Em caso de erro, usar arrays vazios
+  }
+};
+
+// Função auxiliar para buscar barbeiros de uma barbearia
+const buscarBarbeirosPorBarbearia = (barbeariaId: string): Barbeiro[] => {
+  // Simulação - em produção seria uma query no banco
+  const barbeirosSimulados: Barbeiro[] = [
+    {
+      id: "1",
+      nome: "Carlos Silva",
+      email: "carlos@barbeariadoroao.com",
+      telefone: "(11) 98888-7777",
+      cpf: "111.222.333-44",
+      tipo: "comissionado",
+      porcentagemComissao: 40,
+      barbeariaId: "1",
+      especialidades: ["Corte masculino", "Barba", "Bigode"],
+      status: "ativo",
+      dataCadastro: "2024-01-16T09:00:00Z",
+      dataAtualizacao: "2024-01-16T09:00:00Z"
+    },
+    {
+      id: "2",
+      nome: "Ricardo Santos",
+      email: "ricardo@barbeariadoroao.com",
+      telefone: "(11) 97777-6666",
+      cpf: "222.333.444-55",
+      tipo: "funcionario",
+      salarioFixo: 3500,
+      barbeariaId: "1",
+      especialidades: ["Corte feminino", "Coloração", "Tratamentos"],
+      status: "ativo",
+      dataCadastro: "2024-01-18T10:30:00Z",
+      dataAtualizacao: "2024-01-18T10:30:00Z"
+    },
+    {
+      id: "3",
+      nome: "Ana Costa",
+      email: "ana@barbershoppremium.com",
+      telefone: "(11) 96666-5555",
+      cpf: "333.444.555-66",
+      tipo: "freelancer",
+      valorHora: 80,
+      barbeariaId: "2",
+      especialidades: ["Corte premium", "Barba premium", "Design de sobrancelhas"],
+      status: "ativo",
+      dataCadastro: "2024-01-20T15:00:00Z",
+      dataAtualizacao: "2024-01-20T15:00:00Z"
+    }
+  ];
+
+  return barbeirosSimulados.filter(b => b.barbeariaId === barbeariaId);
+};
+
+// Função auxiliar para buscar serviços de uma barbearia
+const buscarServicosPorBarbearia = (barbeariaId: string): Servico[] => {
+  // Simulação - em produção seria uma query no banco
+  const servicosSimulados: Servico[] = [
+    {
+      id: "1",
+      nome: "Corte Masculino Tradicional",
+      descricao: "Corte clássico masculino com acabamento na navalha",
+      preco: 35.00,
+      duracaoMinutos: 45,
+      barbeariaId: "1",
+      categoria: "corte",
+      ativo: true,
+      dataCadastro: "2024-01-15T10:00:00Z",
+      dataAtualizacao: "2024-01-15T10:00:00Z"
+    },
+    {
+      id: "2",
+      nome: "Barba Completa",
+      descricao: "Aparar, modelar e finalizar barba com produtos premium",
+      preco: 25.00,
+      duracaoMinutos: 30,
+      barbeariaId: "1",
+      categoria: "barba",
+      ativo: true,
+      dataCadastro: "2024-01-15T10:00:00Z",
+      dataAtualizacao: "2024-01-15T10:00:00Z"
+    },
+    {
+      id: "5",
+      nome: "Corte Premium Executive",
+      descricao: "Corte executivo com lavagem, corte e finalizações premium",
+      preco: 80.00,
+      duracaoMinutos: 60,
+      barbeariaId: "2",
+      categoria: "corte",
+      ativo: true,
+      dataCadastro: "2024-01-20T14:30:00Z",
+      dataAtualizacao: "2024-01-20T14:30:00Z"
+    },
+    {
+      id: "6",
+      nome: "Barba Premium",
+      descricao: "Tratamento completo da barba com produtos importados",
+      preco: 50.00,
+      duracaoMinutos: 45,
+      barbeariaId: "2",
+      categoria: "barba",
+      ativo: true,
+      dataCadastro: "2024-01-20T14:30:00Z",
+      dataAtualizacao: "2024-01-20T14:30:00Z"
+    }
+  ];
+
+  return servicosSimulados.filter(s => s.barbeariaId === barbeariaId);
+};
 
 // Simulação de banco de dados em memória
 // Em produção, usar um banco real como PostgreSQL, MongoDB, etc.
