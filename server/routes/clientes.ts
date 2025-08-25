@@ -36,7 +36,14 @@ const mapClienteFromDB = (row: any): Cliente => {
     preferencias: {
       barbeariaId: row.barbearia_preferida,
       barbeiroId: row.barbeiro_preferido,
-      servicosPreferidos: row.servicos_preferidos ? JSON.parse(row.servicos_preferidos) : []
+      servicosPreferidos: (() => {
+        try {
+          return row.servicos_preferidos ? JSON.parse(row.servicos_preferidos) : [];
+        } catch (error) {
+          console.warn('Erro ao fazer parse de servicos_preferidos:', row.servicos_preferidos);
+          return [];
+        }
+      })()
     },
     tipoLogin: row.tipo_login,
     googleId: row.google_id,
