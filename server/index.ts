@@ -118,6 +118,14 @@ export function createServer() {
   app.put("/api/combos/:id", atualizarCombo);
   app.delete("/api/combos/:id", excluirCombo);
 
+  // Rotas de diretório (públicas)
+  app.get("/api/diretorio/barbearias", buscarBarbeariasPublicas);
+  app.get("/api/diretorio/cidades", listarCidades);
+  app.get("/api/diretorio/estatisticas", obterEstatisticas);
+  app.get("/api/diretorio/sugestoes", obterSugestoes);
+  app.get("/api/diretorio/barbearia/:id/detalhes", obterDetalhesBarbearia);
+  app.get("/api/diretorio/promocoes", listarPromocoes);
+
   // Rotas de autenticação (públicas)
   app.post("/api/auth/login/celular", loginCelular);
   app.post("/api/auth/login/google", loginGoogle);
