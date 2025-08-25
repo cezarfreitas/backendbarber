@@ -16,17 +16,36 @@ export default defineConfig({
     rollupOptions: {
       external: [
         // Node.js built-ins
-        "fs", "path", "url", "http", "https", "os", "crypto", "stream", 
-        "util", "events", "buffer", "querystring", "child_process",
+        "fs",
+        "path",
+        "url",
+        "http",
+        "https",
+        "os",
+        "crypto",
+        "stream",
+        "util",
+        "events",
+        "buffer",
+        "querystring",
+        "child_process",
         // External dependencies that should not be bundled
-        "express", "cors", "mysql2", "jsonwebtoken", "bcryptjs", 
-        "uuid", "dotenv", "zod",
+        "express",
+        "cors",
+        "mysql2",
+        "jsonwebtoken",
+        "bcryptjs",
+        "uuid",
+        "dotenv",
+        "zod",
       ],
       output: {
         format: "es",
         entryFileNames: "production.mjs",
         // Add banner for debugging
-        banner: "// Barbearia SaaS API - EasyPanel Build\n// Built: " + new Date().toISOString(),
+        banner:
+          "// Barbearia SaaS API - EasyPanel Build\n// Built: " +
+          new Date().toISOString(),
       },
     },
     minify: false, // Keep readable for debugging in EasyPanel
@@ -42,7 +61,7 @@ export default defineConfig({
   define: {
     "process.env.NODE_ENV": '"production"',
     // Add build timestamp for debugging
-    "__BUILD_TIME__": JSON.stringify(new Date().toISOString()),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
   plugins: [
     {

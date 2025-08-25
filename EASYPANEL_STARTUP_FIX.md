@@ -5,12 +5,14 @@
 ### 🔍 Diagnóstico Comum
 
 **Sintomas:**
+
 - Container não inicia ou para imediatamente
-- "No running containers found" 
+- "No running containers found"
 - Build falha silenciosamente
 - Health check nunca passa
 
 **Principais Causas:**
+
 1. **Variáveis de ambiente em falta**
 2. **Health check muito rigoroso**
 3. **Dependências não instaladas**
@@ -20,18 +22,21 @@
 ## ✅ Soluções Implementadas
 
 ### 1. **Dockerfile Otimizado**
+
 - ✅ Health check mais tolerante (5min startup, 15 retries)
 - ✅ Logs detalhados durante build
 - ✅ Verificação de dependências
 - ✅ Script de diagnóstico integrado
 
 ### 2. **Startup Melhorado**
+
 - ✅ Script de diagnóstico (`scripts/easypanel-startup-debug.sh`)
 - ✅ Startup especializado (`server/easypanel-start.ts`)
 - ✅ Error handling robusto
 - ✅ Logs detalhados de inicialização
 
 ### 3. **Health Checks Múltiplos**
+
 - ✅ `/health` - Ultra simples (apenas "OK")
 - ✅ `/api/ping` - Completo com informações
 - ✅ `/api/health` - Detalhado para debug
@@ -63,6 +68,7 @@ PING_MESSAGE=API Barbearia EasyPanel Online!
 ```
 
 ### **Como Gerar Chaves JWT Seguras:**
+
 ```bash
 # No seu terminal local:
 node -e "console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'))"
@@ -72,6 +78,7 @@ node -e "console.log('JWT_REFRESH_SECRET=' + require('crypto').randomBytes(32).t
 ## 🛠️ Passos para Corrigir
 
 ### **1. Atualizar Repository**
+
 - ✅ Push das correções aplicadas
 - ✅ Dockerfile otimizado
 - ✅ Scripts de diagnóstico
@@ -79,12 +86,14 @@ node -e "console.log('JWT_REFRESH_SECRET=' + require('crypto').randomBytes(32).t
 ### **2. Configurar EasyPanel**
 
 #### **A. Environment Variables**
+
 1. Acesse sua app no EasyPanel
 2. Vá em **Settings** → **Environment Variables**
 3. Configure TODAS as variáveis listadas acima
 4. **IMPORTANTE:** Gere chaves JWT únicas e seguras
 
 #### **B. Build Configuration**
+
 ```yaml
 Build Command: docker build -t barbearia-api .
 Dockerfile: ./Dockerfile
@@ -93,6 +102,7 @@ Target: production
 ```
 
 #### **C. Health Check Settings**
+
 ```yaml
 Health Check Path: /health
 Health Check Interval: 30s
@@ -101,6 +111,7 @@ Health Check Retries: 15
 ```
 
 #### **D. Resource Settings (Mínimo)**
+
 ```yaml
 CPU: 0.5 cores
 Memory: 512MB
@@ -109,12 +120,15 @@ Memory: 512MB
 ### **3. Deploy e Monitor**
 
 #### **Deploy:**
+
 1. Configure todas as variáveis
 2. Clique em **"Deploy"**
 3. **Aguarde 5-10 minutos** (startup pode ser lento)
 
 #### **Monitor Logs:**
+
 Procure por estes logs de sucesso:
+
 ```
 🚀 EasyPanel Startup - Barbearia SaaS API
 ✅ Server started successfully!
@@ -125,6 +139,7 @@ Procure por estes logs de sucesso:
 ```
 
 #### **Logs de Erro Comuns:**
+
 ```bash
 # Variáveis em falta:
 ❌ DB_HOST: not set
@@ -142,6 +157,7 @@ Procure por estes logs de sucesso:
 ### **4. Testar Endpoints**
 
 Após deploy bem-sucedido:
+
 ```bash
 # Health checks simples
 curl https://seu-dominio.easypanel.host/health
@@ -163,19 +179,24 @@ curl https://seu-dominio.easypanel.host/api/docs
 ## 🚨 Se Ainda Não Funcionar
 
 ### **1. Use Dockerfile Alternativo**
+
 Se o Dockerfile padrão não funcionar, tente:
+
 ```bash
 # No EasyPanel, altere o Dockerfile para:
 Dockerfile: ./Dockerfile.easypanel
 ```
 
 ### **2. Debug Manual**
+
 Acesse os logs do container no EasyPanel e procure por:
+
 - Mensagens de erro específicas
 - Problemas de conexão
 - Falhas de dependências
 
 ### **3. Teste Build Local**
+
 ```bash
 # No seu ambiente local:
 docker build -t test-barbearia -f Dockerfile.easypanel .
@@ -192,7 +213,9 @@ docker run -p 8080:80 \
 ```
 
 ### **4. Alternativas de Deploy**
+
 Se EasyPanel continuar falhando:
+
 - **Fly.io** (Dockerfile compatível)
 - **Railway** (Deploy simples)
 - **Render** (Auto-deploy do GitHub)
@@ -214,6 +237,7 @@ Se EasyPanel continuar falhando:
 ## 🆘 Suporte
 
 Se nada funcionar:
+
 1. **Copie os logs completos** do EasyPanel
 2. **Verifique todas as environment variables**
 3. **Teste build local** primeiro
