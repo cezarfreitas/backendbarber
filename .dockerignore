@@ -110,9 +110,10 @@ postcss.config.js
 tailwind.config.ts
 components.json
 
-# Keep only server-side code and configs
-!server/
-!shared/
-!package.json
-!pnpm-lock.yaml
-!vite.config.server.ts
+# Frontend dependencies and configs
+.prettierrc*
+.eslintrc*
+.editorconfig
+
+# Keep only server-side code and configs needed for build
+# (these will be explicitly copied in Dockerfile)
