@@ -144,7 +144,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         <div class="section" id="autenticacao">
             <h2>🔐 Autenticação</h2>
-            <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
+            <p>Atualmente a API não requer autenticação. Em produção, implemente autenticaç��o JWT ou API Keys.</p>
         </div>
 
         <div class="section" id="endpoints-barbearias">
@@ -160,7 +160,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <h4>Parâmetros de Query</h4>
                     <table class="table">
                         <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padr��o: 1)</td></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
                         <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
                         <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativa, inativa, pendente</td></tr>
                         <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
@@ -405,8 +405,10 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
         </div>
 
-        <div class="section" id="modelo-barbearia">
-            <h2>🏪 Modelo de Barbearia</h2>
+        <div class="section" id="modelos">
+            <h2>📋 Modelos de Dados</h2>
+
+            <h3>🏪 Barbearia</h3>
             <p>Estrutura completa do objeto barbearia:</p>
             <pre>{
   "id": "string",
