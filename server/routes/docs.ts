@@ -164,6 +164,8 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
                         <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativa, inativa, pendente</td></tr>
                         <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
+                        <tr><td><code>incluirBarbeiros</code></td><td>boolean</td><td>Não</td><td>Incluir lista de barbeiros (padrão: false)</td></tr>
+                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de serviços (padrão: false)</td></tr>
                     </table>
                 </div>
 
