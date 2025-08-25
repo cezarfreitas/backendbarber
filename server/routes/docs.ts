@@ -307,7 +307,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         <div class="section" id="visao-geral">
             <h2>🌟 Visão Geral</h2>
-            <p>A API Barbearia SaaS permite o gerenciamento completo de barbearias, incluindo cadastro, consulta, atualizaç��o e exclusão. Todas as respostas são retornadas em formato JSON.</p>
+            <p>A API Barbearia SaaS permite o gerenciamento completo de barbearias, incluindo cadastro, consulta, atualização e exclusão. Todas as respostas são retornadas em formato JSON.</p>
             
             <h3>Base URL</h3>
             <pre>https://seu-dominio.com/api</pre>
@@ -1014,6 +1014,38 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <li><strong>Freelancer:</strong> Recebe por hora trabalhada (requer valorHora)</li>
             </ul>
 
+            <h3>👥 Cliente</h3>
+            <p>Estrutura do objeto cliente:</p>
+            <pre>{
+  "id": "string",
+  "nome": "string",
+  "email": "string",
+  "celular": "string", // Campo principal para login
+  "dataNascimento": "ISO 8601",
+  "foto": "string", // URL da foto de perfil
+  "endereco": {
+    "rua": "string",
+    "numero": "string",
+    "bairro": "string",
+    "cidade": "string",
+    "estado": "string",
+    "cep": "string"
+  },
+  "preferencias": {
+    "barbeariaId": "string", // Barbearia preferida
+    "barbeiroId": "string", // Barbeiro preferido
+    "servicosPreferidos": ["string"] // IDs dos serviços preferidos
+  },
+  "tipoLogin": "celular" | "google" | "ambos",
+  "googleId": "string", // ID do Google OAuth
+  "emailVerificado": boolean,
+  "celularVerificado": boolean,
+  "status": "ativo" | "inativo" | "suspenso",
+  "dataCadastro": "ISO 8601",
+  "dataAtualizacao": "ISO 8601",
+  "ultimoLogin": "ISO 8601"
+}</pre>
+
             <h3>🎁 Observações sobre Combos</h3>
             <ul>
                 <li><strong>Desconto por valor:</strong> Desconto fixo em reais (ex: R$ 10,00 de desconto)</li>
@@ -1021,6 +1053,15 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <li><strong>Valor original:</strong> Soma dos preços individuais dos serviços</li>
                 <li><strong>Valor combo:</strong> Preço final após aplicação do desconto</li>
                 <li><strong>Mínimo de serviços:</strong> Um combo deve ter pelo menos 2 serviços</li>
+            </ul>
+
+            <h3>🔐 Observações sobre Autenticação</h3>
+            <ul>
+                <li><strong>Token JWT:</strong> Válido por 7 dias, deve ser enviado no header Authorization</li>
+                <li><strong>Refresh Token:</strong> Válido por 30 dias, usado para renovar o token principal</li>
+                <li><strong>Login por celular:</strong> Requer senha cadastrada</li>
+                <li><strong>Login por Google:</strong> Cria conta automaticamente se não existir</li>
+                <li><strong>Formato do header:</strong> Authorization: Bearer {token}</li>
             </ul>
         </div>
 
