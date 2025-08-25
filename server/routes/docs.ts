@@ -614,6 +614,96 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
         </div>
 
+        <div class="section" id="endpoints-combos">
+            <h2>🎁 Endpoints - Combos</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/combos</span>
+                <h4>Listar combos</h4>
+                <p>Retorna lista paginada de combos com filtros opcionais.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
+                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
+                        <tr><td><code>ativo</code></td><td>boolean</td><td>Não</td><td>Filtrar por status ativo/inativo</td></tr>
+                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de serviços (padrão: true)</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/combos/{id}</span>
+                <h4>Buscar combo por ID</h4>
+                <p>Retorna dados detalhados de um combo específico com serviços incluídos.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir serviços completos (padrão: true)</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/combos</span>
+                <h4>Criar novo combo</h4>
+                <p>Cadastra um novo combo de serviços com desconto automático.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "nome": "Corte + Barba Tradicional",
+  "descricao": "Combo clássico com desconto especial",
+  "barbeariaId": "1",
+  "servicoIds": ["1", "2"],
+  "tipoDesconto": "valor",
+  "valorDesconto": 10.00
+}</pre>
+
+                    <h4>Observações importantes:</h4>
+                    <ul>
+                        <li><strong>servicoIds:</strong> Deve conter pelo menos 2 serviços</li>
+                        <li><strong>tipoDesconto:</strong> "valor" (desconto fixo) ou "percentual" (% de desconto)</li>
+                        <li><strong>valorDesconto:</strong> Valor absoluto ou percentual (0-100 para percentual)</li>
+                        <li><strong>Valores automáticos:</strong> valorOriginal, valorCombo e duração são calculados automaticamente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="url">/api/combos/{id}</span>
+                <h4>Atualizar combo</h4>
+                <p>Atualiza dados de um combo existente. Valores são recalculados automaticamente.</p>
+
+                <div class="params">
+                    <h4>Body (JSON) - Campos opcionais</h4>
+                    <pre>{
+  "nome": "Novo nome do combo",
+  "servicoIds": ["1", "2", "4"],
+  "tipoDesconto": "percentual",
+  "valorDesconto": 15.00,
+  "ativo": true
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="url">/api/combos/{id}</span>
+                <h4>Excluir combo</h4>
+                <p>Remove permanentemente um combo do sistema.</p>
+            </div>
+        </div>
+
         <div class="section" id="modelos">
             <h2>📋 Modelos de Dados</h2>
 
