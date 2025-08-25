@@ -92,6 +92,26 @@ export interface Servico {
 }
 
 /**
+ * Interface para dados do combo de serviços
+ */
+export interface Combo {
+  id: string;
+  nome: string;
+  descricao?: string;
+  barbeariaId: string;
+  servicoIds: string[]; // IDs dos serviços incluídos no combo
+  servicos?: Servico[]; // Serviços completos (carregados quando necessário)
+  valorOriginal: number; // Soma dos preços individuais dos serviços
+  valorCombo: number; // Preço do combo (com desconto)
+  tipoDesconto: 'valor' | 'percentual'; // Tipo do desconto aplicado
+  valorDesconto: number; // Valor do desconto (absoluto ou %)
+  duracaoTotalMinutos: number; // Soma das durações dos serviços
+  ativo: boolean;
+  dataCadastro: string;
+  dataAtualizacao: string;
+}
+
+/**
  * DTO para criação de nova barbearia
  */
 export interface CriarBarbeariaRequest {
