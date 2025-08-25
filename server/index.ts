@@ -16,6 +16,13 @@ import {
   atualizarBarbeiro,
   excluirBarbeiro
 } from "./routes/barbeiros";
+import {
+  listarServicos,
+  buscarServico,
+  criarServico,
+  atualizarServico,
+  excluirServico
+} from "./routes/servicos";
 import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
