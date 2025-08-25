@@ -423,7 +423,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <a href="#endpoints-auth" class="nav-sub-item">📱 Login com Celular</a>
                         <a href="#endpoints-auth" class="nav-sub-item">🌐 Login com Google</a>
                         <a href="#endpoints-auth" class="nav-sub-item">🏪 Login Barbearia</a>
-                        <a href="#endpoints-auth" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
+                        <a href="#endpoints-auth" class="nav-sub-item">💇‍♂�� Login Barbeiro</a>
                         <a href="#endpoints-auth" class="nav-sub-item">✅ Verificar Token</a>
                         <a href="#endpoints-auth" class="nav-sub-item">🔄 Renovar Token</a>
                         <a href="#endpoints-auth" class="nav-sub-item">🔑 Alterar Senha</a>
@@ -801,7 +801,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
                         <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia específica</td></tr>
                         <tr><td><code>ativo</code></td><td>boolean</td><td>Não</td><td>Filtrar por status ativo/inativo</td></tr>
-                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de serviços (padrão: true)</td></tr>
+                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir lista de servi��os (padrão: true)</td></tr>
                     </table>
                 </div>
             </div>
@@ -969,6 +969,229 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <span class="url">/api/clientes/{id}</span>
                 <h4>Desativar cliente</h4>
                 <p>Marca cliente como inativo (soft delete). <strong>Requer autenticação.</strong></p>
+            </div>
+        </div>
+
+        <div class="section" id="endpoints-diretorio">
+            <h2>📂 APIs de Diretório</h2>
+            <p>APIs públicas especializadas para catálogo e busca de barbearias. Estes endpoints não requerem autenticação e são otimizados para aplicações de diretório e busca pública.</p>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/barbearias</span>
+                <h4>Busca pública de barbearias</h4>
+                <p>Endpoint otimizado para busca pública com filtros específicos para diretórios.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>q</code></td><td>string</td><td>Não</td><td>Busca por nome, descrição ou bairro</td></tr>
+                        <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
+                        <tr><td><code>bairro</code></td><td>string</td><td>Não</td><td>Filtrar por bairro</td></tr>
+                        <tr><td><code>servicos</code></td><td>array</td><td>Não</td><td>IDs dos serviços desejados</td></tr>
+                        <tr><td><code>avaliacaoMin</code></td><td>number</td><td>Não</td><td>Avaliação mínima (1-5)</td></tr>
+                        <tr><td><code>aberto</code></td><td>boolean</td><td>Não</td><td>Apenas barbearias abertas no momento</td></tr>
+                        <tr><td><code>raio</code></td><td>number</td><td>Não</td><td>Raio em km (requer lat/lng)</td></tr>
+                        <tr><td><code>lat</code></td><td>number</td><td>Não</td><td>Latitude para busca por proximidade</td></tr>
+                        <tr><td><code>lng</code></td><td>number</td><td>Não</td><td>Longitude para busca por proximidade</td></tr>
+                        <tr><td><code>ordenacao</code></td><td>string</td><td>Não</td><td>Ordenar por: distancia, avaliacao, preco, nome</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Máximo 50 resultados (padrão: 20)</td></tr>
+                    </table>
+                </div>
+
+                <div class="response">
+                    <h4>Resposta</h4>
+                    <pre>{
+  "barbearias": [
+    {
+      "id": "1",
+      "nome": "Barbearia do João",
+      "descricao": "Barbearia tradicional",
+      "endereco": {...},
+      "contato": {...},
+      "avaliacaoMedia": 4.8,
+      "totalAvaliacoes": 124,
+      "distancia": 2.5, // em km (se lat/lng fornecidos)
+      "aberta": true,
+      "proximoHorario": "08:00",
+      "servicosPopulares": [
+        { "nome": "Corte Masculino", "preco": 35.00 },
+        { "nome": "Barba", "preco": 25.00 }
+      ]
+    }
+  ],
+  "total": 15,
+  "filtrosAplicados": {...},
+  "sugestoes": ["Centro", "Vila Madalena"]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/cidades</span>
+                <h4>Listar cidades disponíveis</h4>
+                <p>Retorna lista de cidades com barbearias cadastradas.</p>
+
+                <div class="response">
+                    <h4>Resposta</h4>
+                    <pre>{
+  "cidades": [
+    {
+      "nome": "São Paulo",
+      "estado": "SP",
+      "totalBarbearias": 25,
+      "bairros": ["Centro", "Vila Madalena", "Jardins"]
+    },
+    {
+      "nome": "Rio de Janeiro",
+      "estado": "RJ",
+      "totalBarbearias": 18,
+      "bairros": ["Copacabana", "Ipanema", "Tijuca"]
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/estatisticas</span>
+                <h4>Estatísticas do diretório</h4>
+                <p>Informações gerais sobre o diretório de barbearias.</p>
+
+                <div class="response">
+                    <h4>Resposta</h4>
+                    <pre>{
+  "totalBarbearias": 156,
+  "totalCidades": 12,
+  "totalEstados": 5,
+  "avaliacaoGeral": 4.7,
+  "servicosMaisPopulares": [
+    { "servico": "Corte Masculino", "frequencia": 89 },
+    { "servico": "Barba", "frequencia": 72 },
+    { "servico": "Corte + Barba", "frequencia": 65 }
+  ],
+  "cidadesComMaisBarbearias": [
+    { "cidade": "São Paulo", "total": 45 },
+    { "cidade": "Rio de Janeiro", "total": 32 }
+  ],
+  "faixaPrecos": {
+    "min": 15.00,
+    "max": 150.00,
+    "media": 42.50
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/sugestoes</span>
+                <h4>Sugestões de busca</h4>
+                <p>Autocomplete para busca com base no termo digitado.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>termo</code></td><td>string</td><td>Sim</td><td>Termo para autocompletar (mín. 2 chars)</td></tr>
+                        <tr><td><code>tipo</code></td><td>string</td><td>Não</td><td>Tipo: barbearia, cidade, bairro, servico</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Máximo 10 sugestões (padrão: 5)</td></tr>
+                    </table>
+                </div>
+
+                <div class="response">
+                    <h4>Resposta</h4>
+                    <pre>{
+  "sugestoes": [
+    {
+      "tipo": "barbearia",
+      "texto": "Barbearia do João",
+      "complemento": "Centro, São Paulo",
+      "id": "1"
+    },
+    {
+      "tipo": "cidade",
+      "texto": "São Paulo",
+      "complemento": "45 barbearias",
+      "id": "sao-paulo"
+    },
+    {
+      "tipo": "servico",
+      "texto": "Corte Masculino",
+      "complemento": "89 barbearias oferecem",
+      "id": "corte-masculino"
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/barbearia/{id}/detalhes</span>
+                <h4>Detalhes públicos da barbearia</h4>
+                <p>Versão pública com informações otimizadas para diretório.</p>
+
+                <div class="response">
+                    <h4>Resposta</h4>
+                    <pre>{
+  "barbearia": {
+    "id": "1",
+    "nome": "Barbearia do João",
+    "descricao": "A melhor barbearia do bairro",
+    "endereco": {...},
+    "contato": {...},
+    "horarioFuncionamento": {...},
+    "avaliacaoMedia": 4.8,
+    "totalAvaliacoes": 124,
+    "foto": "https://exemplo.com/foto.jpg",
+    "galeria": ["url1", "url2"],
+    "especialidades": ["Corte clássico", "Barba tradicional"],
+    "servicos": [
+      {
+        "nome": "Corte Masculino",
+        "preco": 35.00,
+        "duracao": 45,
+        "categoria": "corte"
+      }
+    ],
+    "barbeiros": [
+      {
+        "nome": "Carlos",
+        "especialidades": ["Corte", "Barba"],
+        "avaliacaoMedia": 4.9
+      }
+    ],
+    "promocoes": [
+      {
+        "titulo": "Corte + Barba",
+        "desconto": 15,
+        "validoAte": "2024-12-31"
+      }
+    ]
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/diretorio/promocoes</span>
+                <h4>Promoções ativas</h4>
+                <p>Lista promoções e combos ativos de todas as barbearias.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
+                        <tr><td><code>descontoMin</code></td><td>number</td><td>Não</td><td>Desconto mínimo (%)</td></tr>
+                        <tr><td><code>categoria</code></td><td>string</td><td>Não</td><td>Categoria do serviço</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
 
