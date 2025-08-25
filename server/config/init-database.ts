@@ -221,18 +221,98 @@ INSERT IGNORE INTO barbeiros (
 );
 `;
 
-// Dados iniciais para serviços
+// Dados iniciais para serviços (removendo o combo manual da lista de serviços)
 const insertInitialServicos = `
 INSERT IGNORE INTO servicos (
   id, nome, descricao, preco, duracao_minutos, barbearia_id, categoria, ativo
-) VALUES 
+) VALUES
 ('1', 'Corte Masculino Tradicional', 'Corte clássico masculino com acabamento na navalha', 35.00, 45, '1', 'corte', true),
 ('2', 'Barba Completa', 'Aparar, modelar e finalizar barba com produtos premium', 25.00, 30, '1', 'barba', true),
-('3', 'Corte + Barba', 'Pacote completo de corte masculino + barba', 55.00, 75, '1', 'combo', true),
 ('4', 'Sobrancelha Masculina', 'Design e limpeza de sobrancelhas masculinas', 20.00, 20, '1', 'design', true),
+('8', 'Lavagem de Cabelo', 'Lavagem profissional com shampoo premium', 15.00, 15, '1', 'lavagem', true),
 ('5', 'Corte Premium Executive', 'Corte executivo com lavagem, corte e finalizações premium', 80.00, 60, '2', 'corte', true),
 ('6', 'Barba Premium', 'Tratamento completo da barba com produtos importados', 50.00, 45, '2', 'barba', true),
-('7', 'Tratamento Capilar', 'Hidratação e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true);
+('7', 'Tratamento Capilar', 'Hidratação e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true),
+('9', 'Relaxamento', 'Relaxamento com produtos importados', 60.00, 45, '2', 'tratamento', true);
+`;
+
+// Dados iniciais para combos
+const insertInitialCombos = `
+INSERT IGNORE INTO combos (
+  id, nome, descricao, barbearia_id, valor_original, valor_combo,
+  tipo_desconto, valor_desconto, duracao_total_minutos, ativo
+) VALUES
+(
+  'combo1',
+  'Corte + Barba Tradicional',
+  'Combo clássico: corte masculino + barba completa com desconto especial',
+  '1',
+  60.00,
+  50.00,
+  'valor',
+  10.00,
+  75,
+  true
+),
+(
+  'combo2',
+  'Pacote Completo Masculino',
+  'Corte + barba + sobrancelha - economia de 15%',
+  '1',
+  80.00,
+  68.00,
+  'percentual',
+  15.00,
+  95,
+  true
+),
+(
+  'combo3',
+  'Premium Executive',
+  'Corte premium + barba premium + tratamento capilar',
+  '2',
+  170.00,
+  140.00,
+  'valor',
+  30.00,
+  135,
+  true
+),
+(
+  'combo4',
+  'Relax Total',
+  'Corte premium + tratamento + relaxamento com 20% de desconto',
+  '2',
+  180.00,
+  144.00,
+  'percentual',
+  20.00,
+  135,
+  true
+);
+`;
+
+// Dados iniciais para relação combo-serviços
+const insertInitialComboServicos = `
+INSERT IGNORE INTO combo_servicos (combo_id, servico_id, ordem) VALUES
+-- Combo 1: Corte + Barba Tradicional
+('combo1', '1', 1), -- Corte Masculino Tradicional
+('combo1', '2', 2), -- Barba Completa
+
+-- Combo 2: Pacote Completo Masculino
+('combo2', '1', 1), -- Corte Masculino Tradicional
+('combo2', '2', 2), -- Barba Completa
+('combo2', '4', 3), -- Sobrancelha Masculina
+
+-- Combo 3: Premium Executive
+('combo3', '5', 1), -- Corte Premium Executive
+('combo3', '6', 2), -- Barba Premium
+('combo3', '7', 3), -- Tratamento Capilar
+
+-- Combo 4: Relax Total
+('combo4', '5', 1), -- Corte Premium Executive
+('combo4', '7', 2), -- Tratamento Capilar
+('combo4', '9', 3); -- Relaxamento
 `;
 
 /**
