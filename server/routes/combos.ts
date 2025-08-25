@@ -171,8 +171,8 @@ export const listarCombos: RequestHandler = async (req, res) => {
     const response: ListarCombosResponse = {
       combos,
       total,
-      pagina,
-      totalPaginas
+      pagina: 1,
+      totalPaginas: 1
     };
 
     res.json(response);
