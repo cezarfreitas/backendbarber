@@ -4,6 +4,36 @@ import { executeQuery, initDatabase } from './database';
  * Script para criar e inicializar as tabelas do banco de dados
  */
 
+/**
+ * Executa query com retry em caso de deadlock
+ */
+const executeQueryWithRetry = async (sql: string, maxRetries = 3): Promise<any> => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await executeQuery(sql);
+    } catch (error: any) {
+      if (error.code === 'ER_LOCK_DEADLOCK' && attempt < maxRetries) {
+        console.log(`⚠️ Deadlock detectado, tentativa ${attempt}/${maxRetries}. Aguardando ${attempt * 1000}ms...`);
+        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
+/**
+ * Verifica se dados já existem na tabela antes de inserir
+ */
+const checkDataExists = async (tableName: string): Promise<boolean> => {
+  try {
+    const result = await executeQuery(`SELECT COUNT(*) as count FROM ${tableName} LIMIT 1`);
+    return (result as any[])[0]?.count > 0;
+  } catch (error) {
+    return false;
+  }
+};
+
 // SQL para criar tabela de barbearias
 const createBarbeariasTable = `
 CREATE TABLE IF NOT EXISTS barbearias (
@@ -280,7 +310,7 @@ INSERT IGNORE INTO servicos (
 ('8', 'Lavagem de Cabelo', 'Lavagem profissional com shampoo premium', 15.00, 15, '1', 'lavagem', true),
 ('5', 'Corte Premium Executive', 'Corte executivo com lavagem, corte e finalizações premium', 80.00, 60, '2', 'corte', true),
 ('6', 'Barba Premium', 'Tratamento completo da barba com produtos importados', 50.00, 45, '2', 'barba', true),
-('7', 'Tratamento Capilar', 'Hidratação e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true),
+('7', 'Tratamento Capilar', 'Hidrata��ão e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true),
 ('9', 'Relaxamento', 'Relaxamento com produtos importados', 60.00, 45, '2', 'tratamento', true);
 `;
 
@@ -532,7 +562,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
       }
 
       if (!hasLastLogin) {
-        console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
+        console.log('��� Adicionando campo ultimo_login na tabela barbearias...');
         try {
           await executeQuery(`
             ALTER TABLE barbearias
