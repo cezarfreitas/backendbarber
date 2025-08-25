@@ -251,29 +251,56 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1>🪒 API Barbearia SaaS</h1>
-            <p>Documentação completa da API para sistema de gestão de barbearias</p>
-        </div>
-    </div>
+    <!-- Sidebar Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
-    <div class="container">
-        <div class="section">
-            <div class="toc">
-                <h3>📋 Índice</h3>
-                <ul>
-                    <li><a href="#visao-geral">Visão Geral</a></li>
-                    <li><a href="#autenticacao">Autenticação</a></li>
-                    <li><a href="#endpoints-barbearias">Endpoints - Barbearias</a></li>
-                    <li><a href="#endpoints-barbeiros">Endpoints - Barbeiros</a></li>
-                    <li><a href="#endpoints-servicos">Endpoints - Serviços</a></li>
-                    <li><a href="#modelos">Modelos de Dados</a></li>
-                    <li><a href="#codigos-resposta">Códigos de Resposta</a></li>
-                    <li><a href="#exemplos">Exemplos de Uso</a></li>
-                </ul>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>🪒 API Docs</h1>
+            <p>Barbearia SaaS</p>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="nav-section">
+                <h3>Começar</h3>
+                <a href="#visao-geral" class="nav-item">Visão Geral</a>
+                <a href="#autenticacao" class="nav-item">Autenticação</a>
+                <a href="#banco-dados" class="nav-item">Banco de Dados</a>
+            </div>
+
+            <div class="nav-section">
+                <h3>Endpoints</h3>
+                <a href="#endpoints-barbearias" class="nav-item">🏪 Barbearias</a>
+                <a href="#endpoints-barbeiros" class="nav-item">💇‍♂️ Barbeiros</a>
+                <a href="#endpoints-servicos" class="nav-item">✂️ Serviços</a>
+            </div>
+
+            <div class="nav-section">
+                <h3>Referência</h3>
+                <a href="#modelos" class="nav-item">Modelos de Dados</a>
+                <a href="#codigos-resposta" class="nav-item">Códigos HTTP</a>
+                <a href="#exemplos" class="nav-item">Exemplos</a>
+            </div>
+
+            <div class="nav-section">
+                <h3>Suporte</h3>
+                <a href="#suporte" class="nav-item">Ajuda & Contato</a>
             </div>
         </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="layout">
+        <main class="main-content" id="mainContent">
+            <div class="hero">
+                <div class="container">
+                    <h1>🪒 API Barbearia SaaS</h1>
+                    <p>Documentação completa da API para sistema de gestão de barbearias com MySQL</p>
+                </div>
+            </div>
+
+            <div class="container">
 
         <div class="section" id="visao-geral">
             <h2>🌟 Visão Geral</h2>
