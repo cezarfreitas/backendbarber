@@ -426,7 +426,7 @@ export async function listarPromocoes(req: Request, res: Response) {
         b.endereco_cidade as cidade,
         b.endereco_estado as estado
       FROM combos c
-      JOIN barbearias b ON c.barbeariaId = b.id
+      JOIN barbearias b ON c.barbearia_id = b.id
       WHERE c.ativo = 1 AND b.status = 'ativa'
     `;
 
