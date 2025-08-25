@@ -103,10 +103,11 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
         sql += ` ORDER BY b.nome`;
     }
 
-    // Paginação
-    const offset = (parseInt(pagina as string) - 1) * parseInt(limite as string);
-    sql += ` LIMIT ? OFFSET ?`;
-    params.push(parseInt(limite as string), offset);
+    // Paginação (usando interpolação de string para evitar problemas com prepared statements)
+    const limiteParsed = Math.max(1, Math.min(100, parseInt(limite as string) || 20)); // Entre 1 e 100
+    const paginaParsed = Math.max(1, parseInt(pagina as string) || 1);
+    const offset = (paginaParsed - 1) * limiteParsed;
+    sql += ` LIMIT ${limiteParsed} OFFSET ${offset}`;
 
     const [rows] = await getPool().execute<Barbearia[]>(sql, params);
 
