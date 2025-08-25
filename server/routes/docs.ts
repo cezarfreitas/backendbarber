@@ -75,6 +75,73 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             margin-bottom: 10px;
             padding: 0 20px;
         }
+
+        /* Tree Structure */
+        .nav-tree { margin-bottom: 15px; }
+        .nav-tree-item {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 8px 20px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-tree-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #3498db;
+        }
+        .nav-tree-item.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+        }
+        .nav-tree-item.expandable::after {
+            content: "▶";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease;
+            font-size: 0.8rem;
+        }
+        .nav-tree-item.expandable.expanded::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        /* Sub-items */
+        .nav-sub-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0,0,0,0.2);
+        }
+        .nav-sub-items.expanded {
+            max-height: 500px;
+        }
+        .nav-sub-item {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 6px 20px 6px 40px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+        .nav-sub-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-left-color: #3498db;
+        }
+        .nav-sub-item.active {
+            color: white;
+            background: rgba(52, 152, 219, 0.2);
+            border-left-color: #3498db;
+        }
+
+        /* Simple nav items (non-expandable) */
         .nav-item {
             display: block;
             color: rgba(255,255,255,0.8);
