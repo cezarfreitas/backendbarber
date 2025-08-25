@@ -40,20 +40,19 @@ let barbearias: Barbearia[] = [
       sexta: { abertura: "08:00", fechamento: "18:00" },
       sabado: { abertura: "08:00", fechamento: "16:00" }
     },
-    servicos: ["Corte de cabelo", "Barba", "Bigode", "Sobrancelha"],
     status: "ativa",
     dataCadastro: "2024-01-15T10:00:00Z",
     dataAtualizacao: "2024-01-15T10:00:00Z"
   },
   {
-    id: "2", 
+    id: "2",
     nome: "BarberShop Premium",
     descricao: "Barbearia moderna com serviços premium",
     endereco: {
       rua: "Av. Paulista",
       numero: "1500",
       bairro: "Bela Vista",
-      cidade: "São Paulo", 
+      cidade: "São Paulo",
       estado: "SP",
       cep: "01310-100"
     },
@@ -74,7 +73,6 @@ let barbearias: Barbearia[] = [
       sexta: { abertura: "09:00", fechamento: "19:00" },
       sabado: { abertura: "09:00", fechamento: "17:00" }
     },
-    servicos: ["Corte premium", "Barba premium", "Tratamento capilar"],
     status: "ativa",
     dataCadastro: "2024-01-20T14:30:00Z",
     dataAtualizacao: "2024-01-20T14:30:00Z"
