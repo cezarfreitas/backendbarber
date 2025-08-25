@@ -1,6 +1,7 @@
 # 🔧 Correção do Deploy EasyPanel
 
 ## ❌ Problema Identificado
+
 O serviço aparece como "Service is not reachable" no EasyPanel devido a:
 
 1. **Conflito de rotas**: Rota "/" duplicada entre `server/index.ts` e `server/node-build.ts`
@@ -10,6 +11,7 @@ O serviço aparece como "Service is not reachable" no EasyPanel devido a:
 ## ✅ Correções Aplicadas
 
 ### 1. **Removido conflito de rotas** (`server/node-build.ts`)
+
 ```typescript
 // ANTES - Conflito
 app.get("/", (req, res) => {
@@ -21,6 +23,7 @@ app.get("/", (req, res) => {
 ```
 
 ### 2. **Corrigido bind do servidor**
+
 ```typescript
 // ANTES
 app.listen(port, () => {...});
@@ -30,16 +33,18 @@ app.listen(port, "0.0.0.0", () => {...});
 ```
 
 ### 3. **Health check mais robusto** (`Dockerfile`)
+
 ```dockerfile
 # ANTES
 HEALTHCHECK CMD node -e "fetch('http://localhost:80/api/ping')..."
 
-# DEPOIS  
+# DEPOIS
 RUN apk add --no-cache curl
 HEALTHCHECK CMD curl -f http://localhost:80/api/ping || exit 1
 ```
 
 ### 4. **Dependências corrigidas**
+
 - `cors` movido para `dependencies`
 - Dockerfile instala todas as dependências
 - `production.mjs` gerado corretamente
@@ -47,12 +52,14 @@ HEALTHCHECK CMD curl -f http://localhost:80/api/ping || exit 1
 ## 🚀 Para Aplicar no EasyPanel
 
 ### Método 1: Rebuild Completo
+
 1. **Push** das correções (botão no topo da interface)
 2. **Delete** o app no EasyPanel
 3. **Recrie** o app do zero
 4. **Deploy** com as novas configurações
 
 ### Método 2: Force Rebuild
+
 1. **Push** das correções
 2. **Settings** > **Redeploy**
 3. **Force rebuild** from scratch
@@ -68,15 +75,15 @@ Após o deploy, teste estes endpoints:
 
 ## 📋 Endpoints Principais da API
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/` | GET | Redireciona para `/docs` |
-| `/api/ping` | GET | Health check |
-| `/api/docs` | GET | Documentação da API |
-| `/api/diretorio/barbearias/todas` | GET | Listar todas as barbearias |
-| `/api/diretorio/barbearias` | GET | Buscar barbearias com filtros |
-| `/api/diretorio/cidades` | GET | Listar cidades |
-| `/api/diretorio/estatisticas` | GET | Estatísticas do sistema |
+| Endpoint                          | Método | Descrição                     |
+| --------------------------------- | ------ | ----------------------------- |
+| `/`                               | GET    | Redireciona para `/docs`      |
+| `/api/ping`                       | GET    | Health check                  |
+| `/api/docs`                       | GET    | Documentação da API           |
+| `/api/diretorio/barbearias/todas` | GET    | Listar todas as barbearias    |
+| `/api/diretorio/barbearias`       | GET    | Buscar barbearias com filtros |
+| `/api/diretorio/cidades`          | GET    | Listar cidades                |
+| `/api/diretorio/estatisticas`     | GET    | Estatísticas do sistema       |
 
 ## 🎯 Resultado Esperado
 
