@@ -310,7 +310,7 @@ INSERT IGNORE INTO servicos (
 ('8', 'Lavagem de Cabelo', 'Lavagem profissional com shampoo premium', 15.00, 15, '1', 'lavagem', true),
 ('5', 'Corte Premium Executive', 'Corte executivo com lavagem, corte e finalizações premium', 80.00, 60, '2', 'corte', true),
 ('6', 'Barba Premium', 'Tratamento completo da barba com produtos importados', 50.00, 45, '2', 'barba', true),
-('7', 'Tratamento Capilar', 'Hidrata��ão e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true),
+('7', 'Tratamento Capilar', 'Hidratação e tratamento do couro cabeludo', 40.00, 30, '2', 'tratamento', true),
 ('9', 'Relaxamento', 'Relaxamento com produtos importados', 60.00, 45, '2', 'tratamento', true);
 `;
 
@@ -504,14 +504,56 @@ export const initializeTables = async (): Promise<void> => {
     console.log('🔄 Verificando campos de autenticação novamente...');
     await migrarTabelasParaAutenticacao();
 
-    // Inserir dados iniciais na ordem correta
+    // Inserir dados iniciais na ordem correta (com verificação)
     console.log('📝 Inserindo dados iniciais...');
-    await executeQuery(insertInitialBarbearias);
-    await executeQuery(insertInitialBarbeiros);
-    await executeQuery(insertInitialServicos);
-    await executeQuery(insertInitialCombos);
-    await executeQuery(insertInitialComboServicos);
-    await executeQuery(insertInitialClientes);
+
+    const barbeariasHasData = await checkDataExists('barbearias');
+    if (!barbeariasHasData) {
+      console.log('📝 Inserindo barbearias...');
+      await executeQueryWithRetry(insertInitialBarbearias);
+    } else {
+      console.log('ℹ️ Dados já existem em barbearias, pulando inserção');
+    }
+
+    const barbeirosHasData = await checkDataExists('barbeiros');
+    if (!barbeirosHasData) {
+      console.log('📝 Inserindo barbeiros...');
+      await executeQueryWithRetry(insertInitialBarbeiros);
+    } else {
+      console.log('ℹ️ Dados já existem em barbeiros, pulando inserção');
+    }
+
+    const servicosHasData = await checkDataExists('servicos');
+    if (!servicosHasData) {
+      console.log('📝 Inserindo serviços...');
+      await executeQueryWithRetry(insertInitialServicos);
+    } else {
+      console.log('ℹ️ Dados já existem em servicos, pulando inserção');
+    }
+
+    const combosHasData = await checkDataExists('combos');
+    if (!combosHasData) {
+      console.log('📝 Inserindo combos...');
+      await executeQueryWithRetry(insertInitialCombos);
+    } else {
+      console.log('ℹ️ Dados já existem em combos, pulando inserção');
+    }
+
+    const comboServicosHasData = await checkDataExists('combo_servicos');
+    if (!comboServicosHasData) {
+      console.log('📝 Inserindo relações combo-serviços...');
+      await executeQueryWithRetry(insertInitialComboServicos);
+    } else {
+      console.log('ℹ️ Dados já existem em combo_servicos, pulando inserção');
+    }
+
+    const clientesHasData = await checkDataExists('clientes');
+    if (!clientesHasData) {
+      console.log('📝 Inserindo clientes...');
+      await executeQueryWithRetry(insertInitialClientes);
+    } else {
+      console.log('ℹ️ Dados já existem em clientes, pulando inserção');
+    }
 
     console.log('✅ Banco de dados inicializado com sucesso!');
 
@@ -562,7 +604,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
       }
 
       if (!hasLastLogin) {
-        console.log('��� Adicionando campo ultimo_login na tabela barbearias...');
+        console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
         try {
           await executeQuery(`
             ALTER TABLE barbearias
