@@ -67,8 +67,8 @@ RUN addgroup -g 1001 -S nodejs && \
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
 
-# Install only production dependencies
-RUN pnpm install --prod --frozen-lockfile && \
+# Install ALL dependencies (not just production) to ensure cors is available
+RUN pnpm install --frozen-lockfile && \
     pnpm store prune && \
     rm -rf ~/.pnpm-store
 
