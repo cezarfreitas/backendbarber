@@ -435,12 +435,18 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-weight: 500;
             color: var(--gray-800);
-            font-size: 1.125rem;
+            font-size: 1rem;
             background: var(--gray-100);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
             flex: 1;
             min-width: 0;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+        .url:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
         }
 
         .params, .response { margin-top: 24px; }
@@ -1363,7 +1369,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/diretorio/estatisticas</span>
                         </div>
                         <h4>Estatísticas do diretório</h4>
-                        <p>Retorna estat��sticas gerais do sistema.</p>
+                        <p>Retorna estatísticas gerais do sistema.</p>
                         
                         <div class="response">
                             <h4>Exemplo de Resposta</h4>
