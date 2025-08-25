@@ -156,16 +156,18 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             transform: translateY(0);
         }
 
-        .sidebar-nav { padding: 24px 0; }
-        .nav-section { margin-bottom: 32px; }
+        .sidebar-nav { padding: var(--spacing-lg) 0; }
+        .nav-section { margin-bottom: var(--spacing-xl); }
+        .nav-section:last-child { margin-bottom: var(--spacing-lg); }
         .nav-section h3 {
             color: var(--gray-300);
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-            padding: 0 24px;
-            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--spacing-md);
+            padding: 0 var(--spacing-lg);
+            font-weight: 700;
+            opacity: 0.9;
         }
 
         /* Tree Structure */
