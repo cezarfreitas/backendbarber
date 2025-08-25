@@ -54,6 +54,7 @@ JWT_SECRET=sua-chave-segura-256-bits
 ```
 
 ### **Health Check:**
+
 ```bash
 URL: /api/ping
 Interval: 30s
@@ -90,12 +91,14 @@ curl http://localhost:8080/api/ping
 ## 📊 **Recursos Recomendados EasyPanel:**
 
 ### **Mínimo:**
+
 - CPU: 0.25 cores
 - RAM: 256 MB
 - Storage: 1 GB
 
 ### **Produção:**
-- CPU: 0.5-1 cores  
+
+- CPU: 0.5-1 cores
 - RAM: 512 MB - 1 GB
 - Storage: 2-5 GB
 

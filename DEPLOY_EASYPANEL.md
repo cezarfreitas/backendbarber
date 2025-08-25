@@ -35,6 +35,7 @@ Target: production
 Configure as seguintes variáveis no EasyPanel:
 
 #### **🔐 Obrigatórias**
+
 ```bash
 NODE_ENV=production
 PORT=80
@@ -54,6 +55,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 ```
 
 #### **⚙️ Opcionais**
+
 ```bash
 PING_MESSAGE=API Barbearia Production Online!
 ```
@@ -74,6 +76,7 @@ Health Check Interval: 30s
 ### 6. **Resources (Recursos)**
 
 #### **Mínimo Recomendado:**
+
 ```yaml
 CPU: 0.25 cores
 Memory: 256 MB
@@ -81,6 +84,7 @@ Storage: 1 GB
 ```
 
 #### **Produção Recomendada:**
+
 ```yaml
 CPU: 0.5-1 cores
 Memory: 512 MB - 1 GB
@@ -124,6 +128,7 @@ Para deploy automático a cada push:
 ### **3. Deploy Manual**
 
 No painel EasyPanel:
+
 1. Clique em "Deploy"
 2. Aguarde o build completar
 3. Verifique os logs em caso de erro
@@ -131,6 +136,7 @@ No painel EasyPanel:
 ## 📊 Monitoramento
 
 ### **Logs em Tempo Real**
+
 ```bash
 # No painel EasyPanel, vá em Logs para ver:
 🚀 Fusion Starter server running on port 80
@@ -141,6 +147,7 @@ No painel EasyPanel:
 ```
 
 ### **Endpoints de Saúde**
+
 ```bash
 # Teste se a API está funcionando:
 GET https://seu-dominio.com/api/ping
@@ -212,6 +219,7 @@ O Dockerfile já está otimizado com multi-stage build para cache eficiente.
 ### **2. Monitoramento**
 
 Configure alertas no EasyPanel para:
+
 - CPU > 80%
 - Memory > 80%
 - Aplicação down
