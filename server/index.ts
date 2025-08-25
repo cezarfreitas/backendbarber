@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { initDatabase } from "./config/database";
 import { handleDemo } from "./routes/demo";
 import {
   listarBarbearias,
