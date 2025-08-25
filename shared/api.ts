@@ -184,6 +184,18 @@ export interface CriarServicoRequest {
 }
 
 /**
+ * DTO para criação de novo combo
+ */
+export interface CriarComboRequest {
+  nome: string;
+  descricao?: string;
+  barbeariaId: string;
+  servicoIds: string[]; // Mínimo 2 serviços
+  tipoDesconto: 'valor' | 'percentual';
+  valorDesconto: number; // Valor absoluto ou percentual (0-100)
+}
+
+/**
  * DTO para atualização de barbearia
  */
 export interface AtualizarBarbeariaRequest {
