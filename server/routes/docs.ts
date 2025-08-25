@@ -193,11 +193,9 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 0;
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-top: 80px;
+            margin-left: 320px;
+            padding-top: 40px;
         }
-        .main-content.shifted { margin-left: 320px; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
 
@@ -562,7 +560,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-auth-celular" class="nav-sub-item">📱 Login por Celular</a>
                             <a href="#endpoints-auth-google" class="nav-sub-item">🔗 Login Google</a>
                             <a href="#endpoints-auth-barbearia" class="nav-sub-item">🏪 Login Barbearia</a>
-                            <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍���️ Login Barbeiro</a>
+                            <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
                             <a href="#endpoints-auth-verify" class="nav-sub-item">✅ Verificar Token</a>
                             <a href="#endpoints-auth-refresh" class="nav-sub-item">🔄 Refresh Token</a>
                         </div>
@@ -1316,7 +1314,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/auth/verificar-token</span>
                         </div>
                         <h4>Verificar token</h4>
-                        <p>Verifica se um token JWT é v��lido.</p>
+                        <p>Verifica se um token JWT é válido.</p>
                         
                         <div class="params">
                             <h4>Body (JSON)</h4>
