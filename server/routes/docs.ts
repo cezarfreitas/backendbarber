@@ -307,7 +307,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         <div class="section" id="visao-geral">
             <h2>🌟 Visão Geral</h2>
-            <p>A API Barbearia SaaS permite o gerenciamento completo de barbearias, incluindo cadastro, consulta, atualização e exclusão. Todas as respostas são retornadas em formato JSON.</p>
+            <p>A API Barbearia SaaS permite o gerenciamento completo de barbearias, incluindo cadastro, consulta, atualizaç��o e exclusão. Todas as respostas são retornadas em formato JSON.</p>
             
             <h3>Base URL</h3>
             <pre>https://seu-dominio.com/api</pre>
@@ -703,6 +703,202 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <span class="url">/api/combos/{id}</span>
                 <h4>Excluir combo</h4>
                 <p>Remove permanentemente um combo do sistema.</p>
+            </div>
+        </div>
+
+        <div class="section" id="endpoints-clientes">
+            <h2>👥 Endpoints - Clientes</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/clientes</span>
+                <h4>Listar clientes</h4>
+                <p>Retorna lista paginada de clientes. <strong>Requer autenticação de admin.</strong></p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
+                        <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
+                        <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativo, inativo, suspenso</td></tr>
+                        <tr><td><code>barbeariaId</code></td><td>string</td><td>Não</td><td>Filtrar por barbearia preferida</td></tr>
+                        <tr><td><code>barbeiroId</code></td><td>string</td><td>Não</td><td>Filtrar por barbeiro preferido</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/clientes/me</span>
+                <h4>Buscar perfil do cliente logado</h4>
+                <p>Retorna dados do cliente autenticado. <strong>Requer autenticação.</strong></p>
+
+                <div class="params">
+                    <h4>Headers</h4>
+                    <table class="table">
+                        <tr><th>Header</th><th>Valor</th><th>Descrição</th></tr>
+                        <tr><td><code>Authorization</code></td><td>Bearer {token}</td><td>Token JWT obtido no login</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="url">/api/clientes/{id}</span>
+                <h4>Buscar cliente por ID</h4>
+                <p>Retorna dados detalhados de um cliente específico.</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/clientes</span>
+                <h4>Cadastrar novo cliente</h4>
+                <p>Cria uma nova conta de cliente (endpoint público).</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "nome": "João Silva",
+  "celular": "11987654321",
+  "senha": "minhasenha123",
+  "email": "joao@email.com",
+  "tipoLogin": "celular",
+  "dataNascimento": "1990-01-01",
+  "endereco": {
+    "rua": "Rua Exemplo",
+    "numero": "123",
+    "bairro": "Centro",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "01234-567"
+  },
+  "preferencias": {
+    "barbeariaId": "1",
+    "barbeiroId": "2"
+  }
+}</pre>
+
+                    <h4>Observações:</h4>
+                    <ul>
+                        <li><strong>nome, celular, tipoLogin:</strong> Obrigatórios</li>
+                        <li><strong>senha:</strong> Obrigatória para tipoLogin "celular"</li>
+                        <li><strong>celular:</strong> Aceita formatos: "11987654321" ou "(11) 98765-4321"</li>
+                        <li><strong>tipoLogin:</strong> "celular" ou "google"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="url">/api/clientes/{id}</span>
+                <h4>Atualizar cliente</h4>
+                <p>Atualiza dados de um cliente. <strong>Requer autenticação.</strong></p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="url">/api/clientes/{id}</span>
+                <h4>Desativar cliente</h4>
+                <p>Marca cliente como inativo (soft delete). <strong>Requer autenticação.</strong></p>
+            </div>
+        </div>
+
+        <div class="section" id="endpoints-auth">
+            <h2>🔐 Endpoints - Autenticação</h2>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/login/celular</span>
+                <h4>Login com celular + senha</h4>
+                <p>Autentica cliente usando celular e senha.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "celular": "11987654321",
+  "senha": "minhasenha123"
+}</pre>
+                </div>
+
+                <div class="response">
+                    <h4>Resposta de Sucesso</h4>
+                    <pre>{
+  "sucesso": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "cliente": {/* dados do cliente */},
+  "expiresIn": 604800,
+  "mensagem": "Login realizado com sucesso"
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/login/google</span>
+                <h4>Login/Cadastro com Google OAuth</h4>
+                <p>Autentica ou cria conta usando Google OAuth.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "googleToken": "google_oauth_token_here",
+  "googleId": "google_user_id",
+  "email": "usuario@gmail.com",
+  "nome": "Nome Usuario",
+  "foto": "https://foto_url.jpg"
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/verificar-token</span>
+                <h4>Verificar token JWT</h4>
+                <p>Valida se um token JWT ainda é válido.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/refresh-token</span>
+                <h4>Renovar token</h4>
+                <p>Gera um novo token usando refresh token.</p>
+
+                <div class="params">
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="url">/api/auth/alterar-senha</span>
+                <h4>Alterar senha</h4>
+                <p>Altera senha do cliente logado. <strong>Requer autenticação.</strong></p>
+
+                <div class="params">
+                    <h4>Headers</h4>
+                    <table class="table">
+                        <tr><th>Header</th><th>Valor</th></tr>
+                        <tr><td><code>Authorization</code></td><td>Bearer {token}</td></tr>
+                    </table>
+
+                    <h4>Body (JSON)</h4>
+                    <pre>{
+  "senhaAtual": "senha_atual",
+  "novaSenha": "nova_senha_123"
+}</pre>
+                </div>
             </div>
         </div>
 
