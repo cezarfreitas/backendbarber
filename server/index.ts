@@ -121,6 +121,7 @@ export function createServer() {
   app.delete("/api/combos/:id", excluirCombo);
 
   // Rotas de diretório (públicas)
+  app.get("/api/diretorio/barbearias/todas", listarTodasBarbearias);
   app.get("/api/diretorio/barbearias", buscarBarbeariasPublicas);
   app.get("/api/diretorio/cidades", listarCidades);
   app.get("/api/diretorio/estatisticas", obterEstatisticas);
