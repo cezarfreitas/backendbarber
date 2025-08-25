@@ -22,10 +22,12 @@ CREATE TABLE IF NOT EXISTS barbearias (
   proprietario_nome VARCHAR(255) NOT NULL,
   proprietario_cpf VARCHAR(14) NOT NULL,
   proprietario_email VARCHAR(255) NOT NULL,
+  senha_hash VARCHAR(255), -- Hash da senha para autenticação
   horario_funcionamento JSON,
   status ENUM('ativa', 'inativa', 'pendente') DEFAULT 'pendente',
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ultimo_login TIMESTAMP NULL, -- Data do último login
   INDEX idx_status (status),
   INDEX idx_cidade (endereco_cidade),
   INDEX idx_email (contato_email)
