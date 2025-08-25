@@ -84,10 +84,16 @@ export function createServer() {
     res.redirect("/docs");
   });
 
-  // Example API routes
+  // Health check endpoint
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "ping";
-    res.json({ message: ping });
+    res.status(200).json({
+      message: ping,
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || "development"
+    });
   });
 
   app.get("/api/demo", handleDemo);

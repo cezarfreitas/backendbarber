@@ -91,8 +91,9 @@ USER nextjs
 EXPOSE 80
 
 # Health check using curl (installed earlier as root)
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:80/api/ping || exit 1
+# Increased start-period and timeout for better reliability on EasyPanel
+HEALTHCHECK --interval=30s --timeout=15s --start-period=120s --retries=5 \
+    CMD curl -f -s http://localhost:80/api/ping || curl -f -s http://0.0.0.0:80/api/ping || exit 1
 
 # Set environment variables
 ENV NODE_ENV=production
