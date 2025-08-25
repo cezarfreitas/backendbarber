@@ -26,5 +26,12 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Rotas das barbearias
+  app.get("/api/barbearias", listarBarbearias);
+  app.get("/api/barbearias/:id", buscarBarbearia);
+  app.post("/api/barbearias", criarBarbearia);
+  app.put("/api/barbearias/:id", atualizarBarbearia);
+  app.delete("/api/barbearias/:id", excluirBarbearia);
+
   return app;
 }
