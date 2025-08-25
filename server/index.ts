@@ -184,28 +184,49 @@ export function createServer() {
   return app;
 }
 
-// Inicializar banco de dados ao iniciar o servidor
-if (process.env.NODE_ENV !== "test") {
-  (async () => {
-    try {
-      await initDatabase();
+// Função para inicializar banco quando o servidor for realmente executado
+export async function initializeDatabase() {
+  try {
+    await initDatabase();
 
-      // Verificar se as tabelas existem
-      const tablesExist = await checkTables();
-      if (!tablesExist) {
-        console.log(
-          "🔧 Tabelas não encontradas, criando estrutura do banco...",
-        );
-        await initializeTables();
-      } else {
-        console.log("✅ Estrutura do banco de dados verificada");
-        console.log(
-          "ℹ️ Tabelas já existem, pulando inicialização para evitar conflitos",
-        );
-      }
-    } catch (error) {
-      console.error("Falha ao inicializar banco de dados:", error);
-      process.exit(1);
+    // Verificar se as tabelas existem
+    const tablesExist = await checkTables();
+    if (!tablesExist) {
+      console.log(
+        "🔧 Tabelas não encontradas, criando estrutura do banco...",
+      );
+      await initializeTables();
+    } else {
+      console.log("✅ Estrutura do banco de dados verificada");
+      console.log(
+        "ℹ️ Tabelas já existem, pulando inicialização para evitar conflitos",
+      );
     }
+  } catch (error) {
+    console.error("Falha ao inicializar banco de dados:", error);
+    process.exit(1);
+  }
+}
+
+// Só executar se for chamado diretamente (não durante import/build)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const PORT = parseInt(process.env.PORT || "8080");
+
+  (async () => {
+    console.log("🚀 Starting Barbearia SaaS API...");
+
+    // Inicializar banco apenas quando executar diretamente
+    if (process.env.NODE_ENV !== "test") {
+      await initializeDatabase();
+    }
+
+    const app = createServer();
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 API Barbearia SaaS running on port ${PORT}`);
+      console.log(`🔧 API: http://localhost:${PORT}/api`);
+      console.log(`📚 Docs: http://localhost:${PORT}/api/docs`);
+      console.log(`🌐 Health: http://localhost:${PORT}/api/ping`);
+    });
   })();
 }
