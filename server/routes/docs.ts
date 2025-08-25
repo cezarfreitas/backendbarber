@@ -1028,26 +1028,60 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         
         // Copy to Clipboard
         function copyToClipboard(button, text) {
+            // Verificar se a API de clipboard está disponível
+            if (!navigator.clipboard) {
+                console.warn('Clipboard API não disponível');
+                return;
+            }
+
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = button.innerHTML;
                 button.innerHTML = '✅ Copiado!';
                 button.classList.add('copied');
-                
+
                 showCopyFeedback();
-                
+
                 setTimeout(() => {
                     button.innerHTML = originalText;
                     button.classList.remove('copied');
                 }, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar texto:', err);
+                // Fallback: tentar copiar usando o método tradicional
+                fallbackCopyTextToClipboard(text);
+                showCopyFeedback();
             });
         }
-        
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Erro no fallback de cópia:', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
         function showCopyFeedback() {
             const feedback = document.getElementById('copyFeedback');
-            feedback.classList.add('show');
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 2000);
+            if (!feedback) return;
+
+            // Garantir que está oculto primeiro
+            feedback.classList.remove('show');
+
+            // Usar requestAnimationFrame para garantir que a classe seja aplicada
+            requestAnimationFrame(() => {
+                feedback.classList.add('show');
+
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2500);
+            });
         }
         
         // Download Postman Collection
