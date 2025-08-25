@@ -2,6 +2,13 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import {
+  listarBarbearias,
+  buscarBarbearia,
+  criarBarbearia,
+  atualizarBarbearia,
+  excluirBarbearia
+} from "./routes/barbearias";
 
 export function createServer() {
   const app = express();
