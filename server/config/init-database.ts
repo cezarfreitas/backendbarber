@@ -466,6 +466,10 @@ export const initializeTables = async (): Promise<void> => {
     console.log('👥 Criando tabela clientes...');
     await executeQuery(createClientesTable);
 
+    // Migrar tabelas existentes para adicionar campos de autenticação
+    console.log('🔄 Verificando e migrando tabelas para autenticação...');
+    await migrarTabelasParaAutenticacao();
+
     // Inserir dados iniciais na ordem correta
     console.log('📝 Inserindo dados iniciais...');
     await executeQuery(insertInitialBarbearias);
@@ -480,6 +484,73 @@ export const initializeTables = async (): Promise<void> => {
   } catch (error) {
     console.error('❌ Erro ao inicializar banco de dados:', error);
     throw error;
+  }
+};
+
+/**
+ * Função para migrar tabelas existentes adicionando campos de autenticação
+ */
+const migrarTabelasParaAutenticacao = async (): Promise<void> => {
+  try {
+    // Verificar e adicionar campos na tabela barbearias
+    const barbeariaColumns = await executeQuery(`
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'barbearias'
+    `);
+
+    const hasPasswordHash = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
+    const hasLastLogin = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+
+    if (!hasPasswordHash) {
+      console.log('🔧 Adicionando campo senha_hash na tabela barbearias...');
+      await executeQuery(`
+        ALTER TABLE barbearias
+        ADD COLUMN senha_hash VARCHAR(255) AFTER proprietario_email
+      `);
+    }
+
+    if (!hasLastLogin) {
+      console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
+      await executeQuery(`
+        ALTER TABLE barbearias
+        ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+      `);
+    }
+
+    // Verificar e adicionar campos na tabela barbeiros
+    const barbeiroColumns = await executeQuery(`
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'barbeiros'
+    `);
+
+    const barbeiroHasPasswordHash = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
+    const barbeiroHasLastLogin = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+
+    if (!barbeiroHasPasswordHash) {
+      console.log('🔧 Adicionando campo senha_hash na tabela barbeiros...');
+      await executeQuery(`
+        ALTER TABLE barbeiros
+        ADD COLUMN senha_hash VARCHAR(255) AFTER cpf
+      `);
+    }
+
+    if (!barbeiroHasLastLogin) {
+      console.log('🔧 Adicionando campo ultimo_login na tabela barbeiros...');
+      await executeQuery(`
+        ALTER TABLE barbeiros
+        ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+      `);
+    }
+
+    console.log('✅ Migração de autenticação concluída!');
+
+  } catch (error) {
+    console.error('⚠️ Erro na migração (pode ser normal se campos já existem):', error.message);
+    // Não falha o processo, apenas mostra o erro
   }
 };
 
