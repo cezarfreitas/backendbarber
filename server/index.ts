@@ -101,6 +101,23 @@ export function createServer() {
   app.put("/api/combos/:id", atualizarCombo);
   app.delete("/api/combos/:id", excluirCombo);
 
+  // Rotas de autenticação (públicas)
+  app.post("/api/auth/login/celular", loginCelular);
+  app.post("/api/auth/login/google", loginGoogle);
+  app.post("/api/auth/verificar-token", verificarTokenAuth);
+  app.post("/api/auth/refresh-token", refreshTokenAuth);
+
+  // Rotas de clientes
+  app.get("/api/clientes", listarClientes); // TODO: Adicionar middleware de admin
+  app.get("/api/clientes/me", verificarAutenticacao, buscarPerfilCliente);
+  app.get("/api/clientes/:id", buscarCliente); // TODO: Adicionar middleware de admin ou próprio cliente
+  app.post("/api/clientes", criarCliente); // Cadastro público
+  app.put("/api/clientes/:id", verificarAutenticacao, atualizarCliente); // TODO: Verificar se é o próprio cliente ou admin
+  app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente); // TODO: Verificar se é o próprio cliente ou admin
+
+  // Rotas de autenticação (privadas - requer login)
+  app.post("/api/auth/alterar-senha", verificarAutenticacao, alterarSenha);
+
   return app;
 }
 
