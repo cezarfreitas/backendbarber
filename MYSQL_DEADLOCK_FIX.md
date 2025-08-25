@@ -1,11 +1,13 @@
 # 🔧 Correção de Deadlock MySQL - EasyPanel
 
 ## ❌ Problema Detectado
+
 ```
 Error [ERR_MYSQL_DEADLOCK]: Deadlock found when trying to get lock; try restarting transaction
 ```
 
 **Sintomas observados:**
+
 - Múltiplas instâncias iniciando simultaneamente
 - Logs duplicados da inicialização do banco
 - Falha na inserção de dados em `combo_servicos`
@@ -21,6 +23,7 @@ Error [ERR_MYSQL_DEADLOCK]: Deadlock found when trying to get lock; try restarti
 ## ✅ Correções Aplicadas
 
 ### 1. **Removida execução desnecessária** (`server/index.ts`)
+
 ```typescript
 // ANTES ❌
 if (!tablesExist) {
@@ -40,15 +43,18 @@ if (!tablesExist) {
 ```
 
 ### 2. **Adicionado retry para deadlocks** (`init-database.ts`)
+
 ```typescript
 const executeQueryWithRetry = async (sql: string, maxRetries = 3) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await executeQuery(sql);
     } catch (error: any) {
-      if (error.code === 'ER_LOCK_DEADLOCK' && attempt < maxRetries) {
-        console.log(`⚠️ Deadlock detectado, tentativa ${attempt}/${maxRetries}`);
-        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+      if (error.code === "ER_LOCK_DEADLOCK" && attempt < maxRetries) {
+        console.log(
+          `⚠️ Deadlock detectado, tentativa ${attempt}/${maxRetries}`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
         continue;
       }
       throw error;
@@ -58,10 +64,13 @@ const executeQueryWithRetry = async (sql: string, maxRetries = 3) => {
 ```
 
 ### 3. **Verificação de dados existentes**
+
 ```typescript
 const checkDataExists = async (tableName: string): Promise<boolean> => {
   try {
-    const result = await executeQuery(`SELECT COUNT(*) as count FROM ${tableName} LIMIT 1`);
+    const result = await executeQuery(
+      `SELECT COUNT(*) as count FROM ${tableName} LIMIT 1`,
+    );
     return (result as any[])[0]?.count > 0;
   } catch (error) {
     return false;
@@ -70,26 +79,29 @@ const checkDataExists = async (tableName: string): Promise<boolean> => {
 ```
 
 ### 4. **Proteção contra execução desnecessária**
+
 ```typescript
 // Verificar se já há dados para evitar execução desnecessária
-const hasData = await checkDataExists('barbearias') && 
-                await checkDataExists('barbeiros') && 
-                await checkDataExists('servicos');
+const hasData =
+  (await checkDataExists("barbearias")) &&
+  (await checkDataExists("barbeiros")) &&
+  (await checkDataExists("servicos"));
 
 if (hasData) {
-  console.log('ℹ️ Dados já existem, pulando inicialização');
+  console.log("ℹ️ Dados já existem, pulando inicialização");
   return;
 }
 ```
 
 ### 5. **Inserção inteligente com verificação**
+
 ```typescript
 // Para cada tabela, verifica se já tem dados antes de inserir
-const barbeariasHasData = await checkDataExists('barbearias');
+const barbeariasHasData = await checkDataExists("barbearias");
 if (!barbeariasHasData) {
   await executeQueryWithRetry(insertInitialBarbearias);
 } else {
-  console.log('ℹ️ Dados já existem em barbearias, pulando inserção');
+  console.log("ℹ️ Dados já existem em barbearias, pulando inserção");
 }
 ```
 
@@ -104,6 +116,7 @@ if (!barbeariasHasData) {
 ## 📊 Resultado Esperado
 
 **Antes (❌ Problemático):**
+
 ```
 🗄️ Inicializando estrutura do banco de dados...
 🗄️ Inicializando estrutura do banco de dados... [DUPLICADO]
@@ -111,6 +124,7 @@ if (!barbeariasHasData) {
 ```
 
 **Depois (✅ Correto):**
+
 ```
 🗄️ Inicializando estrutura do banco de dados...
 ℹ️ Dados já existem, pulando inicialização para evitar conflitos
@@ -120,14 +134,14 @@ if (!barbeariasHasData) {
 ## 🚀 Para Aplicar no EasyPanel
 
 1. **Push das correções** (botão no topo da interface)
-2. **Rebuild no EasyPanel** 
+2. **Rebuild no EasyPanel**
 3. **Container deve iniciar** sem deadlocks
 4. **Status verde** no EasyPanel
 5. **APIs acessíveis** sem erro
 
 ## 🧪 Status das Correções
 
-- ✅ Build testado (209KB) 
+- ✅ Build testado (209KB)
 - ✅ Retry para deadlocks implementado
 - ✅ Verificação de dados existentes
 - ✅ Proteção contra múltiplas execuções

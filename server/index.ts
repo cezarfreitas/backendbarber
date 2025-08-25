@@ -183,7 +183,9 @@ if (process.env.NODE_ENV !== "test") {
         await initializeTables();
       } else {
         console.log("✅ Estrutura do banco de dados verificada");
-        console.log("ℹ️ Tabelas já existem, pulando inicialização para evitar conflitos");
+        console.log(
+          "ℹ️ Tabelas já existem, pulando inicialização para evitar conflitos",
+        );
       }
     } catch (error) {
       console.error("Falha ao inicializar banco de dados:", error);
