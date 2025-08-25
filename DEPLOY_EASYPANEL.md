@@ -133,9 +133,9 @@ No painel EasyPanel:
 ### **Logs em Tempo Real**
 ```bash
 # No painel EasyPanel, vá em Logs para ver:
-🚀 Fusion Starter server running on port 3000
-📱 Frontend: http://localhost:3000
-🔧 API: http://localhost:3000/api
+🚀 Fusion Starter server running on port 80
+📱 Frontend: http://localhost:80
+🔧 API: http://localhost:80/api
 ✅ Conectado ao MySQL: seu-host
 ✅ Estrutura do banco de dados verificada
 ```
