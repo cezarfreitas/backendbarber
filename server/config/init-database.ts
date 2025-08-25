@@ -120,6 +120,45 @@ CREATE TABLE IF NOT EXISTS combo_servicos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 `;
 
+// SQL para criar tabela de clientes
+const createClientesTable = `
+CREATE TABLE IF NOT EXISTS clientes (
+  id VARCHAR(36) PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  email VARCHAR(255),
+  celular VARCHAR(20) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255), -- Hash da senha (nullable para Google login)
+  data_nascimento DATE,
+  foto VARCHAR(500), -- URL da foto de perfil
+  endereco_rua VARCHAR(255),
+  endereco_numero VARCHAR(50),
+  endereco_bairro VARCHAR(100),
+  endereco_cidade VARCHAR(100),
+  endereco_estado VARCHAR(2),
+  endereco_cep VARCHAR(10),
+  barbearia_preferida VARCHAR(36),
+  barbeiro_preferido VARCHAR(36),
+  servicos_preferidos JSON, -- Array de IDs dos serviços preferidos
+  tipo_login ENUM('celular', 'google', 'ambos') NOT NULL DEFAULT 'celular',
+  google_id VARCHAR(255), -- ID único do Google OAuth
+  email_verificado BOOLEAN DEFAULT FALSE,
+  celular_verificado BOOLEAN DEFAULT FALSE,
+  status ENUM('ativo', 'inativo', 'suspenso') DEFAULT 'ativo',
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ultimo_login TIMESTAMP NULL,
+  FOREIGN KEY (barbearia_preferida) REFERENCES barbearias(id) ON DELETE SET NULL,
+  FOREIGN KEY (barbeiro_preferido) REFERENCES barbeiros(id) ON DELETE SET NULL,
+  INDEX idx_celular (celular),
+  INDEX idx_email (email),
+  INDEX idx_google_id (google_id),
+  INDEX idx_status (status),
+  INDEX idx_barbearia_preferida (barbearia_preferida),
+  INDEX idx_barbeiro_preferido (barbeiro_preferido),
+  UNIQUE KEY unique_google_id (google_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+`;
+
 // Dados iniciais para barbearias
 const insertInitialBarbearias = `
 INSERT IGNORE INTO barbearias (
