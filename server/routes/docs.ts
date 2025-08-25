@@ -363,10 +363,6 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             width: 100%;
             border-collapse: collapse;
             margin-top: 16px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--gray-200);
         }
         .table th, .table td {
             padding: 16px;
@@ -534,7 +530,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="clientes-tree">
                             <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
-                            <a href="#endpoints-cliente-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-cliente-id" class="nav-sub-item">�� Buscar por ID</a>
                             <a href="#endpoints-clientes-create" class="nav-sub-item">➕ Criar Cliente</a>
                             <a href="#endpoints-clientes-update" class="nav-sub-item">✏️ Atualizar Cliente</a>
                             <a href="#endpoints-clientes-delete" class="nav-sub-item">🗑️ Excluir Cliente</a>
