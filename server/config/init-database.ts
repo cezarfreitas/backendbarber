@@ -322,7 +322,7 @@ export const initializeTables = async (): Promise<void> => {
   try {
     console.log('🗄️ Inicializando estrutura do banco de dados...');
 
-    // Criar tabelas
+    // Criar tabelas na ordem correta (respeitando foreign keys)
     console.log('📋 Criando tabela barbearias...');
     await executeQuery(createBarbeariasTable);
 
@@ -332,11 +332,19 @@ export const initializeTables = async (): Promise<void> => {
     console.log('✂️ Criando tabela servicos...');
     await executeQuery(createServicosTable);
 
-    // Inserir dados iniciais
+    console.log('🎁 Criando tabela combos...');
+    await executeQuery(createCombosTable);
+
+    console.log('🔗 Criando tabela combo_servicos...');
+    await executeQuery(createComboServicosTable);
+
+    // Inserir dados iniciais na ordem correta
     console.log('📝 Inserindo dados iniciais...');
     await executeQuery(insertInitialBarbearias);
     await executeQuery(insertInitialBarbeiros);
     await executeQuery(insertInitialServicos);
+    await executeQuery(insertInitialCombos);
+    await executeQuery(insertInitialComboServicos);
 
     console.log('✅ Banco de dados inicializado com sucesso!');
 
