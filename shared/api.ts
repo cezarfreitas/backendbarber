@@ -440,6 +440,51 @@ export interface ListarCombosResponse {
 }
 
 /**
+ * Resposta para listar clientes
+ */
+export interface ListarClientesResponse {
+  clientes: Cliente[];
+  total: number;
+  pagina: number;
+  totalPaginas: number;
+}
+
+/**
+ * Resposta de autenticação (login)
+ */
+export interface LoginResponse {
+  sucesso: boolean;
+  token?: string; // JWT token
+  refreshToken?: string; // Refresh token
+  cliente?: Omit<Cliente, 'senha'>; // Dados do cliente sem senha
+  expiresIn?: number; // Tempo de expiração em segundos
+  mensagem?: string;
+  erro?: string;
+}
+
+/**
+ * Payload do JWT Token
+ */
+export interface JWTPayload {
+  clienteId: string;
+  celular: string;
+  email?: string;
+  nome: string;
+  tipoLogin: 'celular' | 'google';
+  iat: number; // Issued at
+  exp: number; // Expires at
+}
+
+/**
+ * Resposta para verificação de token
+ */
+export interface VerificarTokenResponse {
+  valido: boolean;
+  cliente?: Omit<Cliente, 'senha'>;
+  erro?: string;
+}
+
+/**
  * Resposta para operações de sucesso
  */
 export interface ApiResponse<T = any> {
