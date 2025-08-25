@@ -57,7 +57,7 @@ export interface Barbeiro {
   cpf: string;
   tipo: 'comissionado' | 'funcionario' | 'freelancer';
   porcentagemComissao?: number; // Apenas para comissionados (0-100)
-  salarioFixo?: number; // Apenas para funcionários
+  salarioFixo?: number; // Apenas para funcion��rios
   valorHora?: number; // Apenas para freelancers
   barbeariaId: string;
   especialidades?: string[]; // Ex: ["corte masculino", "barba", "coloração"]
@@ -196,8 +196,44 @@ export interface AtualizarBarbeariaRequest {
     sabado?: { abertura: string; fechamento: string };
     domingo?: { abertura: string; fechamento: string };
   };
-  servicos?: string[];
   status?: 'ativa' | 'inativa' | 'pendente';
+}
+
+/**
+ * DTO para atualização de barbeiro
+ */
+export interface AtualizarBarbeiroRequest {
+  nome?: string;
+  email?: string;
+  telefone?: string;
+  cpf?: string;
+  tipo?: 'comissionado' | 'funcionario' | 'freelancer';
+  porcentagemComissao?: number;
+  salarioFixo?: number;
+  valorHora?: number;
+  especialidades?: string[];
+  horarioTrabalho?: {
+    segunda?: { inicio: string; fim: string };
+    terca?: { inicio: string; fim: string };
+    quarta?: { inicio: string; fim: string };
+    quinta?: { inicio: string; fim: string };
+    sexta?: { inicio: string; fim: string };
+    sabado?: { inicio: string; fim: string };
+    domingo?: { inicio: string; fim: string };
+  };
+  status?: 'ativo' | 'inativo' | 'afastado';
+}
+
+/**
+ * DTO para atualização de serviço
+ */
+export interface AtualizarServicoRequest {
+  nome?: string;
+  descricao?: string;
+  preco?: number;
+  duracaoMinutos?: number;
+  categoria?: string;
+  ativo?: boolean;
 }
 
 /**
