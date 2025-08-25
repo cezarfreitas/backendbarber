@@ -1,6 +1,7 @@
 # 🔧 Correção de Permissões Docker - EasyPanel
 
 ## ❌ Problema Detectado
+
 ```
 ERROR: Unable to lock database: Permission denied
 ERROR: Failed to open apk database: Permission denied
@@ -11,6 +12,7 @@ ERROR: Failed to open apk database: Permission denied
 ## ✅ Solução Aplicada
 
 ### **Antes (❌ Incorreto)**
+
 ```dockerfile
 # Set user
 USER nextjs
@@ -20,7 +22,8 @@ RUN apk add --no-cache curl  # ❌ Falha - sem privilégios
 HEALTHCHECK CMD curl -f http://localhost:80/api/ping
 ```
 
-### **Depois (✅ Correto)**  
+### **Depois (✅ Correto)**
+
 ```dockerfile
 # Install pnpm and curl (needed for health check)
 RUN npm install -g pnpm@10.14.0 && \
@@ -38,7 +41,7 @@ HEALTHCHECK CMD curl -f http://localhost:80/api/ping  # ✅ OK
 ## 🔄 Ordem Correta no Dockerfile
 
 1. **Como root**: Instalar pacotes (`pnpm`, `curl`)
-2. **Como root**: Configurar usuário não-root  
+2. **Como root**: Configurar usuário não-root
 3. **Como root**: Copiar arquivos e definir permissões
 4. **Trocar para usuário não-root**: `USER nextjs`
 5. **Como usuário não-root**: Apenas executar aplicação
