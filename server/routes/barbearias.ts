@@ -8,130 +8,103 @@ import {
   ListarBarbeariasResponse,
   ApiResponse
 } from "@shared/api";
+import { executeQuery, executeQuerySingle } from "../config/database";
+import { v4 as uuidv4 } from 'uuid';
 
-// Importar dados dos outros módulos para relacionamentos
-// Em produção, essas consultas seriam feitas no banco de dados
-let barbeiros: Barbeiro[] = [];
-let servicos: Servico[] = [];
+// Instalar uuid se não estiver instalado
+// pnpm add uuid @types/uuid
 
-// Função para importar dados dos outros módulos
-const importarDados = async () => {
-  try {
-    const { barbeiros: barbeirosImportados } = await import("./barbeiros");
-    const { servicos: servicosImportados } = await import("./servicos");
-    // Como são arrays exportados diretamente, precisamos acessar de forma diferente
-    // Por enquanto, vamos simular a busca
-  } catch (error) {
-    // Em caso de erro, usar arrays vazios
-  }
+// Função auxiliar para converter dados do MySQL para o formato da interface
+const mapBarbeariaFromDB = (row: any): Barbearia => {
+  return {
+    id: row.id,
+    nome: row.nome,
+    descricao: row.descricao,
+    endereco: {
+      rua: row.endereco_rua,
+      numero: row.endereco_numero,
+      bairro: row.endereco_bairro,
+      cidade: row.endereco_cidade,
+      estado: row.endereco_estado,
+      cep: row.endereco_cep
+    },
+    contato: {
+      telefone: row.contato_telefone,
+      email: row.contato_email,
+      whatsapp: row.contato_whatsapp
+    },
+    proprietario: {
+      nome: row.proprietario_nome,
+      cpf: row.proprietario_cpf,
+      email: row.proprietario_email
+    },
+    horarioFuncionamento: row.horario_funcionamento ? JSON.parse(row.horario_funcionamento) : {},
+    status: row.status,
+    dataCadastro: row.data_cadastro,
+    dataAtualizacao: row.data_atualizacao
+  };
 };
 
 // Função auxiliar para buscar barbeiros de uma barbearia
-const buscarBarbeirosPorBarbearia = (barbeariaId: string): Barbeiro[] => {
-  // Simulação - em produção seria uma query no banco
-  const barbeirosSimulados: Barbeiro[] = [
-    {
-      id: "1",
-      nome: "Carlos Silva",
-      email: "carlos@barbeariadoroao.com",
-      telefone: "(11) 98888-7777",
-      cpf: "111.222.333-44",
-      tipo: "comissionado",
-      porcentagemComissao: 40,
-      barbeariaId: "1",
-      especialidades: ["Corte masculino", "Barba", "Bigode"],
-      status: "ativo",
-      dataCadastro: "2024-01-16T09:00:00Z",
-      dataAtualizacao: "2024-01-16T09:00:00Z"
-    },
-    {
-      id: "2",
-      nome: "Ricardo Santos",
-      email: "ricardo@barbeariadoroao.com",
-      telefone: "(11) 97777-6666",
-      cpf: "222.333.444-55",
-      tipo: "funcionario",
-      salarioFixo: 3500,
-      barbeariaId: "1",
-      especialidades: ["Corte feminino", "Coloração", "Tratamentos"],
-      status: "ativo",
-      dataCadastro: "2024-01-18T10:30:00Z",
-      dataAtualizacao: "2024-01-18T10:30:00Z"
-    },
-    {
-      id: "3",
-      nome: "Ana Costa",
-      email: "ana@barbershoppremium.com",
-      telefone: "(11) 96666-5555",
-      cpf: "333.444.555-66",
-      tipo: "freelancer",
-      valorHora: 80,
-      barbeariaId: "2",
-      especialidades: ["Corte premium", "Barba premium", "Design de sobrancelhas"],
-      status: "ativo",
-      dataCadastro: "2024-01-20T15:00:00Z",
-      dataAtualizacao: "2024-01-20T15:00:00Z"
-    }
-  ];
+const buscarBarbeirosPorBarbearia = async (barbeariaId: string): Promise<Barbeiro[]> => {
+  try {
+    const rows = await executeQuery(`
+      SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao,
+             salario_fixo, valor_hora, barbearia_id, especialidades,
+             horario_trabalho, status, data_cadastro, data_atualizacao
+      FROM barbeiros
+      WHERE barbearia_id = ? AND status = 'ativo'
+    `, [barbeariaId]);
 
-  return barbeirosSimulados.filter(b => b.barbeariaId === barbeariaId);
+    return rows.map((row: any): Barbeiro => ({
+      id: row.id,
+      nome: row.nome,
+      email: row.email,
+      telefone: row.telefone,
+      cpf: row.cpf,
+      tipo: row.tipo,
+      porcentagemComissao: row.porcentagem_comissao,
+      salarioFixo: row.salario_fixo,
+      valorHora: row.valor_hora,
+      barbeariaId: row.barbearia_id,
+      especialidades: row.especialidades ? JSON.parse(row.especialidades) : [],
+      horarioTrabalho: row.horario_trabalho ? JSON.parse(row.horario_trabalho) : {},
+      status: row.status,
+      dataCadastro: row.data_cadastro,
+      dataAtualizacao: row.data_atualizacao
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar barbeiros:', error);
+    return [];
+  }
 };
 
 // Função auxiliar para buscar serviços de uma barbearia
-const buscarServicosPorBarbearia = (barbeariaId: string): Servico[] => {
-  // Simulação - em produção seria uma query no banco
-  const servicosSimulados: Servico[] = [
-    {
-      id: "1",
-      nome: "Corte Masculino Tradicional",
-      descricao: "Corte clássico masculino com acabamento na navalha",
-      preco: 35.00,
-      duracaoMinutos: 45,
-      barbeariaId: "1",
-      categoria: "corte",
-      ativo: true,
-      dataCadastro: "2024-01-15T10:00:00Z",
-      dataAtualizacao: "2024-01-15T10:00:00Z"
-    },
-    {
-      id: "2",
-      nome: "Barba Completa",
-      descricao: "Aparar, modelar e finalizar barba com produtos premium",
-      preco: 25.00,
-      duracaoMinutos: 30,
-      barbeariaId: "1",
-      categoria: "barba",
-      ativo: true,
-      dataCadastro: "2024-01-15T10:00:00Z",
-      dataAtualizacao: "2024-01-15T10:00:00Z"
-    },
-    {
-      id: "5",
-      nome: "Corte Premium Executive",
-      descricao: "Corte executivo com lavagem, corte e finalizações premium",
-      preco: 80.00,
-      duracaoMinutos: 60,
-      barbeariaId: "2",
-      categoria: "corte",
-      ativo: true,
-      dataCadastro: "2024-01-20T14:30:00Z",
-      dataAtualizacao: "2024-01-20T14:30:00Z"
-    },
-    {
-      id: "6",
-      nome: "Barba Premium",
-      descricao: "Tratamento completo da barba com produtos importados",
-      preco: 50.00,
-      duracaoMinutos: 45,
-      barbeariaId: "2",
-      categoria: "barba",
-      ativo: true,
-      dataCadastro: "2024-01-20T14:30:00Z",
-      dataAtualizacao: "2024-01-20T14:30:00Z"
-    }
-  ];
+const buscarServicosPorBarbearia = async (barbeariaId: string): Promise<Servico[]> => {
+  try {
+    const rows = await executeQuery(`
+      SELECT id, nome, descricao, preco, duracao_minutos, barbearia_id,
+             categoria, ativo, data_cadastro, data_atualizacao
+      FROM servicos
+      WHERE barbearia_id = ? AND ativo = true
+    `, [barbeariaId]);
 
-  return servicosSimulados.filter(s => s.barbeariaId === barbeariaId);
+    return rows.map((row: any): Servico => ({
+      id: row.id,
+      nome: row.nome,
+      descricao: row.descricao,
+      preco: row.preco,
+      duracaoMinutos: row.duracao_minutos,
+      barbeariaId: row.barbearia_id,
+      categoria: row.categoria,
+      ativo: row.ativo,
+      dataCadastro: row.data_cadastro,
+      dataAtualizacao: row.data_atualizacao
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar serviços:', error);
+    return [];
+  }
 };
 
 // Simulação de banco de dados em memória
