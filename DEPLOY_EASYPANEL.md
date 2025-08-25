@@ -61,7 +61,7 @@ PING_MESSAGE=API Barbearia Production Online!
 ### 4. **Configuração de Porta**
 
 ```yaml
-Container Port: 3000
+Container Port: 80
 ```
 
 ### 5. **Health Check**
