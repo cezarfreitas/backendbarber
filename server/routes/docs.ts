@@ -584,26 +584,63 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             .sidebar-toggle {
                 display: block;
                 position: fixed;
-                top: 24px;
-                left: 24px;
+                top: var(--spacing-lg);
+                left: var(--spacing-lg);
                 z-index: 1001;
                 background: var(--primary);
                 color: white;
                 border: none;
-                padding: 12px 16px;
-                border-radius: 8px;
+                padding: var(--spacing-sm) var(--spacing-md);
+                border-radius: var(--border-radius);
                 cursor: pointer;
                 font-size: 16px;
                 font-weight: 500;
                 box-shadow: var(--shadow-md);
             }
-            .main-content { margin-left: 0; }
-            .hero h1 { font-size: 2.5rem; }
-            .container { padding: 16px; }
-            .section { padding: 24px 16px; }
-            .endpoint { padding: 24px 16px; }
-            .endpoint-header { flex-direction: column; align-items: flex-start; }
-            .url { font-size: 1rem; }
+            .main-content {
+                margin-left: 0;
+                padding-top: var(--spacing-3xl);
+            }
+            .container {
+                padding: var(--spacing-md);
+            }
+            .hero {
+                margin: 0 var(--spacing-md) var(--spacing-lg);
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
+            .hero h1 {
+                font-size: 2.25rem;
+                line-height: 1.1;
+            }
+            .hero p {
+                font-size: 1.0625rem;
+            }
+            .section {
+                padding: var(--spacing-lg) 0;
+                margin-bottom: var(--spacing-lg);
+            }
+            .section h2 {
+                font-size: 1.625rem;
+            }
+            .endpoint {
+                padding: var(--spacing-lg) 0;
+                margin-bottom: var(--spacing-lg);
+            }
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            .url {
+                font-size: 0.875rem;
+                width: 100%;
+            }
+            .table {
+                font-size: 0.875rem;
+            }
+            .table th, .table td {
+                padding: var(--spacing-sm);
+            }
         }
 
         /* Animações */
