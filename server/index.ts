@@ -48,5 +48,12 @@ export function createServer() {
   app.put("/api/barbearias/:id", atualizarBarbearia);
   app.delete("/api/barbearias/:id", excluirBarbearia);
 
+  // Rotas dos barbeiros
+  app.get("/api/barbeiros", listarBarbeiros);
+  app.get("/api/barbeiros/:id", buscarBarbeiro);
+  app.post("/api/barbeiros", criarBarbeiro);
+  app.put("/api/barbeiros/:id", atualizarBarbeiro);
+  app.delete("/api/barbeiros/:id", excluirBarbeiro);
+
   return app;
 }
