@@ -58,6 +58,14 @@ import {
   verificarCliente
 } from "./utils/auth";
 import { mostrarDocumentacao } from "./routes/docs";
+import {
+  buscarBarbeariasPublicas,
+  listarCidades,
+  obterEstatisticas,
+  obterSugestoes,
+  obterDetalhesBarbearia,
+  listarPromocoes
+} from "./routes/diretorio";
 
 export function createServer() {
   const app = express();
