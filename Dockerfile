@@ -22,7 +22,7 @@ FROM base AS deps
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
 
-# Install all dependencies (including devDependencies for build)
+# Install dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
 
 # ================================
@@ -30,21 +30,24 @@ RUN pnpm install --frozen-lockfile
 # ================================
 FROM base AS builder
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
+WORKDIR /app
 
-# Install dependencies
+# Copy package files and install dependencies
+COPY package.json pnpm-lock.yaml* ./
 RUN pnpm install --frozen-lockfile
 
-# Copy only necessary files for server build
-COPY package.json pnpm-lock.yaml* ./
-COPY server ./server
-COPY shared ./shared
-COPY vite.config.server.ts ./
-COPY tsconfig.json ./
+# Copy only necessary source files for server build
+COPY server/ ./server/
+COPY shared/ ./shared/
+COPY vite.config.server.ts ./vite.config.server.ts
+COPY tsconfig.json ./tsconfig.json
 
 # Build only the server (backend API)
 RUN pnpm run build:server
+
+# Verify build output
+RUN ls -la dist/server/ && \
+    test -f dist/server/production.mjs || (echo "Build failed: production.mjs not found" && exit 1)
 
 # ================================
 # Production stage
@@ -72,8 +75,7 @@ RUN pnpm install --prod --frozen-lockfile && \
 # Copy built application from builder stage
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
 
-# Copy any additional necessary files
-COPY --chown=nextjs:nodejs server/config ./server/config
+# Copy shared folder if needed at runtime
 COPY --chown=nextjs:nodejs shared ./shared
 
 # Create .env file with default values (can be overridden by environment variables)
@@ -88,7 +90,7 @@ USER nextjs
 EXPOSE 80
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD node -e "fetch('http://localhost:80/api/ping').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"
 
 # Set environment variables
