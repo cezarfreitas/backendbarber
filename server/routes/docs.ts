@@ -171,39 +171,45 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         }
 
         /* Tree Structure */
-        .nav-tree { margin-bottom: 8px; }
+        .nav-tree { margin-bottom: var(--spacing-xs); }
         .nav-tree-item {
             display: block;
             color: var(--gray-300);
             text-decoration: none;
-            padding: 12px 24px;
-            transition: all 0.2s ease;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 3px solid transparent;
             cursor: pointer;
             position: relative;
             font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+            margin: 0 var(--spacing-xs) 2px 0;
         }
         .nav-tree-item:hover {
             color: white;
-            background: rgba(255,255,255,0.1);
-            border-left-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+            border-left-color: var(--primary-light);
+            transform: translateX(2px);
         }
         .nav-tree-item.active {
             color: white;
-            background: rgba(79, 70, 229, 0.2);
+            background: rgba(79, 70, 229, 0.15);
             border-left-color: var(--primary);
         }
         .nav-tree-item.expandable::after {
             content: "▶";
             position: absolute;
-            right: 24px;
+            right: var(--spacing-lg);
             top: 50%;
             transform: translateY(-50%);
-            transition: transform 0.2s ease;
-            font-size: 0.75rem;
+            transition: transform 0.25s ease;
+            font-size: 0.625rem;
+            opacity: 0.7;
         }
         .nav-tree-item.expandable.expanded::after {
             transform: translateY(-50%) rotate(90deg);
+            opacity: 1;
         }
 
         /* Sub-items */
@@ -1130,7 +1136,7 @@ function generateEndpointsDocumentation(): string {
                 
                 <!-- APIs de Diretório -->
                 <div class="section" id="endpoints-diretorio-barbearias">
-                    <h2>📂 APIs de Diretório</h2>
+                    <h2>�� APIs de Diretório</h2>
                     
                     <div class="endpoint">
                         <div class="endpoint-header">
