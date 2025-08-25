@@ -567,27 +567,31 @@ export const verificarTokenAuth: RequestHandler = async (req, res) => {
       } as VerificarTokenResponse);
     }
 
-    // Buscar dados atuais do cliente
-    const cliente = await executeQuerySingle(`
-      SELECT id, nome, email, celular, data_nascimento, foto,
-             endereco_rua, endereco_numero, endereco_bairro, endereco_cidade, 
-             endereco_estado, endereco_cep, barbearia_preferida, barbeiro_preferido,
-             servicos_preferidos, tipo_login, google_id, email_verificado, 
-             celular_verificado, status, data_cadastro, data_atualizacao, ultimo_login
-      FROM clientes 
-      WHERE id = ? AND status = 'ativo'
-    `, [payload.clienteId]);
-
-    if (!cliente) {
-      return res.json({
-        valido: false,
-        erro: "Cliente não encontrado ou inativo"
-      } as VerificarTokenResponse);
-    }
-
-    res.json({
+    const response: VerificarTokenResponse = {
       valido: true,
-      cliente: {
+      userType: payload.userType
+    };
+
+    // Buscar dados baseado no tipo de usuário
+    if (payload.userType === 'cliente') {
+      const cliente = await executeQuerySingle(`
+        SELECT id, nome, email, celular, data_nascimento, foto,
+               endereco_rua, endereco_numero, endereco_bairro, endereco_cidade,
+               endereco_estado, endereco_cep, barbearia_preferida, barbeiro_preferido,
+               servicos_preferidos, tipo_login, google_id, email_verificado,
+               celular_verificado, status, data_cadastro, data_atualizacao, ultimo_login
+        FROM clientes
+        WHERE id = ? AND status = 'ativo'
+      `, [payload.userId]);
+
+      if (!cliente) {
+        return res.json({
+          valido: false,
+          erro: "Cliente não encontrado ou inativo"
+        } as VerificarTokenResponse);
+      }
+
+      response.cliente = {
         id: cliente.id,
         nome: cliente.nome,
         email: cliente.email,
@@ -605,7 +609,13 @@ export const verificarTokenAuth: RequestHandler = async (req, res) => {
         preferencias: {
           barbeariaId: cliente.barbearia_preferida,
           barbeiroId: cliente.barbeiro_preferido,
-          servicosPreferidos: cliente.servicos_preferidos ? JSON.parse(cliente.servicos_preferidos) : []
+          servicosPreferidos: (() => {
+            try {
+              return cliente.servicos_preferidos ? JSON.parse(cliente.servicos_preferidos) : [];
+            } catch (error) {
+              return [];
+            }
+          })()
         },
         tipoLogin: cliente.tipo_login,
         googleId: cliente.google_id,
@@ -615,8 +625,90 @@ export const verificarTokenAuth: RequestHandler = async (req, res) => {
         dataCadastro: cliente.data_cadastro,
         dataAtualizacao: cliente.data_atualizacao,
         ultimoLogin: cliente.ultimo_login
+      };
+
+    } else if (payload.userType === 'barbearia') {
+      const barbearia = await executeQuerySingle(`
+        SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+               endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+               contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+               proprietario_email, horario_funcionamento, status, data_cadastro,
+               data_atualizacao, ultimo_login
+        FROM barbearias
+        WHERE id = ? AND status = 'ativa'
+      `, [payload.userId]);
+
+      if (!barbearia) {
+        return res.json({
+          valido: false,
+          erro: "Barbearia não encontrada ou inativa"
+        } as VerificarTokenResponse);
       }
-    } as VerificarTokenResponse);
+
+      response.barbearia = {
+        id: barbearia.id,
+        nome: barbearia.nome,
+        descricao: barbearia.descricao,
+        endereco: {
+          rua: barbearia.endereco_rua,
+          numero: barbearia.endereco_numero,
+          bairro: barbearia.endereco_bairro,
+          cidade: barbearia.endereco_cidade,
+          estado: barbearia.endereco_estado,
+          cep: barbearia.endereco_cep
+        },
+        contato: {
+          telefone: barbearia.contato_telefone,
+          email: barbearia.contato_email,
+          whatsapp: barbearia.contato_whatsapp
+        },
+        proprietario: {
+          nome: barbearia.proprietario_nome,
+          cpf: barbearia.proprietario_cpf,
+          email: barbearia.proprietario_email
+        },
+        horarioFuncionamento: barbearia.horario_funcionamento ? JSON.parse(barbearia.horario_funcionamento) : {},
+        status: barbearia.status,
+        dataCadastro: barbearia.data_cadastro,
+        dataAtualizacao: barbearia.data_atualizacao
+      };
+
+    } else if (payload.userType === 'barbeiro') {
+      const barbeiro = await executeQuerySingle(`
+        SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao,
+               salario_fixo, valor_hora, barbearia_id, especialidades,
+               horario_trabalho, status, data_cadastro, data_atualizacao, ultimo_login
+        FROM barbeiros
+        WHERE id = ? AND status = 'ativo'
+      `, [payload.userId]);
+
+      if (!barbeiro) {
+        return res.json({
+          valido: false,
+          erro: "Barbeiro não encontrado ou inativo"
+        } as VerificarTokenResponse);
+      }
+
+      response.barbeiro = {
+        id: barbeiro.id,
+        nome: barbeiro.nome,
+        email: barbeiro.email,
+        telefone: barbeiro.telefone,
+        cpf: barbeiro.cpf,
+        tipo: barbeiro.tipo,
+        porcentagemComissao: barbeiro.porcentagem_comissao,
+        salarioFixo: barbeiro.salario_fixo,
+        valorHora: barbeiro.valor_hora,
+        barbeariaId: barbeiro.barbearia_id,
+        especialidades: barbeiro.especialidades ? JSON.parse(barbeiro.especialidades) : [],
+        horarioTrabalho: barbeiro.horario_trabalho ? JSON.parse(barbeiro.horario_trabalho) : {},
+        status: barbeiro.status,
+        dataCadastro: barbeiro.data_cadastro,
+        dataAtualizacao: barbeiro.data_atualizacao
+      };
+    }
+
+    res.json(response);
 
   } catch (error) {
     console.error("Erro na verificação de token:", error);
