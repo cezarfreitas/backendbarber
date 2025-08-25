@@ -38,8 +38,55 @@ export interface Barbearia {
     sabado?: { abertura: string; fechamento: string };
     domingo?: { abertura: string; fechamento: string };
   };
-  servicos?: string[];
   status: 'ativa' | 'inativa' | 'pendente';
+  dataCadastro: string;
+  dataAtualizacao: string;
+  // Relações - serão carregadas separadamente
+  barbeiros?: Barbeiro[];
+  servicos?: Servico[];
+}
+
+/**
+ * Interface para dados do barbeiro
+ */
+export interface Barbeiro {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  cpf: string;
+  tipo: 'comissionado' | 'funcionario' | 'freelancer';
+  porcentagemComissao?: number; // Apenas para comissionados (0-100)
+  salarioFixo?: number; // Apenas para funcionários
+  valorHora?: number; // Apenas para freelancers
+  barbeariaId: string;
+  especialidades?: string[]; // Ex: ["corte masculino", "barba", "coloração"]
+  horarioTrabalho?: {
+    segunda?: { inicio: string; fim: string };
+    terca?: { inicio: string; fim: string };
+    quarta?: { inicio: string; fim: string };
+    quinta?: { inicio: string; fim: string };
+    sexta?: { inicio: string; fim: string };
+    sabado?: { inicio: string; fim: string };
+    domingo?: { inicio: string; fim: string };
+  };
+  status: 'ativo' | 'inativo' | 'afastado';
+  dataCadastro: string;
+  dataAtualizacao: string;
+}
+
+/**
+ * Interface para dados do serviço
+ */
+export interface Servico {
+  id: string;
+  nome: string;
+  descricao?: string;
+  preco: number;
+  duracaoMinutos: number;
+  barbeariaId: string;
+  categoria?: string; // Ex: "corte", "barba", "tratamento"
+  ativo: boolean;
   dataCadastro: string;
   dataAtualizacao: string;
 }
