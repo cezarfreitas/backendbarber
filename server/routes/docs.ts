@@ -476,7 +476,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   "dataAtualizacao": "ISO 8601"
 }</pre>
 
-            <h3>✂��� Serviço</h3>
+            <h3>✂️ Serviço</h3>
             <p>Estrutura do objeto serviço:</p>
             <pre>{
   "id": "string",
@@ -513,11 +513,15 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         <div class="section" id="exemplos">
             <h2>💡 Exemplos de Uso</h2>
-            
-            <h3>Listar barbearias ativas em São Paulo</h3>
-            <pre>GET /api/barbearias?status=ativa&cidade=São Paulo&limite=5</pre>
-            
-            <h3>Criar nova barbearia</h3>
+
+            <h3>🏪 Barbearias</h3>
+            <h4>Listar barbearias ativas em São Paulo com barbeiros e serviços</h4>
+            <pre>GET /api/barbearias?status=ativa&cidade=São Paulo&incluirBarbeiros=true&incluirServicos=true&limite=5</pre>
+
+            <h4>Buscar barbearia específica com todos os dados</h4>
+            <pre>GET /api/barbearias/1</pre>
+
+            <h4>Criar nova barbearia</h4>
             <pre>POST /api/barbearias
 Content-Type: application/json
 
@@ -526,7 +530,7 @@ Content-Type: application/json
   "endereco": {
     "rua": "Rua das Flores",
     "numero": "123",
-    "bairro": "Centro", 
+    "bairro": "Centro",
     "cidade": "São Paulo",
     "estado": "SP",
     "cep": "01234-567"
@@ -542,12 +546,62 @@ Content-Type: application/json
   }
 }</pre>
 
-            <h3>Atualizar status da barbearia</h3>
-            <pre>PUT /api/barbearias/123
+            <h3>💇‍♂️ Barbeiros</h3>
+            <h4>Listar barbeiros comissionados de uma barbearia</h4>
+            <pre>GET /api/barbeiros?barbeariaId=1&tipo=comissionado</pre>
+
+            <h4>Criar barbeiro comissionado</h4>
+            <pre>POST /api/barbeiros
 Content-Type: application/json
 
 {
-  "status": "ativa"
+  "nome": "Carlos Silva",
+  "email": "carlos@barbearia.com",
+  "telefone": "(11) 99999-9999",
+  "cpf": "111.222.333-44",
+  "tipo": "comissionado",
+  "porcentagemComissao": 40,
+  "barbeariaId": "1",
+  "especialidades": ["Corte masculino", "Barba"]
+}</pre>
+
+            <h4>Criar barbeiro funcionário</h4>
+            <pre>POST /api/barbeiros
+Content-Type: application/json
+
+{
+  "nome": "Ana Santos",
+  "email": "ana@barbearia.com",
+  "telefone": "(11) 88888-8888",
+  "cpf": "222.333.444-55",
+  "tipo": "funcionario",
+  "salarioFixo": 3500,
+  "barbeariaId": "1"
+}</pre>
+
+            <h3>✂️ Serviços</h3>
+            <h4>Listar serviços ativos de uma barbearia por faixa de preço</h4>
+            <pre>GET /api/servicos?barbeariaId=1&ativo=true&precoMin=20&precoMax=50</pre>
+
+            <h4>Criar novo serviço</h4>
+            <pre>POST /api/servicos
+Content-Type: application/json
+
+{
+  "nome": "Corte + Barba",
+  "descricao": "Pacote completo de corte e barba",
+  "preco": 55.00,
+  "duracaoMinutos": 75,
+  "barbeariaId": "1",
+  "categoria": "combo"
+}</pre>
+
+            <h4>Atualizar preço de um serviço</h4>
+            <pre>PUT /api/servicos/123
+Content-Type: application/json
+
+{
+  "preco": 40.00
 }</pre>
         </div>
 
