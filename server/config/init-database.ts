@@ -447,6 +447,10 @@ export const initializeTables = async (): Promise<void> => {
   try {
     console.log('🗄️ Inicializando estrutura do banco de dados...');
 
+    // Migrar tabelas existentes PRIMEIRO, antes de criar novas
+    console.log('🔄 Verificando e migrando tabelas para autenticação...');
+    await migrarTabelasParaAutenticacao();
+
     // Criar tabelas na ordem correta (respeitando foreign keys)
     console.log('📋 Criando tabela barbearias...');
     await executeQuery(createBarbeariasTable);
@@ -466,8 +470,8 @@ export const initializeTables = async (): Promise<void> => {
     console.log('👥 Criando tabela clientes...');
     await executeQuery(createClientesTable);
 
-    // Migrar tabelas existentes para adicionar campos de autenticação
-    console.log('🔄 Verificando e migrando tabelas para autenticação...');
+    // Migrar novamente após criação das tabelas para garantir que todas tenham os campos
+    console.log('🔄 Verificando campos de autenticação novamente...');
     await migrarTabelasParaAutenticacao();
 
     // Inserir dados iniciais na ordem correta
