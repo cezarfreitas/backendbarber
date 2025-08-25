@@ -354,13 +354,13 @@ export async function obterDetalhesBarbearia(req: Request, res: Response) {
 
     // Buscar barbeiros da barbearia
     const [barbeiros] = await getPool().execute<RowDataPacket[]>(
-      `SELECT nome, especialidades FROM barbeiros WHERE barbeariaId = ?`,
+      `SELECT nome, especialidades FROM barbeiros WHERE barbearia_id = ?`,
       [id]
     );
 
     // Buscar serviços da barbearia
     const [servicos] = await getPool().execute<RowDataPacket[]>(
-      `SELECT nome, preco, duracaoMinutos, categoria FROM servicos WHERE barbeariaId = ? AND ativo = 1`,
+      `SELECT nome, preco, duracao_minutos, categoria FROM servicos WHERE barbearia_id = ? AND ativo = 1`,
       [id]
     );
 
