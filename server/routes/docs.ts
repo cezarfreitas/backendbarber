@@ -143,7 +143,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         </div>
 
         <div class="section" id="autenticacao">
-            <h2>🔐 Autenticação</h2>
+            <h2>���� Autenticação</h2>
             <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
         </div>
 
@@ -184,13 +184,28 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <span class="method get">GET</span>
                 <span class="url">/api/barbearias/{id}</span>
                 <h4>Buscar barbearia por ID</h4>
-                <p>Retorna dados detalhados de uma barbearia específica.</p>
-                
+                <p>Retorna dados detalhados de uma barbearia específica, incluindo barbeiros e serviços por padrão.</p>
+
+                <div class="params">
+                    <h4>Parâmetros de Query</h4>
+                    <table class="table">
+                        <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td><code>incluirBarbeiros</code></td><td>boolean</td><td>Não</td><td>Incluir barbeiros (padrão: true)</td></tr>
+                        <tr><td><code>incluirServicos</code></td><td>boolean</td><td>Não</td><td>Incluir serviços (padrão: true)</td></tr>
+                    </table>
+                </div>
+
                 <div class="response">
                     <h4>Resposta</h4>
                     <pre>{
   "sucesso": true,
-  "dados": {/* objeto barbearia */}
+  "dados": {
+    "id": "1",
+    "nome": "Barbearia do João",
+    "endereco": {...},
+    "barbeiros": [...],
+    "servicos": [...]
+  }
 }</pre>
                 </div>
             </div>
