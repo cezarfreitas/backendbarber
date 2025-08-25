@@ -483,10 +483,10 @@ export const checkTables = async (): Promise<boolean> => {
       SELECT TABLE_NAME
       FROM INFORMATION_SCHEMA.TABLES
       WHERE TABLE_SCHEMA = DATABASE()
-      AND TABLE_NAME IN ('barbearias', 'barbeiros', 'servicos', 'combos', 'combo_servicos')
+      AND TABLE_NAME IN ('barbearias', 'barbeiros', 'servicos', 'combos', 'combo_servicos', 'clientes')
     `);
 
-    return (tables as any[]).length === 5;
+    return (tables as any[]).length === 6;
   } catch (error) {
     console.error('Erro ao verificar tabelas:', error);
     return false;
