@@ -153,7 +153,7 @@ export const listarBarbearias: RequestHandler = async (req, res) => {
     const countResult = await executeQuerySingle<{ total: number }>(countQuery, params);
     const total = countResult?.total || 0;
     const totalPaginas = Math.ceil(total / limite);
-    const offset = (pagina - 1) * limite;
+    const offset = Math.max(0, (pagina - 1) * limite);
 
     // Buscar barbearias com paginação
     const selectQuery = `
@@ -167,7 +167,9 @@ export const listarBarbearias: RequestHandler = async (req, res) => {
       LIMIT ? OFFSET ?
     `;
 
-    const rows = await executeQuery(selectQuery, [...params, limite, offset]);
+    // Garantir que limite e offset sejam números inteiros válidos
+    const queryParams = [...params, Number(limite), Number(offset)];
+    const rows = await executeQuery(selectQuery, queryParams);
     const barbearias = rows.map(mapBarbeariaFromDB);
 
     // Incluir barbeiros e serviços se solicitado
