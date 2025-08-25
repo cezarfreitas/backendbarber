@@ -78,6 +78,13 @@ export function createServer() {
   app.put("/api/servicos/:id", atualizarServico);
   app.delete("/api/servicos/:id", excluirServico);
 
+  // Rotas dos combos
+  app.get("/api/combos", listarCombos);
+  app.get("/api/combos/:id", buscarCombo);
+  app.post("/api/combos", criarCombo);
+  app.put("/api/combos/:id", atualizarCombo);
+  app.delete("/api/combos/:id", excluirCombo);
+
   return app;
 }
 
