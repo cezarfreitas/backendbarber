@@ -39,8 +39,8 @@ RUN pnpm install --frozen-lockfile
 # Copy only necessary source files for server build
 COPY server/ ./server/
 COPY shared/ ./shared/
-COPY vite.config.server.ts ./vite.config.server.ts
-COPY tsconfig.json ./tsconfig.json
+COPY vite.config.server.ts ./
+COPY tsconfig.json ./
 
 # Build only the server (backend API)
 RUN pnpm run build:server
