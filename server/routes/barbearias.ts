@@ -107,81 +107,9 @@ const buscarServicosPorBarbearia = async (barbeariaId: string): Promise<Servico[
   }
 };
 
-// Simulação de banco de dados em memória
-// Em produção, usar um banco real como PostgreSQL, MongoDB, etc.
-let barbearias: Barbearia[] = [
-  {
-    id: "1",
-    nome: "Barbearia do João",
-    descricao: "A melhor barbearia do bairro, com mais de 20 anos de tradição",
-    endereco: {
-      rua: "Rua das Flores",
-      numero: "123",
-      bairro: "Centro",
-      cidade: "São Paulo",
-      estado: "SP",
-      cep: "01234-567"
-    },
-    contato: {
-      telefone: "(11) 99999-9999",
-      email: "contato@barbeariadoroao.com",
-      whatsapp: "(11) 99999-9999"
-    },
-    proprietario: {
-      nome: "João Silva",
-      cpf: "123.456.789-00",
-      email: "joao@barbeariadoroao.com"
-    },
-    horarioFuncionamento: {
-      segunda: { abertura: "08:00", fechamento: "18:00" },
-      terca: { abertura: "08:00", fechamento: "18:00" },
-      quarta: { abertura: "08:00", fechamento: "18:00" },
-      quinta: { abertura: "08:00", fechamento: "18:00" },
-      sexta: { abertura: "08:00", fechamento: "18:00" },
-      sabado: { abertura: "08:00", fechamento: "16:00" }
-    },
-    status: "ativa",
-    dataCadastro: "2024-01-15T10:00:00Z",
-    dataAtualizacao: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "2",
-    nome: "BarberShop Premium",
-    descricao: "Barbearia moderna com serviços premium",
-    endereco: {
-      rua: "Av. Paulista",
-      numero: "1500",
-      bairro: "Bela Vista",
-      cidade: "São Paulo",
-      estado: "SP",
-      cep: "01310-100"
-    },
-    contato: {
-      telefone: "(11) 88888-8888",
-      email: "contato@barbershoppremium.com"
-    },
-    proprietario: {
-      nome: "Maria Santos",
-      cpf: "987.654.321-00",
-      email: "maria@barbershoppremium.com"
-    },
-    horarioFuncionamento: {
-      segunda: { abertura: "09:00", fechamento: "19:00" },
-      terca: { abertura: "09:00", fechamento: "19:00" },
-      quarta: { abertura: "09:00", fechamento: "19:00" },
-      quinta: { abertura: "09:00", fechamento: "19:00" },
-      sexta: { abertura: "09:00", fechamento: "19:00" },
-      sabado: { abertura: "09:00", fechamento: "17:00" }
-    },
-    status: "ativa",
-    dataCadastro: "2024-01-20T14:30:00Z",
-    dataAtualizacao: "2024-01-20T14:30:00Z"
-  }
-];
-
 // Função para gerar ID único
 const gerarId = (): string => {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  return uuidv4();
 };
 
 /**
