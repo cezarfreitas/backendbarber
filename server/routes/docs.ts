@@ -59,10 +59,14 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
             color: var(--gray-800);
-            background: var(--gray-50);
+            background: var(--gray-25);
             overflow-x: hidden;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         /* Layout Principal */
@@ -1139,7 +1143,7 @@ function generateEndpointsDocumentation(): string {
                                     <tr>
                                         <td><code>ordenar</code></td>
                                         <td>string</td>
-                                        <td>Ordenaç��o (relevancia, distancia, avaliacao)</td>
+                                        <td>Ordenação (relevancia, distancia, avaliacao)</td>
                                         <td>relevancia</td>
                                     </tr>
                                 </tbody>
