@@ -156,6 +156,7 @@ export const listarBarbearias: RequestHandler = async (req, res) => {
     const offset = Math.max(0, (pagina - 1) * limite);
 
     // Buscar barbearias com paginação
+    // Usar string interpolation para LIMIT e OFFSET (com validação para evitar SQL injection)
     const selectQuery = `
       SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
              endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
@@ -164,12 +165,10 @@ export const listarBarbearias: RequestHandler = async (req, res) => {
       FROM barbearias
       ${whereClause}
       ORDER BY nome
-      LIMIT ? OFFSET ?
+      LIMIT ${limite} OFFSET ${offset}
     `;
 
-    // Garantir que limite e offset sejam números inteiros válidos
-    const queryParams = [...params, Number(limite), Number(offset)];
-    const rows = await executeQuery(selectQuery, queryParams);
+    const rows = await executeQuery(selectQuery, params);
     const barbearias = rows.map(mapBarbeariaFromDB);
 
     // Incluir barbeiros e serviços se solicitado
