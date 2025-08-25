@@ -74,22 +74,22 @@ COPY --chown=nextjs:nodejs shared ./shared
 
 # Create .env file with default values (can be overridden by environment variables)
 RUN echo "NODE_ENV=production" > .env && \
-    echo "PORT=3000" >> .env && \
+    echo "PORT=80" >> .env && \
     chown nextjs:nodejs .env
 
 # Set user
 USER nextjs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "fetch('http://localhost:3000/api/ping').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"
+    CMD node -e "fetch('http://localhost:80/api/ping').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=80
 
 # Start the application
 CMD ["node", "dist/server/production.mjs"]
