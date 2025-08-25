@@ -466,8 +466,8 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     
     <div class="layout">
         <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-        
-        <nav class="sidebar" id="sidebar">
+
+        <nav class="sidebar active" id="sidebar">
             <div class="sidebar-header">
                 <h1>🪒 API Barbearia</h1>
                 <p>Sistema completo para gestão de barbearias</p>
