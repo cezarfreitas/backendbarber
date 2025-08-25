@@ -496,65 +496,113 @@ export const initializeTables = async (): Promise<void> => {
  */
 const migrarTabelasParaAutenticacao = async (): Promise<void> => {
   try {
-    // Verificar e adicionar campos na tabela barbearias
-    const barbeariaColumns = await executeQuery(`
-      SELECT COLUMN_NAME
-      FROM INFORMATION_SCHEMA.COLUMNS
+    // Verificar se a tabela barbearias existe
+    const barbeariasExists = await executeQuery(`
+      SELECT COUNT(*) as count
+      FROM INFORMATION_SCHEMA.TABLES
       WHERE TABLE_SCHEMA = DATABASE()
       AND TABLE_NAME = 'barbearias'
     `);
 
-    const hasPasswordHash = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
-    const hasLastLogin = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
-
-    if (!hasPasswordHash) {
-      console.log('🔧 Adicionando campo senha_hash na tabela barbearias...');
-      await executeQuery(`
-        ALTER TABLE barbearias
-        ADD COLUMN senha_hash VARCHAR(255) AFTER proprietario_email
+    if ((barbeariasExists as any[])[0]?.count > 0) {
+      // Verificar e adicionar campos na tabela barbearias
+      const barbeariaColumns = await executeQuery(`
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'barbearias'
       `);
+
+      const hasPasswordHash = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
+      const hasLastLogin = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+
+      if (!hasPasswordHash) {
+        console.log('🔧 Adicionando campo senha_hash na tabela barbearias...');
+        try {
+          await executeQuery(`
+            ALTER TABLE barbearias
+            ADD COLUMN senha_hash VARCHAR(255) AFTER proprietario_email
+          `);
+          console.log('✅ Campo senha_hash adicionado à tabela barbearias');
+        } catch (alterError) {
+          console.error('❌ Erro ao adicionar senha_hash à barbearias:', alterError.message);
+        }
+      } else {
+        console.log('ℹ️ Campo senha_hash já existe na tabela barbearias');
+      }
+
+      if (!hasLastLogin) {
+        console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
+        try {
+          await executeQuery(`
+            ALTER TABLE barbearias
+            ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+          `);
+          console.log('✅ Campo ultimo_login adicionado à tabela barbearias');
+        } catch (alterError) {
+          console.error('❌ Erro ao adicionar ultimo_login à barbearias:', alterError.message);
+        }
+      } else {
+        console.log('ℹ️ Campo ultimo_login já existe na tabela barbearias');
+      }
     }
 
-    if (!hasLastLogin) {
-      console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
-      await executeQuery(`
-        ALTER TABLE barbearias
-        ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
-      `);
-    }
-
-    // Verificar e adicionar campos na tabela barbeiros
-    const barbeiroColumns = await executeQuery(`
-      SELECT COLUMN_NAME
-      FROM INFORMATION_SCHEMA.COLUMNS
+    // Verificar se a tabela barbeiros existe
+    const barbeirosExists = await executeQuery(`
+      SELECT COUNT(*) as count
+      FROM INFORMATION_SCHEMA.TABLES
       WHERE TABLE_SCHEMA = DATABASE()
       AND TABLE_NAME = 'barbeiros'
     `);
 
-    const barbeiroHasPasswordHash = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
-    const barbeiroHasLastLogin = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
-
-    if (!barbeiroHasPasswordHash) {
-      console.log('🔧 Adicionando campo senha_hash na tabela barbeiros...');
-      await executeQuery(`
-        ALTER TABLE barbeiros
-        ADD COLUMN senha_hash VARCHAR(255) AFTER cpf
+    if ((barbeirosExists as any[])[0]?.count > 0) {
+      // Verificar e adicionar campos na tabela barbeiros
+      const barbeiroColumns = await executeQuery(`
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'barbeiros'
       `);
-    }
 
-    if (!barbeiroHasLastLogin) {
-      console.log('🔧 Adicionando campo ultimo_login na tabela barbeiros...');
-      await executeQuery(`
-        ALTER TABLE barbeiros
-        ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
-      `);
+      const barbeiroHasPasswordHash = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
+      const barbeiroHasLastLogin = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+
+      if (!barbeiroHasPasswordHash) {
+        console.log('🔧 Adicionando campo senha_hash na tabela barbeiros...');
+        try {
+          await executeQuery(`
+            ALTER TABLE barbeiros
+            ADD COLUMN senha_hash VARCHAR(255) AFTER cpf
+          `);
+          console.log('✅ Campo senha_hash adicionado à tabela barbeiros');
+        } catch (alterError) {
+          console.error('❌ Erro ao adicionar senha_hash à barbeiros:', alterError.message);
+        }
+      } else {
+        console.log('ℹ️ Campo senha_hash já existe na tabela barbeiros');
+      }
+
+      if (!barbeiroHasLastLogin) {
+        console.log('🔧 Adicionando campo ultimo_login na tabela barbeiros...');
+        try {
+          await executeQuery(`
+            ALTER TABLE barbeiros
+            ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+          `);
+          console.log('✅ Campo ultimo_login adicionado à tabela barbeiros');
+        } catch (alterError) {
+          console.error('❌ Erro ao adicionar ultimo_login à barbeiros:', alterError.message);
+        }
+      } else {
+        console.log('ℹ️ Campo ultimo_login já existe na tabela barbeiros');
+      }
     }
 
     console.log('✅ Migração de autenticação concluída!');
 
   } catch (error) {
-    console.error('⚠️ Erro na migração (pode ser normal se campos já existem):', error.message);
-    // Não falha o processo, apenas mostra o erro
+    console.error('⚠️ Erro na migração de autenticação:', error.message);
+    // Não falha o processo, pois pode ser que as tabelas ainda não existam
   }
 };
 
