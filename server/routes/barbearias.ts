@@ -221,6 +221,8 @@ export const listarBarbearias: RequestHandler = (req, res) => {
     const limite = parseInt(req.query.limite as string) || 10;
     const status = req.query.status as string;
     const cidade = req.query.cidade as string;
+    const incluirBarbeiros = req.query.incluirBarbeiros === 'true';
+    const incluirServicos = req.query.incluirServicos === 'true';
 
     let barbeariasFiltradas = [...barbearias];
 
@@ -231,7 +233,7 @@ export const listarBarbearias: RequestHandler = (req, res) => {
 
     // Filtrar por cidade se fornecido
     if (cidade) {
-      barbeariasFiltradas = barbeariasFiltradas.filter(b => 
+      barbeariasFiltradas = barbeariasFiltradas.filter(b =>
         b.endereco.cidade.toLowerCase().includes(cidade.toLowerCase())
       );
     }
@@ -243,8 +245,23 @@ export const listarBarbearias: RequestHandler = (req, res) => {
 
     const barbeariasPaginadas = barbeariasFiltradas.slice(inicio, fim);
 
+    // Incluir barbeiros e serviços se solicitado
+    const barbeariasComRelacionamentos = barbeariasPaginadas.map(barbearia => {
+      const barbeariaCompleta: Barbearia = { ...barbearia };
+
+      if (incluirBarbeiros) {
+        barbeariaCompleta.barbeiros = buscarBarbeirosPorBarbearia(barbearia.id);
+      }
+
+      if (incluirServicos) {
+        barbeariaCompleta.servicos = buscarServicosPorBarbearia(barbearia.id);
+      }
+
+      return barbeariaCompleta;
+    });
+
     const response: ListarBarbeariasResponse = {
-      barbearias: barbeariasPaginadas,
+      barbearias: barbeariasComRelacionamentos,
       total,
       pagina,
       totalPaginas
