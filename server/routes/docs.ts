@@ -790,11 +790,39 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   "dataAtualizacao": "ISO 8601"
 }</pre>
 
+            <h3>🎁 Combo</h3>
+            <p>Estrutura do objeto combo de serviços:</p>
+            <pre>{
+  "id": "string",
+  "nome": "string",
+  "descricao": "string",
+  "barbeariaId": "string",
+  "servicoIds": ["string"], // IDs dos serviços incluídos
+  "servicos": [/* array de objetos Servico */], // Carregado quando solicitado
+  "valorOriginal": number, // Soma dos preços individuais
+  "valorCombo": number, // Preço final com desconto
+  "tipoDesconto": "valor" | "percentual",
+  "valorDesconto": number, // Valor do desconto aplicado
+  "duracaoTotalMinutos": number, // Soma das durações
+  "ativo": boolean,
+  "dataCadastro": "ISO 8601",
+  "dataAtualizacao": "ISO 8601"
+}</pre>
+
             <h3>💡 Observações sobre Tipos de Barbeiro</h3>
             <ul>
                 <li><strong>Comissionado:</strong> Recebe percentual sobre vendas (requer porcentagemComissao)</li>
                 <li><strong>Funcionário:</strong> Recebe salário fixo mensal (requer salarioFixo)</li>
                 <li><strong>Freelancer:</strong> Recebe por hora trabalhada (requer valorHora)</li>
+            </ul>
+
+            <h3>🎁 Observações sobre Combos</h3>
+            <ul>
+                <li><strong>Desconto por valor:</strong> Desconto fixo em reais (ex: R$ 10,00 de desconto)</li>
+                <li><strong>Desconto percentual:</strong> Percentual de desconto sobre o valor original (ex: 15% de desconto)</li>
+                <li><strong>Valor original:</strong> Soma dos preços individuais dos serviços</li>
+                <li><strong>Valor combo:</strong> Preço final após aplicação do desconto</li>
+                <li><strong>Mínimo de serviços:</strong> Um combo deve ter pelo menos 2 serviços</li>
             </ul>
         </div>
 
