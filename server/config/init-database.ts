@@ -81,6 +81,45 @@ CREATE TABLE IF NOT EXISTS servicos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 `;
 
+// SQL para criar tabela de combos
+const createCombosTable = `
+CREATE TABLE IF NOT EXISTS combos (
+  id VARCHAR(36) PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  descricao TEXT,
+  barbearia_id VARCHAR(36) NOT NULL,
+  valor_original DECIMAL(10,2) NOT NULL,
+  valor_combo DECIMAL(10,2) NOT NULL,
+  tipo_desconto ENUM('valor', 'percentual') NOT NULL,
+  valor_desconto DECIMAL(10,2) NOT NULL,
+  duracao_total_minutos INT NOT NULL,
+  ativo BOOLEAN DEFAULT TRUE,
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (barbearia_id) REFERENCES barbearias(id) ON DELETE CASCADE,
+  INDEX idx_barbearia (barbearia_id),
+  INDEX idx_ativo (ativo),
+  INDEX idx_valor_combo (valor_combo),
+  UNIQUE KEY unique_nome_barbearia (nome, barbearia_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+`;
+
+// SQL para criar tabela de relação combo-serviços (many-to-many)
+const createComboServicosTable = `
+CREATE TABLE IF NOT EXISTS combo_servicos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  combo_id VARCHAR(36) NOT NULL,
+  servico_id VARCHAR(36) NOT NULL,
+  ordem INT DEFAULT 1,
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (combo_id) REFERENCES combos(id) ON DELETE CASCADE,
+  FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_combo_servico (combo_id, servico_id),
+  INDEX idx_combo (combo_id),
+  INDEX idx_servico (servico_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+`;
+
 // Dados iniciais para barbearias
 const insertInitialBarbearias = `
 INSERT IGNORE INTO barbearias (
