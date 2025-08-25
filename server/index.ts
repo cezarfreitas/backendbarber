@@ -9,6 +9,7 @@ import {
   atualizarBarbearia,
   excluirBarbearia
 } from "./routes/barbearias";
+import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
   const app = express();
