@@ -423,7 +423,7 @@ INSERT IGNORE INTO clientes (
   'SP',
   '2',
   NULL,
-  '["combo1", "combo3"]',
+  '["1", "4"]',
   'ambos',
   true,
   true,
