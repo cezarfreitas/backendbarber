@@ -74,7 +74,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         /* Sidebar */
         .sidebar {
-            width: 320px;
+            width: 280px;
             background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-800) 100%);
             color: white;
             position: fixed;
@@ -83,6 +83,21 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             z-index: 1000;
             transform: translateX(0);
             border-right: 1px solid var(--gray-700);
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray-600) transparent;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gray-600);
+            border-radius: 3px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
         }
 
         /* Toggle Button - Hidden */
