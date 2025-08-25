@@ -113,14 +113,72 @@ const gerarId = (): string => {
  */
 export const listarCombos: RequestHandler = async (req, res) => {
   try {
-    // Versão simplificada para teste
-    const rows = await executeQuery('SELECT * FROM combos LIMIT 10');
+    const pagina = parseInt(req.query.pagina as string) || 1;
+    const limite = parseInt(req.query.limite as string) || 10;
+    const barbeariaId = req.query.barbeariaId as string;
+    const ativo = req.query.ativo as string;
+    const incluirServicos = req.query.incluirServicos !== 'false'; // Incluir por padrão
+
+    // Construir query base
+    let selectQuery = `
+      SELECT id, nome, descricao, barbearia_id, valor_original, valor_combo,
+             tipo_desconto, valor_desconto, duracao_total_minutos, ativo,
+             data_cadastro, data_atualizacao
+      FROM combos
+    `;
+
+    let countQuery = 'SELECT COUNT(*) as total FROM combos';
+    const whereConditions: string[] = [];
+    const params: any[] = [];
+
+    // Adicionar filtros
+    if (barbeariaId) {
+      whereConditions.push('barbearia_id = ?');
+      params.push(barbeariaId);
+    }
+
+    if (ativo !== undefined) {
+      whereConditions.push('ativo = ?');
+      params.push(ativo === 'true' ? 1 : 0);
+    }
+
+    // Aplicar WHERE se houver condições
+    if (whereConditions.length > 0) {
+      const whereClause = ` WHERE ${whereConditions.join(' AND ')}`;
+      selectQuery += whereClause;
+      countQuery += whereClause;
+    }
+
+    // Contar total de registros
+    const countResult = await executeQuerySingle<{ total: number }>(countQuery, params);
+    const total = countResult?.total || 0;
+    const totalPaginas = Math.ceil(total / limite);
+    const offset = (pagina - 1) * limite;
+
+    // Adicionar ordenação e paginação
+    selectQuery += ' ORDER BY nome LIMIT ? OFFSET ?';
+    const allParams = [...params, limite, offset];
+
+    const rows = await executeQuery(selectQuery, allParams);
+    const combos = await Promise.all(
+      rows.map(async (row: any) => {
+        const combo = mapComboFromDB(row);
+        const { servicoIds, servicos } = await buscarServicosPorCombo(combo.id);
+
+        combo.servicoIds = servicoIds;
+        if (incluirServicos) {
+          combo.servicos = servicos;
+        }
+
+        return combo;
+      })
+    );
 
     const response: ListarCombosResponse = {
-      combos: rows.map(mapComboFromDB),
-      total: rows.length,
-      pagina: 1,
-      totalPaginas: 1
+      combos,
+      total,
+      pagina,
+      totalPaginas
     };
 
     res.json(response);
@@ -265,7 +323,7 @@ export const criarCombo: RequestHandler = async (req, res) => {
     // Buscar combo criado com serviços
     const comboCreated = await buscarCombo({ params: { id: comboId }, query: {} } as any, res);
     
-    if (res.headersSent) return; // Se buscarCombo já enviou resposta
+    if (res.headersSent) return; // Se buscarCombo j�� enviou resposta
 
     res.status(201).json({
       sucesso: true,
