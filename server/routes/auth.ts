@@ -962,30 +962,58 @@ export const refreshTokenAuth: RequestHandler = async (req, res) => {
       } as LoginResponse);
     }
 
-    // Buscar cliente
-    const cliente = await executeQuerySingle(`
-      SELECT id, nome, email, celular, tipo_login, status
-      FROM clientes 
-      WHERE id = ? AND status = 'ativo'
-    `, [(payload as any).clienteId]);
+    // Buscar usuário baseado no tipo (legado - assumindo cliente se não especificado)
+    const userId = (payload as any).clienteId || (payload as any).userId;
 
-    if (!cliente) {
+    // Para compatibilidade com tokens antigos, assumir cliente se não tiver userType
+    const userType = (payload as any).userType || 'cliente';
+
+    let userData;
+    if (userType === 'cliente') {
+      userData = await executeQuerySingle(`
+        SELECT id, nome, email, celular, tipo_login, status
+        FROM clientes
+        WHERE id = ? AND status = 'ativo'
+      `, [userId]);
+    } else if (userType === 'barbearia') {
+      userData = await executeQuerySingle(`
+        SELECT id, nome, contato_email as email, status
+        FROM barbearias
+        WHERE id = ? AND status = 'ativa'
+      `, [userId]);
+    } else if (userType === 'barbeiro') {
+      userData = await executeQuerySingle(`
+        SELECT id, nome, email, status, barbearia_id
+        FROM barbeiros
+        WHERE id = ? AND status = 'ativo'
+      `, [userId]);
+    }
+
+    if (!userData) {
       return res.status(401).json({
         sucesso: false,
-        erro: "Cliente não encontrado ou inativo"
+        erro: "Usuário não encontrado ou inativo"
       } as LoginResponse);
     }
 
-    // Gerar novos tokens
-    const newToken = gerarToken({
-      clienteId: cliente.id,
-      celular: cliente.celular,
-      email: cliente.email,
-      nome: cliente.nome,
-      tipoLogin: cliente.tipo_login
-    });
+    // Gerar novos tokens baseado no tipo de usuário
+    let tokenPayload: any = {
+      userId: userData.id,
+      userType: userType,
+      email: userData.email,
+      nome: userData.nome,
+      tipoLogin: 'email'
+    };
 
-    const newRefreshToken = gerarRefreshToken(cliente.id);
+    if (userType === 'cliente') {
+      tokenPayload.celular = userData.celular;
+      tokenPayload.tipoLogin = userData.tipo_login;
+    } else if (userType === 'barbeiro') {
+      tokenPayload.barbeariaId = userData.barbearia_id;
+    }
+
+    const newToken = gerarToken(tokenPayload);
+    const newRefreshToken = gerarRefreshToken(userData.id);
 
     res.json({
       sucesso: true,
