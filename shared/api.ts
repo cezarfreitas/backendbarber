@@ -124,7 +124,43 @@ export interface CriarBarbeariaRequest {
     sabado?: { abertura: string; fechamento: string };
     domingo?: { abertura: string; fechamento: string };
   };
-  servicos?: string[];
+}
+
+/**
+ * DTO para criação de novo barbeiro
+ */
+export interface CriarBarbeiroRequest {
+  nome: string;
+  email: string;
+  telefone: string;
+  cpf: string;
+  tipo: 'comissionado' | 'funcionario' | 'freelancer';
+  porcentagemComissao?: number;
+  salarioFixo?: number;
+  valorHora?: number;
+  barbeariaId: string;
+  especialidades?: string[];
+  horarioTrabalho?: {
+    segunda?: { inicio: string; fim: string };
+    terca?: { inicio: string; fim: string };
+    quarta?: { inicio: string; fim: string };
+    quinta?: { inicio: string; fim: string };
+    sexta?: { inicio: string; fim: string };
+    sabado?: { inicio: string; fim: string };
+    domingo?: { inicio: string; fim: string };
+  };
+}
+
+/**
+ * DTO para criação de novo serviço
+ */
+export interface CriarServicoRequest {
+  nome: string;
+  descricao?: string;
+  preco: number;
+  duracaoMinutos: number;
+  barbeariaId: string;
+  categoria?: string;
 }
 
 /**
