@@ -3,6 +3,7 @@
 ## 📋 Environment Variables para Desenvolvimento
 
 ### 1. Copie o arquivo de exemplo:
+
 ```bash
 cp .env.example .env
 ```
@@ -38,16 +39,19 @@ LOG_LEVEL=debug
 ## 🚀 Como Iniciar o Desenvolvimento
 
 ### 1. Instalar dependências:
+
 ```bash
 pnpm install
 ```
 
 ### 2. Iniciar servidor de desenvolvimento:
+
 ```bash
 pnpm run dev
 ```
 
 ### 3. Acessar aplicação:
+
 - **Frontend**: http://localhost:8080
 - **API**: http://localhost:8080/api
 - **Documentação**: http://localhost:8080/api/docs
@@ -56,10 +60,13 @@ pnpm run dev
 ## 🔍 Verificar se está funcionando:
 
 ### 1. Teste a API:
+
 ```bash
 curl http://localhost:8080/api/ping
 ```
+
 **Resposta esperada:**
+
 ```json
 {
   "message": "ping pong",
@@ -71,10 +78,13 @@ curl http://localhost:8080/api/ping
 ```
 
 ### 2. Teste conexão com banco:
+
 ```bash
 curl http://localhost:8080/api/barbearias
 ```
+
 **Resposta esperada:**
+
 ```json
 {
   "barbearias": [...]
@@ -84,12 +94,14 @@ curl http://localhost:8080/api/barbearias
 ## 🗄️ Banco de Dados
 
 ### Configuração Automática
+
 - ✅ Conecta automaticamente ao MySQL configurado
 - ✅ Verifica estrutura do banco
 - ✅ Inicializa tabelas se necessário
 - ✅ Popula dados de exemplo
 
 ### Logs Esperados:
+
 ```
 ✅ Conectado ao MySQL: server.idenegociosdigitais.com.br
 ✅ Estrutura do banco de dados verificada
@@ -130,27 +142,34 @@ pnpm run start            # Inicia servidor de produção
 ## 🚨 Troubleshooting
 
 ### Erro de Conexão com Banco:
+
 ```
 ❌ Error: connect ECONNREFUSED
 ```
+
 **Solução:** Verificar se as credenciais do banco estão corretas no `.env`
 
 ### Porta em Uso:
+
 ```
 ❌ Error: listen EADDRINUSE :::8080
 ```
-**Solução:** 
+
+**Solução:**
+
 ```bash
 # Matar processo na porta 8080
 lsof -ti:8080 | xargs kill -9
 ```
 
 ### Dependências em Falta:
+
 ```bash
 pnpm install
 ```
 
 ### Limpar Cache:
+
 ```bash
 rm -rf node_modules dist .vite
 pnpm install
@@ -159,11 +178,14 @@ pnpm install
 ## 🔒 Segurança
 
 ### Desenvolvimento vs Produção:
+
 - ✅ **Development**: Usa chaves JWT simples
 - ⚠️ **Production**: DEVE usar chaves seguras geradas
 
 ### Para Produção (EasyPanel):
+
 Gere chaves seguras:
+
 ```bash
 node -e "console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'))"
 node -e "console.log('JWT_REFRESH_SECRET=' + require('crypto').randomBytes(32).toString('hex'))"
