@@ -2211,6 +2211,23 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
             }
           },
           {
+            "name": "Listar Todas as Barbearias",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/diretorio/barbearias/todas?limite=50&pagina=1&ordenar=nome",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "diretorio", "barbearias", "todas"],
+                "query": [
+                  {"key": "limite", "value": "50"},
+                  {"key": "pagina", "value": "1"},
+                  {"key": "ordenar", "value": "nome", "description": "nome, data_cadastro, cidade"}
+                ]
+              }
+            }
+          },
+          {
             "name": "Listar Cidades",
             "request": {
               "method": "GET",
