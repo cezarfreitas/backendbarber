@@ -442,7 +442,7 @@ export async function listarPromocoes(req: Request, res: Response) {
       params.push(estado);
     }
 
-    sql += ` ORDER BY c.valorDesconto DESC LIMIT 20`;
+    sql += ` ORDER BY c.valor_desconto DESC LIMIT 20`;
 
     const [rows] = await getPool().execute<RowDataPacket[]>(sql, params);
 
