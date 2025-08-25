@@ -62,5 +62,12 @@ export function createServer() {
   app.put("/api/barbeiros/:id", atualizarBarbeiro);
   app.delete("/api/barbeiros/:id", excluirBarbeiro);
 
+  // Rotas dos serviços
+  app.get("/api/servicos", listarServicos);
+  app.get("/api/servicos/:id", buscarServico);
+  app.post("/api/servicos", criarServico);
+  app.put("/api/servicos/:id", atualizarServico);
+  app.delete("/api/servicos/:id", excluirServico);
+
   return app;
 }
