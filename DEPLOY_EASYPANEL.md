@@ -158,8 +158,8 @@ GET https://seu-dominio.com/api/docs
 # Verifique se o Dockerfile está correto
 docker build -t test-barbearia .
 
-# Teste localmente
-docker run -p 3000:3000 test-barbearia
+# Teste localmente (mapeia porta 80 do container para 8080 local)
+docker run -p 8080:80 test-barbearia
 ```
 
 ### **Problema: Erro de Conexão com Banco**
