@@ -144,7 +144,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         <div class="section" id="autenticacao">
             <h2>🔐 Autenticação</h2>
-            <p>Atualmente a API não requer autenticação. Em produção, implemente autenticaç��o JWT ou API Keys.</p>
+            <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
         </div>
 
         <div class="section" id="endpoints-barbearias">
@@ -441,11 +441,62 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     "sabado": { "abertura": "HH:mm", "fechamento": "HH:mm" },
     "domingo": { "abertura": "HH:mm", "fechamento": "HH:mm" }
   },
-  "servicos": ["string"],
+  "servicos": [/* array de objetos Servico */],
+  "barbeiros": [/* array de objetos Barbeiro */],
   "status": "ativa" | "inativa" | "pendente",
   "dataCadastro": "ISO 8601",
   "dataAtualizacao": "ISO 8601"
 }</pre>
+
+            <h3>💇‍♂️ Barbeiro</h3>
+            <p>Estrutura do objeto barbeiro:</p>
+            <pre>{
+  "id": "string",
+  "nome": "string",
+  "email": "string",
+  "telefone": "string",
+  "cpf": "string",
+  "tipo": "comissionado" | "funcionario" | "freelancer",
+  "porcentagemComissao": number, // Apenas para comissionados
+  "salarioFixo": number, // Apenas para funcionários
+  "valorHora": number, // Apenas para freelancers
+  "barbeariaId": "string",
+  "especialidades": ["string"],
+  "horarioTrabalho": {
+    "segunda": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "terca": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "quarta": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "quinta": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "sexta": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "sabado": { "inicio": "HH:mm", "fim": "HH:mm" },
+    "domingo": { "inicio": "HH:mm", "fim": "HH:mm" }
+  },
+  "status": "ativo" | "inativo" | "afastado",
+  "dataCadastro": "ISO 8601",
+  "dataAtualizacao": "ISO 8601"
+}</pre>
+
+            <h3>✂��� Serviço</h3>
+            <p>Estrutura do objeto serviço:</p>
+            <pre>{
+  "id": "string",
+  "nome": "string",
+  "descricao": "string",
+  "preco": number,
+  "duracaoMinutos": number,
+  "barbeariaId": "string",
+  "categoria": "string",
+  "ativo": boolean,
+  "dataCadastro": "ISO 8601",
+  "dataAtualizacao": "ISO 8601"
+}</pre>
+
+            <h3>💡 Observações sobre Tipos de Barbeiro</h3>
+            <ul>
+                <li><strong>Comissionado:</strong> Recebe percentual sobre vendas (requer porcentagemComissao)</li>
+                <li><strong>Funcionário:</strong> Recebe salário fixo mensal (requer salarioFixo)</li>
+                <li><strong>Freelancer:</strong> Recebe por hora trabalhada (requer valorHora)</li>
+            </ul>
         </div>
 
         <div class="section" id="codigos-resposta">
