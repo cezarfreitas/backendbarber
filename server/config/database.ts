@@ -2,11 +2,11 @@ import mysql from 'mysql2/promise';
 
 // Configuração do banco de dados MySQL
 const dbConfig = {
-  host: 'server.idenegociosdigitais.com.br',
-  port: 3355,
-  user: 'barbearia',
-  password: '5f8dab8402afe2a6e043',
-  database: 'barbearia-db',
+  host: process.env.DB_HOST || 'server.idenegociosdigitais.com.br',
+  port: parseInt(process.env.DB_PORT || '3355'),
+  user: process.env.DB_USER || 'barbearia',
+  password: process.env.DB_PASSWORD || '5f8dab8402afe2a6e043',
+  database: process.env.DB_NAME || 'barbearia-db',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
