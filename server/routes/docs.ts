@@ -385,9 +385,11 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .endpoint-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
             flex-wrap: wrap;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--gray-100);
         }
 
         .method {
