@@ -724,15 +724,32 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     </div>
     
     <script>
-        // Sidebar Toggle
+        // Sidebar Toggle (mobile only)
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
-        
+
+        // Check if mobile
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
         sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            sidebarToggle.classList.toggle('active');
-            mainContent.classList.toggle('shifted');
+            if (isMobile()) {
+                sidebar.classList.toggle('mobile-active');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                sidebar.classList.remove('mobile-active');
+                sidebar.classList.add('active');
+                mainContent.classList.add('shifted');
+            } else {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('shifted');
+            }
         });
         
         // Expandable Navigation
