@@ -25,6 +25,106 @@ interface Cidade extends RowDataPacket {
 }
 
 /**
+ * GET /api/diretorio/barbearias/todas
+ * Listar todas as barbearias ativas
+ */
+export async function listarTodasBarbearias(req: Request, res: Response) {
+  try {
+    const {
+      limite = 50,
+      pagina = 1,
+      ordenar = 'nome' // nome, data_cadastro, cidade
+    } = req.query;
+
+    let sql = `
+      SELECT
+        b.id,
+        b.nome,
+        b.descricao,
+        b.endereco_rua,
+        b.endereco_numero,
+        b.endereco_bairro,
+        b.endereco_cidade,
+        b.endereco_estado,
+        b.endereco_cep,
+        b.contato_telefone,
+        b.contato_email,
+        b.contato_whatsapp,
+        b.data_cadastro,
+        b.status
+      FROM barbearias b
+      WHERE b.status = 'ativa'
+    `;
+
+    // Ordenação
+    switch (ordenar) {
+      case 'data_cadastro':
+        sql += ` ORDER BY b.data_cadastro DESC`;
+        break;
+      case 'cidade':
+        sql += ` ORDER BY b.endereco_cidade ASC, b.nome ASC`;
+        break;
+      default: // nome
+        sql += ` ORDER BY b.nome ASC`;
+    }
+
+    // Paginação
+    const limiteParsed = Math.max(1, Math.min(100, parseInt(limite as string) || 50));
+    const paginaParsed = Math.max(1, parseInt(pagina as string) || 1);
+    const offset = (paginaParsed - 1) * limiteParsed;
+    sql += ` LIMIT ${limiteParsed} OFFSET ${offset}`;
+
+    // Contar total de registros
+    const [totalRows] = await getPool().execute<RowDataPacket[]>(
+      'SELECT COUNT(*) as total FROM barbearias WHERE status = "ativa"'
+    );
+    const total = totalRows[0].total;
+
+    const [rows] = await getPool().execute<Barbearia[]>(sql);
+
+    // Agrupar campos de endereço e contato
+    const barbearias = rows.map(barbearia => ({
+      id: barbearia.id,
+      nome: barbearia.nome,
+      descricao: barbearia.descricao,
+      endereco: {
+        rua: barbearia.endereco_rua,
+        numero: barbearia.endereco_numero,
+        bairro: barbearia.endereco_bairro,
+        cidade: barbearia.endereco_cidade,
+        estado: barbearia.endereco_estado,
+        cep: barbearia.endereco_cep
+      },
+      contato: {
+        telefone: barbearia.contato_telefone,
+        email: barbearia.contato_email,
+        whatsapp: barbearia.contato_whatsapp
+      },
+      data_cadastro: barbearia.data_cadastro,
+      status: barbearia.status
+    }));
+
+    res.json({
+      sucesso: true,
+      dados: {
+        barbearias,
+        pagina: paginaParsed,
+        limite: limiteParsed,
+        total,
+        total_paginas: Math.ceil(total / limiteParsed)
+      }
+    });
+
+  } catch (error) {
+    console.error('Erro ao listar todas as barbearias:', error);
+    res.status(500).json({
+      sucesso: false,
+      erro: 'Erro interno do servidor'
+    });
+  }
+}
+
+/**
  * GET /api/diretorio/barbearias
  * Busca pública de barbearias com filtros
  */
