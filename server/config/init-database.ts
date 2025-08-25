@@ -454,6 +454,9 @@ export const initializeTables = async (): Promise<void> => {
     console.log('🔗 Criando tabela combo_servicos...');
     await executeQuery(createComboServicosTable);
 
+    console.log('👥 Criando tabela clientes...');
+    await executeQuery(createClientesTable);
+
     // Inserir dados iniciais na ordem correta
     console.log('📝 Inserindo dados iniciais...');
     await executeQuery(insertInitialBarbearias);
@@ -461,6 +464,7 @@ export const initializeTables = async (): Promise<void> => {
     await executeQuery(insertInitialServicos);
     await executeQuery(insertInitialCombos);
     await executeQuery(insertInitialComboServicos);
+    await executeQuery(insertInitialClientes);
 
     console.log('✅ Banco de dados inicializado com sucesso!');
 
