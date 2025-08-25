@@ -226,11 +226,15 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 320px;
-            padding-top: 40px;
+            margin-left: 280px;
+            min-height: 100vh;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+        }
 
         .hero {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -902,7 +906,7 @@ function generateEndpointsDocumentation(): string {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Parâmetro</th>
+                                        <th>Par��metro</th>
                                         <th>Tipo</th>
                                         <th>Descrição</th>
                                         <th>Exemplo</th>
