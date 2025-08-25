@@ -449,12 +449,28 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             border-color: var(--gray-300);
         }
 
-        .params, .response { margin-top: 24px; }
+        .params, .response {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--gray-100);
+        }
         .params h4, .response h4 {
-            margin-bottom: 16px;
+            margin-bottom: var(--spacing-md);
             color: var(--gray-800);
-            font-size: 1.125rem;
+            font-size: 1.0625rem;
             font-weight: 600;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .params h4::before {
+            content: "⚙️";
+            font-size: 1rem;
+        }
+        .response h4::before {
+            content: "📄";
+            font-size: 1rem;
         }
 
         .code-block {
@@ -681,7 +697,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
-                            <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
+                            <a href="#endpoints-combos-update" class="nav-sub-item">���️ Atualizar Combo</a>
                             <a href="#endpoints-combos-delete" class="nav-sub-item">🗑️ Excluir Combo</a>
                         </div>
                     </div>
