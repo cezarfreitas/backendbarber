@@ -77,6 +77,7 @@ export function createServer() {
 
   // Documentação da API
   app.get("/api/docs", mostrarDocumentacao);
+  app.get("/api/docs/postman-collection", downloadPostmanCollection);
   app.get("/docs", mostrarDocumentacao);
   app.get("/", (_req, res) => {
     res.redirect("/docs");
