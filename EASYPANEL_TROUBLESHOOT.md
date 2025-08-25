@@ -3,11 +3,13 @@
 ## Problema: "No running containers found" após deploy
 
 ### Causa Comum
+
 O container inicia mas para devido a **falha no health check**.
 
 ## ✅ Soluções Implementadas
 
 ### 1. Health Check Melhorado
+
 ```dockerfile
 # Dockerfile - Health check com múltiplos endpoints e mais tempo
 HEALTHCHECK --interval=30s --timeout=20s --start-period=180s --retries=10 \
@@ -15,6 +17,7 @@ HEALTHCHECK --interval=30s --timeout=20s --start-period=180s --retries=10 \
 ```
 
 **Melhorias:**
+
 - ✅ `start-period=180s` - 3 minutos para aplicação inicializar
 - ✅ `retries=10` - Mais tentativas antes de marcar como falha
 - ✅ Múltiplos endpoints: `/health`, `/api/ping`
@@ -23,20 +26,22 @@ HEALTHCHECK --interval=30s --timeout=20s --start-period=180s --retries=10 \
 ### 2. Endpoints de Health Simples
 
 **Endpoint Ultra-Simples:** `/health`
+
 ```typescript
 app.get("/health", (_req, res) => {
   res.status(200).send("OK");
 });
 ```
 
-**Endpoint Completo:** `/api/ping`  
+**Endpoint Completo:** `/api/ping`
+
 ```typescript
 app.get("/api/ping", (_req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     message: "ping",
     status: "healthy",
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 ```
@@ -44,6 +49,7 @@ app.get("/api/ping", (_req, res) => {
 ### 3. Variáveis de Ambiente Essenciais
 
 Configure no EasyPanel:
+
 ```bash
 # Obrigatórias
 NODE_ENV=production
@@ -63,6 +69,7 @@ JWT_EXPIRES_IN=24h
 ## 🔍 Como Diagnosticar
 
 ### 1. Verificar Logs no EasyPanel
+
 - Acesse **Application → Logs**
 - Procure por:
   ```
@@ -72,6 +79,7 @@ JWT_EXPIRES_IN=24h
   ```
 
 ### 2. Testar Health Check Manualmente
+
 ```bash
 # Teste local antes do deploy
 docker build -t test-barbearia .
@@ -85,50 +93,62 @@ curl http://localhost:8080/api/ping
 ### 3. Sinais de Problemas Comuns
 
 **❌ Database Connection Failed:**
+
 ```
 Error: connect ECONNREFUSED
 ```
+
 **Solução:** Verificar variáveis DB_HOST, DB_USER, DB_PASSWORD
 
 **❌ Port Already in Use:**
+
 ```
 Error: listen EADDRINUSE :::80
 ```
+
 **Solução:** EasyPanel gerencia isso automaticamente
 
 **❌ Missing Environment Variables:**
+
 ```
 JWT_SECRET is required
 ```
+
 **Solução:** Configurar todas as variáveis obrigatórias
 
 ## 🛠️ Passos para Corrigir
 
 ### 1. Atualizar Código
+
 - ✅ Health check melhorado já implementado
 - ✅ Endpoints de health adicionados
 - ✅ Error handling melhorado
 
 ### 2. Rebuild no EasyPanel
+
 1. Acesse sua aplicação no EasyPanel
 2. Clique em **"Deploy"** ou **"Rebuild"**
 3. Aguarde 3-5 minutos para build completo
 
 ### 3. Configurar Variáveis de Ambiente
+
 - Vá em **Application → Environment Variables**
 - Configure todas as variáveis listadas acima
 
 ### 4. Monitorar Logs
+
 - Durante o deploy, monitore os logs
 - Verifique se aparecem as mensagens de sucesso
 
 ### 5. Testar Endpoints
+
 Após deploy bem-sucedido:
+
 ```bash
 # Health check simples
 curl https://seu-dominio.com/health
 
-# Health check completo  
+# Health check completo
 curl https://seu-dominio.com/api/ping
 
 # Documentação da API
@@ -160,7 +180,8 @@ curl https://seu-dominio.com/api/docs
    - Mesmo Dockerfile deve funcionar
 
 ## URLs para Testar Após Deploy
+
 - Health: `https://seu-dominio.com/health`
-- API Ping: `https://seu-dominio.com/api/ping`  
+- API Ping: `https://seu-dominio.com/api/ping`
 - Docs: `https://seu-dominio.com/api/docs`
 - API Base: `https://seu-dominio.com/api/barbearias`
