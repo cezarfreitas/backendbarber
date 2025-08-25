@@ -477,6 +477,16 @@ export const initializeTables = async (): Promise<void> => {
   try {
     console.log('🗄️ Inicializando estrutura do banco de dados...');
 
+    // Verificar se já há dados para evitar execução desnecessária
+    const hasData = await checkDataExists('barbearias') &&
+                    await checkDataExists('barbeiros') &&
+                    await checkDataExists('servicos');
+
+    if (hasData) {
+      console.log('ℹ️ Dados já existem no banco, pulando inicialização completa para evitar conflitos');
+      return;
+    }
+
     // Migrar tabelas existentes PRIMEIRO, antes de criar novas
     console.log('🔄 Verificando e migrando tabelas para autenticação...');
     await migrarTabelasParaAutenticacao();
