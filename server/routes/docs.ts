@@ -521,28 +521,40 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 16px;
+            margin-top: var(--spacing-md);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
         }
         .table th, .table td {
-            padding: 16px;
+            padding: var(--spacing-md) var(--spacing-md);
             text-align: left;
             border-bottom: 1px solid var(--gray-200);
+            vertical-align: top;
         }
         .table th {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .table tr:nth-child(even) { background: var(--gray-50); }
-        .table tr:hover { background: var(--gray-100); }
+        .table tr:nth-child(even) { background: var(--gray-25); }
+        .table tr:hover {
+            background: var(--gray-50);
+            transition: background-color 0.15s ease;
+        }
         .table code {
             background: var(--gray-100);
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             color: var(--gray-800);
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--gray-200);
         }
 
         /* Status badges */
@@ -697,7 +709,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
-                            <a href="#endpoints-combos-update" class="nav-sub-item">���️ Atualizar Combo</a>
+                            <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
                             <a href="#endpoints-combos-delete" class="nav-sub-item">🗑️ Excluir Combo</a>
                         </div>
                     </div>
