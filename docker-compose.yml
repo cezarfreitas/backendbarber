@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      NODE_ENV: production
+      PORT: 80
+      DB_HOST: server.idenegociosdigitais.com.br
+      DB_PORT: 3355
+      DB_USER: barbearia
+      DB_PASSWORD: 5f8dab8402afe2a6e043
+      DB_NAME: barbearia-db
+      JWT_SECRET: test-secret-key
+      JWT_EXPIRES_IN: 24h
+      JWT_REFRESH_SECRET: test-refresh-secret
+      JWT_REFRESH_EXPIRES_IN: 7d
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
