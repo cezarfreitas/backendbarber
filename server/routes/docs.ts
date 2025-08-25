@@ -954,9 +954,20 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 sidebar.classList.remove('mobile-active');
                 sidebar.classList.add('active');
                 mainContent.classList.add('shifted');
+                mainContent.style.marginLeft = '280px';
             } else {
                 sidebar.classList.remove('active');
                 mainContent.classList.remove('shifted');
+                mainContent.style.marginLeft = '0';
+            }
+        });
+
+        // Initialize correct state on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isMobile()) {
+                sidebar.classList.add('active');
+                mainContent.classList.add('shifted');
+                mainContent.style.marginLeft = '280px';
             }
         });
         
