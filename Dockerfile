@@ -36,11 +36,15 @@ COPY package.json pnpm-lock.yaml* ./
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy source code
-COPY . .
+# Copy only necessary files for server build
+COPY package.json pnpm-lock.yaml* ./
+COPY server ./server
+COPY shared ./shared
+COPY vite.config.server.ts ./
+COPY tsconfig.json ./
 
-# Build the application
-RUN pnpm run build
+# Build only the server (backend API)
+RUN pnpm run build:server
 
 # ================================
 # Production stage
