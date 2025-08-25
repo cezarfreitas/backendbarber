@@ -1,42 +1,42 @@
 // Simple server test to verify the built application works
-const http = require('http');
+const http = require("http");
 
 const port = process.env.PORT || 80;
 
-console.log('🔍 Testing server accessibility...');
+console.log("🔍 Testing server accessibility...");
 
 // Test internal connectivity
 const testEndpoint = (path) => {
   return new Promise((resolve, reject) => {
     const options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: port,
       path: path,
-      method: 'GET',
-      timeout: 5000
+      method: "GET",
+      timeout: 5000,
     };
 
     const req = http.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
+      let data = "";
+      res.on("data", (chunk) => {
         data += chunk;
       });
-      res.on('end', () => {
+      res.on("end", () => {
         resolve({
           statusCode: res.statusCode,
           headers: res.headers,
-          data: data
+          data: data,
         });
       });
     });
 
-    req.on('error', (err) => {
+    req.on("error", (err) => {
       reject(err);
     });
 
-    req.on('timeout', () => {
+    req.on("timeout", () => {
       req.destroy();
-      reject(new Error('Request timeout'));
+      reject(new Error("Request timeout"));
     });
 
     req.end();
@@ -44,12 +44,7 @@ const testEndpoint = (path) => {
 };
 
 async function runTests() {
-  const endpoints = [
-    '/api/ping',
-    '/api/docs', 
-    '/',
-    '/api/barbearias'
-  ];
+  const endpoints = ["/api/ping", "/api/docs", "/", "/api/barbearias"];
 
   for (const endpoint of endpoints) {
     try {
@@ -62,7 +57,7 @@ async function runTests() {
     }
   }
 
-  console.log('\n🏁 Test completed');
+  console.log("\n🏁 Test completed");
 }
 
 runTests();
