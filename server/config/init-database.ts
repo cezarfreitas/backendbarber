@@ -166,20 +166,20 @@ CREATE TABLE IF NOT EXISTS clientes (
 // Dados iniciais para barbearias
 const insertInitialBarbearias = `
 INSERT IGNORE INTO barbearias (
-  id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro, 
-  endereco_cidade, endereco_estado, endereco_cep, contato_telefone, 
-  contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf, 
-  proprietario_email, horario_funcionamento, status
-) VALUES 
+  id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+  endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+  contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+  proprietario_email, senha_hash, horario_funcionamento, status
+) VALUES
 (
-  '1', 
-  'Barbearia do João', 
+  '1',
+  'Barbearia do João',
   'A melhor barbearia do bairro, com mais de 20 anos de tradição',
-  'Rua das Flores', 
-  '123', 
-  'Centro', 
-  'São Paulo', 
-  'SP', 
+  'Rua das Flores',
+  '123',
+  'Centro',
+  'São Paulo',
+  'SP',
   '01234-567',
   '(11) 99999-9999',
   'contato@barbeariadoroao.com',
@@ -187,6 +187,7 @@ INSERT IGNORE INTO barbearias (
   'João Silva',
   '123.456.789-00',
   'joao@barbeariadoroao.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
   '{"segunda": {"abertura": "08:00", "fechamento": "18:00"}, "terca": {"abertura": "08:00", "fechamento": "18:00"}, "quarta": {"abertura": "08:00", "fechamento": "18:00"}, "quinta": {"abertura": "08:00", "fechamento": "18:00"}, "sexta": {"abertura": "08:00", "fechamento": "18:00"}, "sabado": {"abertura": "08:00", "fechamento": "16:00"}}',
   'ativa'
 ),
@@ -206,6 +207,7 @@ INSERT IGNORE INTO barbearias (
   'Maria Santos',
   '987.654.321-00',
   'maria@barbershoppremium.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2', -- senha: 123456
   '{"segunda": {"abertura": "09:00", "fechamento": "19:00"}, "terca": {"abertura": "09:00", "fechamento": "19:00"}, "quarta": {"abertura": "09:00", "fechamento": "19:00"}, "quinta": {"abertura": "09:00", "fechamento": "19:00"}, "sexta": {"abertura": "09:00", "fechamento": "19:00"}, "sabado": {"abertura": "09:00", "fechamento": "17:00"}}',
   'ativa'
 );
