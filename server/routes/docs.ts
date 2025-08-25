@@ -795,6 +795,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="diretorio-tree">
                             <a href="#endpoints-diretorio-barbearias" class="nav-sub-item">🔍 Busca Pública</a>
+                            <a href="#endpoints-diretorio-todas-barbearias" class="nav-sub-item">🏪 Listar Todas</a>
                             <a href="#endpoints-diretorio-cidades" class="nav-sub-item">🏙️ Cidades</a>
                             <a href="#endpoints-diretorio-estatisticas" class="nav-sub-item">📊 Estatísticas</a>
                             <a href="#endpoints-diretorio-sugestoes" class="nav-sub-item">💡 Sugestões</a>
