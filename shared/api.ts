@@ -515,6 +515,35 @@ export interface JWTPayload {
 export interface VerificarTokenResponse {
   valido: boolean;
   cliente?: Omit<Cliente, 'senha'>;
+  barbearia?: Barbearia;
+  barbeiro?: Barbeiro;
+  userType?: 'cliente' | 'barbearia' | 'barbeiro';
+  erro?: string;
+}
+
+/**
+ * Resposta de autenticação para barbearia
+ */
+export interface LoginBarbeariaResponse {
+  sucesso: boolean;
+  token?: string;
+  refreshToken?: string;
+  barbearia?: Barbearia;
+  expiresIn?: number;
+  mensagem?: string;
+  erro?: string;
+}
+
+/**
+ * Resposta de autenticação para barbeiro
+ */
+export interface LoginBarbeiroResponse {
+  sucesso: boolean;
+  token?: string;
+  refreshToken?: string;
+  barbeiro?: Barbeiro;
+  expiresIn?: number;
+  mensagem?: string;
   erro?: string;
 }
 
