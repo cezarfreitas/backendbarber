@@ -147,8 +147,8 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             <p>Atualmente a API não requer autenticação. Em produção, implemente autenticação JWT ou API Keys.</p>
         </div>
 
-        <div class="section" id="endpoints">
-            <h2>📡 Endpoints</h2>
+        <div class="section" id="endpoints-barbearias">
+            <h2>🏪 Endpoints - Barbearias</h2>
 
             <div class="endpoint">
                 <span class="method get">GET</span>
