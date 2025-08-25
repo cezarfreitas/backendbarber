@@ -116,7 +116,7 @@ const gerarId = (): string => {
  * GET /api/barbearias
  * Listar todas as barbearias com paginação
  */
-export const listarBarbearias: RequestHandler = (req, res) => {
+export const listarBarbearias: RequestHandler = async (req, res) => {
   try {
     const pagina = parseInt(req.query.pagina as string) || 1;
     const limite = parseInt(req.query.limite as string) || 10;
@@ -125,41 +125,62 @@ export const listarBarbearias: RequestHandler = (req, res) => {
     const incluirBarbeiros = req.query.incluirBarbeiros === 'true';
     const incluirServicos = req.query.incluirServicos === 'true';
 
-    let barbeariasFiltradas = [...barbearias];
+    // Construir query com filtros
+    let whereClause = 'WHERE 1=1';
+    const params: any[] = [];
 
-    // Filtrar por status se fornecido
     if (status) {
-      barbeariasFiltradas = barbeariasFiltradas.filter(b => b.status === status);
+      whereClause += ' AND status = ?';
+      params.push(status);
     }
 
-    // Filtrar por cidade se fornecido
     if (cidade) {
-      barbeariasFiltradas = barbeariasFiltradas.filter(b =>
-        b.endereco.cidade.toLowerCase().includes(cidade.toLowerCase())
-      );
+      whereClause += ' AND endereco_cidade LIKE ?';
+      params.push(`%${cidade}%`);
     }
 
-    const total = barbeariasFiltradas.length;
+    // Contar total de registros
+    const countQuery = `
+      SELECT COUNT(*) as total
+      FROM barbearias
+      ${whereClause}
+    `;
+    const countResult = await executeQuerySingle<{ total: number }>(countQuery, params);
+    const total = countResult?.total || 0;
     const totalPaginas = Math.ceil(total / limite);
-    const inicio = (pagina - 1) * limite;
-    const fim = inicio + limite;
+    const offset = (pagina - 1) * limite;
 
-    const barbeariasPaginadas = barbeariasFiltradas.slice(inicio, fim);
+    // Buscar barbearias com paginação
+    const selectQuery = `
+      SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+             endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+             contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+             proprietario_email, horario_funcionamento, status, data_cadastro, data_atualizacao
+      FROM barbearias
+      ${whereClause}
+      ORDER BY nome
+      LIMIT ? OFFSET ?
+    `;
+
+    const rows = await executeQuery(selectQuery, [...params, limite, offset]);
+    const barbearias = rows.map(mapBarbeariaFromDB);
 
     // Incluir barbeiros e serviços se solicitado
-    const barbeariasComRelacionamentos = barbeariasPaginadas.map(barbearia => {
-      const barbeariaCompleta: Barbearia = { ...barbearia };
+    const barbeariasComRelacionamentos = await Promise.all(
+      barbearias.map(async (barbearia) => {
+        const barbeariaCompleta: Barbearia = { ...barbearia };
 
-      if (incluirBarbeiros) {
-        barbeariaCompleta.barbeiros = buscarBarbeirosPorBarbearia(barbearia.id);
-      }
+        if (incluirBarbeiros) {
+          barbeariaCompleta.barbeiros = await buscarBarbeirosPorBarbearia(barbearia.id);
+        }
 
-      if (incluirServicos) {
-        barbeariaCompleta.servicos = buscarServicosPorBarbearia(barbearia.id);
-      }
+        if (incluirServicos) {
+          barbeariaCompleta.servicos = await buscarServicosPorBarbearia(barbearia.id);
+        }
 
-      return barbeariaCompleta;
-    });
+        return barbeariaCompleta;
+      })
+    );
 
     const response: ListarBarbeariasResponse = {
       barbearias: barbeariasComRelacionamentos,
