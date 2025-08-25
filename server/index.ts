@@ -25,6 +25,13 @@ import {
   atualizarServico,
   excluirServico
 } from "./routes/servicos";
+import {
+  listarCombos,
+  buscarCombo,
+  criarCombo,
+  atualizarCombo,
+  excluirCombo
+} from "./routes/combos";
 import { mostrarDocumentacao } from "./routes/docs";
 
 export function createServer() {
