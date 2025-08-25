@@ -127,7 +127,9 @@ export function createServer() {
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente); // TODO: Verificar se é o próprio cliente ou admin
 
   // Rotas de autenticação (privadas - requer login)
-  app.post("/api/auth/alterar-senha", verificarAutenticacao, alterarSenha);
+  app.post("/api/auth/alterar-senha", verificarAutenticacao, verificarCliente, alterarSenha);
+  app.post("/api/auth/alterar-senha/barbearia", verificarAutenticacao, verificarBarbearia, alterarSenhaBarbearia);
+  app.post("/api/auth/alterar-senha/barbeiro", verificarAutenticacao, verificarBarbeiro, alterarSenhaBarbeiro);
 
   return app;
 }
