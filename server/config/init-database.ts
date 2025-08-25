@@ -360,13 +360,13 @@ export const initializeTables = async (): Promise<void> => {
 export const checkTables = async (): Promise<boolean> => {
   try {
     const tables = await executeQuery(`
-      SELECT TABLE_NAME 
-      FROM INFORMATION_SCHEMA.TABLES 
-      WHERE TABLE_SCHEMA = DATABASE() 
-      AND TABLE_NAME IN ('barbearias', 'barbeiros', 'servicos')
+      SELECT TABLE_NAME
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME IN ('barbearias', 'barbeiros', 'servicos', 'combos', 'combo_servicos')
     `);
-    
-    return (tables as any[]).length === 3;
+
+    return (tables as any[]).length === 5;
   } catch (error) {
     console.error('Erro ao verificar tabelas:', error);
     return false;
