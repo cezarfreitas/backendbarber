@@ -115,8 +115,10 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <ul>
                     <li><a href="#visao-geral">Visão Geral</a></li>
                     <li><a href="#autenticacao">Autenticação</a></li>
-                    <li><a href="#endpoints">Endpoints</a></li>
-                    <li><a href="#modelo-barbearia">Modelo de Barbearia</a></li>
+                    <li><a href="#endpoints-barbearias">Endpoints - Barbearias</a></li>
+                    <li><a href="#endpoints-barbeiros">Endpoints - Barbeiros</a></li>
+                    <li><a href="#endpoints-servicos">Endpoints - Serviços</a></li>
+                    <li><a href="#modelos">Modelos de Dados</a></li>
                     <li><a href="#codigos-resposta">Códigos de Resposta</a></li>
                     <li><a href="#exemplos">Exemplos de Uso</a></li>
                 </ul>
@@ -158,7 +160,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <h4>Parâmetros de Query</h4>
                     <table class="table">
                         <tr><th>Parâmetro</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padr��o: 1)</td></tr>
+                        <tr><td><code>pagina</code></td><td>number</td><td>Não</td><td>Número da página (padrão: 1)</td></tr>
                         <tr><td><code>limite</code></td><td>number</td><td>Não</td><td>Itens por página (padrão: 10)</td></tr>
                         <tr><td><code>status</code></td><td>string</td><td>Não</td><td>Filtrar por status: ativa, inativa, pendente</td></tr>
                         <tr><td><code>cidade</code></td><td>string</td><td>Não</td><td>Filtrar por cidade</td></tr>
