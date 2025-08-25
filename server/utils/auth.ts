@@ -71,7 +71,7 @@ export const extrairToken = (authHeader?: string): string | null => {
 export const verificarAutenticacao = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = extrairToken(req.headers.authorization);
-    
+
     if (!token) {
       return res.status(401).json({
         sucesso: false,
@@ -80,7 +80,7 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
     }
 
     const payload = verificarToken(token);
-    
+
     if (!payload) {
       return res.status(401).json({
         sucesso: false,
@@ -88,14 +88,107 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
       });
     }
 
-    // Adicionar dados do cliente ao request
+    // Adicionar dados do usuário ao request (compatibilidade mantida com .cliente)
     (req as any).cliente = payload;
+    (req as any).usuario = payload; // Nova propriedade mais genérica
     next();
-    
+
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
       erro: 'Erro na verificação do token'
+    });
+  }
+};
+
+/**
+ * Middleware para verificar se é uma barbearia autenticada
+ */
+export const verificarBarbearia = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as any).cliente || (req as any).usuario;
+
+    if (!user || user.userType !== 'barbearia') {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Acesso restrito a barbearias'
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      sucesso: false,
+      erro: 'Erro na verificação do tipo de usuário'
+    });
+  }
+};
+
+/**
+ * Middleware para verificar se é um barbeiro autenticado
+ */
+export const verificarBarbeiro = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as any).cliente || (req as any).usuario;
+
+    if (!user || user.userType !== 'barbeiro') {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Acesso restrito a barbeiros'
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      sucesso: false,
+      erro: 'Erro na verificação do tipo de usuário'
+    });
+  }
+};
+
+/**
+ * Middleware para verificar se é um cliente autenticado
+ */
+export const verificarCliente = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as any).cliente || (req as any).usuario;
+
+    if (!user || user.userType !== 'cliente') {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Acesso restrito a clientes'
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      sucesso: false,
+      erro: 'Erro na verificação do tipo de usuário'
+    });
+  }
+};
+
+/**
+ * Middleware para verificar se é barbearia OU barbeiro (profissionais)
+ */
+export const verificarProfissional = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as any).cliente || (req as any).usuario;
+
+    if (!user || (user.userType !== 'barbearia' && user.userType !== 'barbeiro')) {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Acesso restrito a profissionais (barbearias ou barbeiros)'
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      sucesso: false,
+      erro: 'Erro na verificação do tipo de usuário'
     });
   }
 };
