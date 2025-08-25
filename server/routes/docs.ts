@@ -19,11 +19,13 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         :root {
             --primary: #4f46e5;
             --primary-dark: #3730a3;
+            --primary-light: #818cf8;
             --secondary: #6366f1;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
             --info: #3b82f6;
+            --gray-25: #fcfcfd;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -39,6 +41,18 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --border-radius-sm: 6px;
+            --border-radius: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 20px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --spacing-3xl: 64px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1125,7 +1139,7 @@ function generateEndpointsDocumentation(): string {
                                     <tr>
                                         <td><code>ordenar</code></td>
                                         <td>string</td>
-                                        <td>Ordenação (relevancia, distancia, avaliacao)</td>
+                                        <td>Ordenaç��o (relevancia, distancia, avaliacao)</td>
                                         <td>relevancia</td>
                                     </tr>
                                 </tbody>
