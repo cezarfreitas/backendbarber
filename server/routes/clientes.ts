@@ -270,27 +270,27 @@ export const criarCliente: RequestHandler = async (req, res) => {
     await executeQuery(`
       INSERT INTO clientes (
         id, nome, email, celular, senha_hash, data_nascimento,
-        endereco_rua, endereco_numero, endereco_bairro, endereco_cidade, 
+        endereco_rua, endereco_numero, endereco_bairro, endereco_cidade,
         endereco_estado, endereco_cep, barbearia_preferida, barbeiro_preferido,
         tipo_login, google_id, email_verificado, celular_verificado, status
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ativo')
     `, [
       clienteId,
       dadosCliente.nome,
-      dadosCliente.email || dadosCliente.googleEmail,
+      dadosCliente.email || dadosCliente.googleEmail || null,
       formatarCelular(dadosCliente.celular),
       senhaHash,
-      dadosCliente.dataNascimento,
-      dadosCliente.endereco?.rua,
-      dadosCliente.endereco?.numero,
-      dadosCliente.endereco?.bairro,
-      dadosCliente.endereco?.cidade,
-      dadosCliente.endereco?.estado,
-      dadosCliente.endereco?.cep,
-      dadosCliente.preferencias?.barbeariaId,
-      dadosCliente.preferencias?.barbeiroId,
+      dadosCliente.dataNascimento || null,
+      dadosCliente.endereco?.rua || null,
+      dadosCliente.endereco?.numero || null,
+      dadosCliente.endereco?.bairro || null,
+      dadosCliente.endereco?.cidade || null,
+      dadosCliente.endereco?.estado || null,
+      dadosCliente.endereco?.cep || null,
+      dadosCliente.preferencias?.barbeariaId || null,
+      dadosCliente.preferencias?.barbeiroId || null,
       dadosCliente.tipoLogin,
-      dadosCliente.googleId,
+      dadosCliente.googleId || null,
       dadosCliente.tipoLogin === 'google', // Email verificado automaticamente para Google
       false // Celular sempre começa como não verificado
     ]);
