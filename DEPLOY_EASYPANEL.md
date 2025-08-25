@@ -37,7 +37,7 @@ Configure as seguintes variáveis no EasyPanel:
 #### **🔐 Obrigatórias**
 ```bash
 NODE_ENV=production
-PORT=3000
+PORT=80
 
 # Database
 DB_HOST=seu-mysql-host
