@@ -107,22 +107,25 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         /* Sidebar Content */
         .sidebar-header {
-            padding: 32px 24px 24px;
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
             border-bottom: 1px solid var(--gray-700);
         }
-        .sidebar-header h1 { 
-            font-size: 1.5rem; 
-            margin-bottom: 8px; 
+        .sidebar-header h1 {
+            font-size: 1.375rem;
+            margin-bottom: var(--spacing-sm);
             font-weight: 700;
+            line-height: 1.3;
             background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.025em;
         }
-        .sidebar-header p { 
-            opacity: 0.8; 
-            font-size: 0.875rem; 
+        .sidebar-header p {
+            opacity: 0.85;
+            font-size: 0.8125rem;
             color: var(--gray-300);
+            line-height: 1.5;
         }
 
         .postman-download {
@@ -658,7 +661,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <!-- Autenticação -->
                 <div class="section" id="authentication">
                     <h2>🔐 Autenticação</h2>
-                    <p>A API suporta múltiplos tipos de autenticação usando JWT tokens:</p>
+                    <p>A API suporta múltiplos tipos de autentica��ão usando JWT tokens:</p>
                     
                     <h3>Headers de Autenticação</h3>
                     <div class="code-block">
@@ -906,7 +909,7 @@ function generateEndpointsDocumentation(): string {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Par��metro</th>
+                                        <th>Parâmetro</th>
                                         <th>Tipo</th>
                                         <th>Descrição</th>
                                         <th>Exemplo</th>
