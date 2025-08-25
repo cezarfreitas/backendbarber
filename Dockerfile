@@ -54,8 +54,9 @@ RUN ls -la dist/server/ && \
 # ================================
 FROM node:22-alpine AS production
 
-# Install pnpm in production image
-RUN npm install -g pnpm@10.14.0
+# Install pnpm and curl (needed for health check)
+RUN npm install -g pnpm@10.14.0 && \
+    apk add --no-cache curl
 
 # Set working directory
 WORKDIR /app
