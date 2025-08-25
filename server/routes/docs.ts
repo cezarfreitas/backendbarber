@@ -359,7 +359,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         </div>
 
         <div class="section" id="endpoints-barbearias">
-            <h2>🏪 Endpoints - Barbearias</h2>
+            <h2>�� Endpoints - Barbearias</h2>
 
             <div class="endpoint">
                 <span class="method get">GET</span>
@@ -1211,6 +1211,88 @@ Content-Type: application/json
 
             <h4>Buscar combo específico com todos os serviços</h4>
             <pre>GET /api/combos/combo1?incluirServicos=true</pre>
+
+            <h3>👥 Clientes</h3>
+            <h4>Cadastrar novo cliente</h4>
+            <pre>POST /api/clientes
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "celular": "11987654321",
+  "senha": "minhasenha123",
+  "email": "joao@email.com",
+  "tipoLogin": "celular",
+  "preferencias": {
+    "barbeariaId": "1",
+    "barbeiroId": "2"
+  }
+}</pre>
+
+            <h4>Buscar perfil do cliente logado</h4>
+            <pre>GET /api/clientes/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</pre>
+
+            <h4>Atualizar preferências do cliente</h4>
+            <pre>PUT /api/clientes/{clienteId}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "preferencias": {
+    "barbeariaId": "2",
+    "barbeiroId": "3",
+    "servicosPreferidos": ["1", "2", "combo1"]
+  }
+}</pre>
+
+            <h3>🔐 Autenticação</h3>
+            <h4>Login com celular e senha</h4>
+            <pre>POST /api/auth/login/celular
+Content-Type: application/json
+
+{
+  "celular": "11987654321",
+  "senha": "minhasenha123"
+}</pre>
+
+            <h4>Login com Google OAuth</h4>
+            <pre>POST /api/auth/login/google
+Content-Type: application/json
+
+{
+  "googleToken": "google_oauth_token_aqui",
+  "googleId": "google_user_id_123",
+  "email": "usuario@gmail.com",
+  "nome": "Nome do Usuario",
+  "foto": "https://lh3.googleusercontent.com/..."
+}</pre>
+
+            <h4>Verificar se token é válido</h4>
+            <pre>POST /api/auth/verificar-token
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+
+            <h4>Alterar senha</h4>
+            <pre>POST /api/auth/alterar-senha
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "senhaAtual": "senha_atual",
+  "novaSenha": "nova_senha_123"
+}</pre>
+
+            <h4>Renovar token expirado</h4>
+            <pre>POST /api/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
         </div>
 
         <div class="section" id="suporte">
