@@ -1447,7 +1447,118 @@ function generateEndpointsDocumentation(): string {
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div class="endpoint" id="endpoints-diretorio-todas-barbearias">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/diretorio/barbearias/todas</span>
+                        </div>
+                        <h4>🏪 Listar todas as barbearias</h4>
+                        <p>Lista todas as barbearias ativas do diretório com paginação e ordenação.</p>
+
+                        <div class="params">
+                            <h4>Query Parameters</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Exemplo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>limite</code></td>
+                                        <td>number</td>
+                                        <td>Número de registros por página (1-100)</td>
+                                        <td>50</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>pagina</code></td>
+                                        <td>number</td>
+                                        <td>Número da página</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ordenar</code></td>
+                                        <td>string</td>
+                                        <td>Ordenação (nome, data_cadastro, cidade)</td>
+                                        <td>nome</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia Central",
+        "descricao": "A melhor barbearia da cidade",
+        "endereco": {
+          "rua": "Rua Principal",
+          "numero": "123",
+          "bairro": "Centro",
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "cep": "01000-000"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999",
+          "email": "contato@barbeariacentral.com",
+          "whatsapp": "(11) 99999-9999"
+        },
+        "data_cadastro": "2024-01-15T10:30:00.000Z",
+        "status": "ativa"
+      }
+    ],
+    "pagina": 1,
+    "limite": 50,
+    "total": 25,
+    "total_paginas": 1
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia Central",
+        "descricao": "A melhor barbearia da cidade",
+        "endereco": {
+          "rua": "Rua Principal",
+          "numero": "123",
+          "bairro": "Centro",
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "cep": "01000-000"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999",
+          "email": "contato@barbeariacentral.com",
+          "whatsapp": "(11) 99999-9999"
+        },
+        "data_cadastro": "2024-01-15T10:30:00.000Z",
+        "status": "ativa"
+      }
+    ],
+    "pagina": 1,
+    "limite": 50,
+    "total": 25,
+    "total_paginas": 1
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="endpoint" id="endpoints-diretorio-cidades">
                         <div class="endpoint-header">
                             <span class="method get">GET</span>
