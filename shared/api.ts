@@ -316,7 +316,7 @@ export interface AtualizarBarbeiroRequest {
 }
 
 /**
- * DTO para atualizaç��o de serviço
+ * DTO para atualização de serviço
  */
 export interface AtualizarServicoRequest {
   nome?: string;
@@ -337,6 +337,66 @@ export interface AtualizarComboRequest {
   tipoDesconto?: 'valor' | 'percentual';
   valorDesconto?: number;
   ativo?: boolean;
+}
+
+/**
+ * DTO para atualização de cliente
+ */
+export interface AtualizarClienteRequest {
+  nome?: string;
+  email?: string;
+  dataNascimento?: string;
+  foto?: string;
+  endereco?: {
+    rua?: string;
+    numero?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    cep?: string;
+  };
+  preferencias?: {
+    barbeariaId?: string;
+    barbeiroId?: string;
+    servicosPreferidos?: string[];
+  };
+  status?: 'ativo' | 'inativo' | 'suspenso';
+}
+
+/**
+ * DTO para login com celular + senha
+ */
+export interface LoginCelularRequest {
+  celular: string;
+  senha: string;
+}
+
+/**
+ * DTO para login com Google OAuth
+ */
+export interface LoginGoogleRequest {
+  googleToken: string; // Token do Google OAuth
+  googleId: string;
+  email: string;
+  nome: string;
+  foto?: string;
+}
+
+/**
+ * DTO para alteração de senha
+ */
+export interface AlterarSenhaRequest {
+  senhaAtual: string;
+  novaSenha: string;
+}
+
+/**
+ * DTO para reset de senha
+ */
+export interface ResetSenhaRequest {
+  celular: string;
+  codigoVerificacao: string;
+  novaSenha: string;
 }
 
 /**
