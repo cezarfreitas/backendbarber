@@ -239,10 +239,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         .section {
             background: var(--white);
             margin-bottom: 32px;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--gray-200);
+            padding: 40px 0;
             position: relative;
         }
         .section h2 {
