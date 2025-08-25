@@ -5,19 +5,23 @@ Sistema de barbearia para desenvolvimento local.
 ## 🚀 Como rodar
 
 ### 1. Instalar dependências:
+
 ```bash
 pnpm install
 ```
 
 ### 2. Configurar ambiente:
+
 Copie o `.env.example` para `.env` e configure suas variáveis.
 
 ### 3. Rodar em desenvolvimento:
+
 ```bash
 pnpm dev
 ```
 
 ### 4. Build (se necessário):
+
 ```bash
 pnpm build
 pnpm start
@@ -39,6 +43,7 @@ pnpm start
 ## 📝 Desenvolvimento
 
 Este projeto usa:
+
 - **Frontend**: React + Vite + TypeScript
 - **Backend**: Express + TypeScript
 - **Database**: MySQL
