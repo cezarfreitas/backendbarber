@@ -653,19 +653,27 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         /* Copy feedback */
         .copy-feedback {
             position: fixed;
-            top: 24px;
-            right: 24px;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
             background: var(--success);
             color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-weight: 500;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 0.875rem;
             z-index: 10000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(calc(100% + 24px)) translateY(-50%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
         }
         .copy-feedback.show {
-            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) translateY(0);
         }
     </style>
 </head>
