@@ -69,8 +69,12 @@ const buscarBarbeirosPorBarbearia = async (barbeariaId: string): Promise<Barbeir
       salarioFixo: row.salario_fixo,
       valorHora: row.valor_hora,
       barbeariaId: row.barbearia_id,
-      especialidades: row.especialidades ? JSON.parse(row.especialidades) : [],
-      horarioTrabalho: row.horario_trabalho ? JSON.parse(row.horario_trabalho) : {},
+      especialidades: typeof row.especialidades === 'string'
+        ? JSON.parse(row.especialidades)
+        : row.especialidades || [],
+      horarioTrabalho: typeof row.horario_trabalho === 'string'
+        ? JSON.parse(row.horario_trabalho)
+        : row.horario_trabalho || {},
       status: row.status,
       dataCadastro: row.data_cadastro,
       dataAtualizacao: row.data_atualizacao
