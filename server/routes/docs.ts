@@ -930,6 +930,48 @@ Content-Type: application/json
 {
   "preco": 40.00
 }</pre>
+
+            <h3>🎁 Combos</h3>
+            <h4>Listar combos ativos de uma barbearia</h4>
+            <pre>GET /api/combos?barbeariaId=1&ativo=true&incluirServicos=true</pre>
+
+            <h4>Criar combo com desconto fixo</h4>
+            <pre>POST /api/combos
+Content-Type: application/json
+
+{
+  "nome": "Corte + Barba Tradicional",
+  "descricao": "Combo clássico com desconto especial",
+  "barbeariaId": "1",
+  "servicoIds": ["1", "2"],
+  "tipoDesconto": "valor",
+  "valorDesconto": 10.00
+}</pre>
+
+            <h4>Criar combo com desconto percentual</h4>
+            <pre>POST /api/combos
+Content-Type: application/json
+
+{
+  "nome": "Pacote Completo Masculino",
+  "descricao": "Corte + barba + sobrancelha com 15% de desconto",
+  "barbeariaId": "1",
+  "servicoIds": ["1", "2", "4"],
+  "tipoDesconto": "percentual",
+  "valorDesconto": 15.00
+}</pre>
+
+            <h4>Atualizar serviços de um combo</h4>
+            <pre>PUT /api/combos/combo1
+Content-Type: application/json
+
+{
+  "servicoIds": ["1", "2", "4", "8"],
+  "valorDesconto": 20.00
+}</pre>
+
+            <h4>Buscar combo específico com todos os serviços</h4>
+            <pre>GET /api/combos/combo1?incluirServicos=true</pre>
         </div>
 
         <div class="section" id="suporte">
