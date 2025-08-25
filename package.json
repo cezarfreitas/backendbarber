@@ -16,6 +16,7 @@
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
     "build:easypanel": "vite build --config vite.config.easypanel.ts",
+    "build:stable": "vite build --config vite.config.stable.ts",
     "start": "node dist/server/production.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
