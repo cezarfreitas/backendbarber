@@ -813,7 +813,7 @@ Content-Type: application/json
 }</pre>
         </div>
 
-        <div class="section">
+        <div class="section" id="suporte">
             <h2>🔧 Suporte</h2>
             <p>Para suporte técnico ou dúvidas sobre a API, entre em contato:</p>
             <ul>
@@ -821,8 +821,113 @@ Content-Type: application/json
                 <li>📱 WhatsApp: (11) 99999-9999</li>
                 <li>🌐 Website: www.barbeariasaas.com</li>
             </ul>
+
+            <div class="endpoint">
+                <h4>🚀 Versão da API</h4>
+                <p><span class="status-badge status-info">v1.0.0</span> - Versão atual</p>
+                <p><strong>Última atualização:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+            </div>
         </div>
+            </div>
+        </main>
     </div>
+
+    <script>
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggle = document.querySelector('.sidebar-toggle');
+
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+            toggle.classList.toggle('active');
+        }
+
+        // Auto-highlight current section in sidebar
+        function highlightCurrentSection() {
+            const sections = document.querySelectorAll('.section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            let currentSection = '';
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    currentSection = section.id;
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + currentSection) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section on scroll
+        window.addEventListener('scroll', highlightCurrentSection);
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            highlightCurrentSection();
+
+            // Auto-open sidebar on larger screens
+            if (window.innerWidth > 768) {
+                toggleSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggle = document.querySelector('.sidebar-toggle');
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('shifted');
+                toggle.classList.remove('active');
+            } else if (!sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+
+        // Close sidebar when clicking on main content (mobile)
+        document.getElementById('mainContent').addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                const toggle = document.querySelector('.sidebar-toggle');
+
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    mainContent.classList.remove('shifted');
+                    toggle.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
   `;
