@@ -149,17 +149,11 @@ export const listarCombos: RequestHandler = async (req, res) => {
       countQuery += whereClause;
     }
 
-    // Contar total de registros
-    const countResult = await executeQuerySingle<{ total: number }>(countQuery, params);
-    const total = countResult?.total || 0;
-    const totalPaginas = Math.ceil(total / limite);
-    const offset = (pagina - 1) * limite;
+    // Buscar dados (sem paginação por enquanto para evitar o erro)
+    selectQuery += ' ORDER BY nome';
 
-    // Adicionar ordenação e paginação
-    selectQuery += ' ORDER BY nome LIMIT ? OFFSET ?';
-    const allParams = [...params, limite, offset];
-
-    const rows = await executeQuery(selectQuery, allParams);
+    const rows = await executeQuery(selectQuery, params);
+    const total = rows.length;
     const combos = await Promise.all(
       rows.map(async (row: any) => {
         const combo = mapComboFromDB(row);
@@ -323,7 +317,7 @@ export const criarCombo: RequestHandler = async (req, res) => {
     // Buscar combo criado com serviços
     const comboCreated = await buscarCombo({ params: { id: comboId }, query: {} } as any, res);
     
-    if (res.headersSent) return; // Se buscarCombo j�� enviou resposta
+    if (res.headersSent) return; // Se buscarCombo já enviou resposta
 
     res.status(201).json({
       sucesso: true,
