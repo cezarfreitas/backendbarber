@@ -590,7 +590,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
         </nav>
         
-        <main class="main-content" id="mainContent">
+        <main class="main-content shifted" id="mainContent">
             <div class="container">
                 <div class="hero">
                     <h1>🪒 API Barbearia SaaS</h1>
