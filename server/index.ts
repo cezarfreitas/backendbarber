@@ -192,9 +192,7 @@ export async function initializeDatabase() {
     // Verificar se as tabelas existem
     const tablesExist = await checkTables();
     if (!tablesExist) {
-      console.log(
-        "🔧 Tabelas não encontradas, criando estrutura do banco...",
-      );
+      console.log("🔧 Tabelas não encontradas, criando estrutura do banco...");
       await initializeTables();
     } else {
       console.log("✅ Estrutura do banco de dados verificada");
