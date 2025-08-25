@@ -1,13 +1,12 @@
-# Git
+# Git and documentation
 .git
 .gitignore
 *.md
 README.md
 CHANGELOG.md
-CONTRIBUTING.md
 LICENSE
 
-# Dependencies
+# Dependencies (will be installed in container)
 node_modules
 .pnpm-store
 .npm
@@ -26,10 +25,14 @@ out
 
 # Environment files (will be set via container env vars)
 .env
-.env.local
-.env.development
-.env.production
-.env.test
+.env.*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
 # Testing
 coverage
@@ -38,70 +41,29 @@ test-results
 *.test.ts
 *.spec.ts
 **/__tests__/**
-**/__mocks__/**
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
 
 # Cache
 .cache
 .parcel-cache
 .next
-.nuxt
-.vuepress/dist
 
-# OS generated files
+# OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
 # Temporary files
 tmp
 temp
 *.tmp
-*.temp
 
-# Docker
-Dockerfile*
-.dockerignore
+# Docker files
 docker-compose*.yml
 
 # CI/CD
 .github
 .gitlab-ci.yml
-.travis.yml
-.circleci
 
-# Documentation
-docs
-
-# Deployment specific files that should not be in image
-netlify.toml
-vercel.json
-
-# Development tools
-.prettierrc*
-.eslintrc*
-.editorconfig
-tsconfig.json
-
-# Client-side files (not needed for backend-only deployment)
+# Frontend files (not needed for backend-only)
 client/
 public/
 index.html
@@ -109,11 +71,13 @@ vite.config.ts
 postcss.config.js
 tailwind.config.ts
 components.json
-
-# Frontend dependencies and configs
 .prettierrc*
 .eslintrc*
 .editorconfig
 
-# Keep only server-side code and configs needed for build
-# (these will be explicitly copied in Dockerfile)
+# Scripts (not needed in production)
+scripts/
+
+# Documentation
+docs/
+*.md
