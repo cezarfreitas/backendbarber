@@ -1,13 +1,21 @@
 import { RequestHandler } from "express";
-import { 
+import {
   LoginCelularRequest,
   LoginGoogleRequest,
+  LoginBarbeariaRequest,
+  LoginBarbeiroRequest,
   AlterarSenhaRequest,
+  AlterarSenhaBarbeariaRequest,
+  AlterarSenhaBarbeiroRequest,
   ResetSenhaRequest,
   LoginResponse,
+  LoginBarbeariaResponse,
+  LoginBarbeiroResponse,
   VerificarTokenResponse,
   ApiResponse,
-  Cliente
+  Cliente,
+  Barbearia,
+  Barbeiro
 } from "@shared/api";
 import { executeQuery, executeQuerySingle } from "../config/database";
 import { 
