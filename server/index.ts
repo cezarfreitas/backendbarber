@@ -57,7 +57,7 @@ import {
   verificarBarbeiro,
   verificarCliente
 } from "./utils/auth";
-import { mostrarDocumentacao } from "./routes/docs";
+import { mostrarDocumentacao, downloadPostmanCollection } from "./routes/docs";
 import {
   buscarBarbeariasPublicas,
   listarCidades,
