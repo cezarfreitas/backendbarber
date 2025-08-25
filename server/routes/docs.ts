@@ -324,26 +324,47 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
         .section {
             background: var(--white);
-            margin-bottom: 32px;
-            padding: 40px 0;
+            margin-bottom: var(--spacing-2xl);
+            padding: var(--spacing-2xl) 0;
             position: relative;
+        }
+        .section:first-of-type {
+            padding-top: 0;
         }
         .section h2 {
             color: var(--gray-900);
-            margin-bottom: 32px;
-            padding-bottom: 16px;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-md);
             border-bottom: 2px solid var(--gray-100);
-            font-size: 2rem;
+            font-size: 1.875rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--spacing-sm);
+            letter-spacing: -0.025em;
+            line-height: 1.2;
         }
         .section h3 {
             color: var(--gray-800);
-            margin: 32px 0 16px 0;
-            font-size: 1.5rem;
+            margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+            font-size: 1.375rem;
             font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        .section p {
+            color: var(--gray-700);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-md);
+        }
+        .section ul {
+            margin: var(--spacing-md) 0;
+            padding-left: var(--spacing-xl);
+        }
+        .section li {
+            color: var(--gray-700);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-sm);
         }
 
         /* Endpoints */
