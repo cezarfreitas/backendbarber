@@ -60,6 +60,7 @@ import {
 import { mostrarDocumentacao, downloadPostmanCollection } from "./routes/docs";
 import {
   buscarBarbeariasPublicas,
+  listarTodasBarbearias,
   listarCidades,
   obterEstatisticas,
   obterSugestoes,
