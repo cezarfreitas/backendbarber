@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS barbeiros (
   email VARCHAR(255) NOT NULL UNIQUE,
   telefone VARCHAR(20) NOT NULL,
   cpf VARCHAR(14) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255), -- Hash da senha para autenticação
   tipo ENUM('comissionado', 'funcionario', 'freelancer') NOT NULL,
   porcentagem_comissao DECIMAL(5,2) NULL,
   salario_fixo DECIMAL(10,2) NULL,
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS barbeiros (
   status ENUM('ativo', 'inativo', 'afastado') DEFAULT 'ativo',
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ultimo_login TIMESTAMP NULL, -- Data do último login
   FOREIGN KEY (barbearia_id) REFERENCES barbearias(id) ON DELETE CASCADE,
   INDEX idx_barbearia (barbearia_id),
   INDEX idx_status (status),
