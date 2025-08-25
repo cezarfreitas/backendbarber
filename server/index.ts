@@ -72,3 +72,11 @@ export function createServer() {
 
   return app;
 }
+
+// Inicializar banco de dados ao iniciar o servidor
+if (process.env.NODE_ENV !== 'test') {
+  initDatabase().catch(error => {
+    console.error('Falha ao inicializar banco de dados:', error);
+    process.exit(1);
+  });
+}
