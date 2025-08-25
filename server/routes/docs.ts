@@ -129,25 +129,31 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         }
 
         .postman-download {
-            margin: 16px 24px;
-            padding: 12px 16px;
+            margin: var(--spacing-md) var(--spacing-lg);
+            padding: var(--spacing-md) var(--spacing-md);
             background: linear-gradient(135deg, var(--success), #059669);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s ease;
-            width: calc(100% - 48px);
+            font-weight: 600;
+            font-size: 0.8125rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            width: calc(100% - var(--spacing-xl));
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: var(--spacing-sm);
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
         }
         .postman-download:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, #0d9488, #047857);
+        }
+        .postman-download:active {
+            transform: translateY(0);
         }
 
         .sidebar-nav { padding: 24px 0; }
@@ -661,7 +667,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 <!-- Autenticação -->
                 <div class="section" id="authentication">
                     <h2>🔐 Autenticação</h2>
-                    <p>A API suporta múltiplos tipos de autentica��ão usando JWT tokens:</p>
+                    <p>A API suporta múltiplos tipos de autenticação usando JWT tokens:</p>
                     
                     <h3>Headers de Autenticação</h3>
                     <div class="code-block">
