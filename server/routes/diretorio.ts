@@ -46,15 +46,19 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
     } = req.query;
 
     let sql = `
-      SELECT 
+      SELECT
         b.id,
         b.nome,
         b.descricao,
-        b.endereco,
-        b.contato,
-        b.avaliacao_media,
-        b.total_avaliacoes,
-        b.preco_medio,
+        b.endereco_rua,
+        b.endereco_numero,
+        b.endereco_bairro,
+        b.endereco_cidade,
+        b.endereco_estado,
+        b.endereco_cep,
+        b.contato_telefone,
+        b.contato_email,
+        b.contato_whatsapp,
         b.data_cadastro,
         b.status
       FROM barbearias b
@@ -71,46 +75,32 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
 
     // Filtro por cidade
     if (cidade) {
-      sql += ` AND JSON_EXTRACT(b.endereco, '$.cidade') = ?`;
+      sql += ` AND b.endereco_cidade = ?`;
       params.push(cidade);
     }
 
     // Filtro por estado
     if (estado) {
-      sql += ` AND JSON_EXTRACT(b.endereco, '$.estado') = ?`;
+      sql += ` AND b.endereco_estado = ?`;
       params.push(estado);
     }
 
-    // Filtro por avaliação mínima
-    if (avaliacao_min) {
-      sql += ` AND b.avaliacao_media >= ?`;
-      params.push(parseFloat(avaliacao_min as string));
-    }
+    // Nota: Campos de avaliação e preço médio não existem na estrutura atual
+    // Removidos filtros por avaliacao_min e preco_max
 
-    // Filtro por preço máximo
-    if (preco_max) {
-      sql += ` AND b.preco_medio <= ?`;
-      params.push(parseFloat(preco_max as string));
-    }
-
-    // Ordenação
+    // Ordenação (simplificada devido à ausência de campos de avaliação)
     switch (ordenar) {
       case 'distancia':
-        if (latitude && longitude) {
-          // Ordenar por distância (implementação simplificada)
-          sql += ` ORDER BY b.nome`;
-        } else {
-          sql += ` ORDER BY b.nome`;
-        }
+        sql += ` ORDER BY b.nome`;
         break;
       case 'avaliacao':
-        sql += ` ORDER BY b.avaliacao_media DESC, b.total_avaliacoes DESC`;
+        sql += ` ORDER BY b.nome`; // Fallback para nome
         break;
       case 'preco':
-        sql += ` ORDER BY b.preco_medio ASC`;
+        sql += ` ORDER BY b.nome`; // Fallback para nome
         break;
       default: // relevancia
-        sql += ` ORDER BY b.avaliacao_media DESC, b.total_avaliacoes DESC, b.nome`;
+        sql += ` ORDER BY b.nome`;
     }
 
     // Paginação
@@ -120,11 +110,26 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
 
     const [rows] = await getPool().execute<Barbearia[]>(sql, params);
 
-    // Parse JSON fields
+    // Agrupar campos de endereço e contato
     const barbearias = rows.map(barbearia => ({
-      ...barbearia,
-      endereco: typeof barbearia.endereco === 'string' ? JSON.parse(barbearia.endereco) : barbearia.endereco,
-      contato: typeof barbearia.contato === 'string' ? JSON.parse(barbearia.contato) : barbearia.contato
+      id: barbearia.id,
+      nome: barbearia.nome,
+      descricao: barbearia.descricao,
+      endereco: {
+        rua: barbearia.endereco_rua,
+        numero: barbearia.endereco_numero,
+        bairro: barbearia.endereco_bairro,
+        cidade: barbearia.endereco_cidade,
+        estado: barbearia.endereco_estado,
+        cep: barbearia.endereco_cep
+      },
+      contato: {
+        telefone: barbearia.contato_telefone,
+        email: barbearia.contato_email,
+        whatsapp: barbearia.contato_whatsapp
+      },
+      data_cadastro: barbearia.data_cadastro,
+      status: barbearia.status
     }));
 
     res.json({
@@ -153,22 +158,22 @@ export async function buscarBarbeariasPublicas(req: Request, res: Response) {
 export async function listarCidades(req: Request, res: Response) {
   try {
     const sql = `
-      SELECT 
-        JSON_EXTRACT(endereco, '$.cidade') as cidade,
-        JSON_EXTRACT(endereco, '$.estado') as estado,
+      SELECT
+        endereco_cidade as cidade,
+        endereco_estado as estado,
         COUNT(*) as total_barbearias
-      FROM barbearias 
+      FROM barbearias
       WHERE status = 'ativa'
-        AND JSON_EXTRACT(endereco, '$.cidade') IS NOT NULL
-      GROUP BY JSON_EXTRACT(endereco, '$.cidade'), JSON_EXTRACT(endereco, '$.estado')
+        AND endereco_cidade IS NOT NULL
+      GROUP BY endereco_cidade, endereco_estado
       ORDER BY total_barbearias DESC, cidade ASC
     `;
 
     const [rows] = await getPool().execute<Cidade[]>(sql);
 
     const cidades = rows.map(row => ({
-      cidade: row.cidade?.toString().replace(/"/g, ''),
-      estado: row.estado?.toString().replace(/"/g, ''),
+      cidade: row.cidade,
+      estado: row.estado,
       total_barbearias: row.total_barbearias
     }));
 
@@ -209,14 +214,14 @@ export async function obterEstatisticas(req: Request, res: Response) {
 
     // Cidades com mais barbearias
     const [cidadesTop] = await getPool().execute<RowDataPacket[]>(`
-      SELECT 
-        JSON_EXTRACT(endereco, '$.cidade') as cidade,
-        JSON_EXTRACT(endereco, '$.estado') as estado,
+      SELECT
+        endereco_cidade as cidade,
+        endereco_estado as estado,
         COUNT(*) as total
-      FROM barbearias 
+      FROM barbearias
       WHERE status = 'ativa'
-        AND JSON_EXTRACT(endereco, '$.cidade') IS NOT NULL
-      GROUP BY JSON_EXTRACT(endereco, '$.cidade'), JSON_EXTRACT(endereco, '$.estado')
+        AND endereco_cidade IS NOT NULL
+      GROUP BY endereco_cidade, endereco_estado
       ORDER BY total DESC
       LIMIT 5
     `);
@@ -235,8 +240,8 @@ export async function obterEstatisticas(req: Request, res: Response) {
           total_servicos: totalServicos[0].total,
           preco_medio_servicos: Math.round(precoMedio[0].preco_medio * 100) / 100,
           cidades_populares: cidadesTop.map(cidade => ({
-            cidade: cidade.cidade?.toString().replace(/"/g, ''),
-            estado: cidade.estado?.toString().replace(/"/g, ''),
+            cidade: cidade.cidade,
+            estado: cidade.estado,
             total_barbearias: cidade.total
           }))
         }
@@ -278,19 +283,19 @@ export async function obterSugestoes(req: Request, res: Response) {
 
     // Sugestões de cidades
     const [cidades] = await getPool().execute<RowDataPacket[]>(
-      `SELECT DISTINCT JSON_EXTRACT(endereco, '$.cidade') as cidade
-       FROM barbearias 
-       WHERE status = 'ativa' 
-         AND JSON_EXTRACT(endereco, '$.cidade') LIKE ?
+      `SELECT DISTINCT endereco_cidade as cidade
+       FROM barbearias
+       WHERE status = 'ativa'
+         AND endereco_cidade LIKE ?
        LIMIT 5`,
       [`%${q}%`]
     );
 
     const sugestoes = [
       ...barbearias.map(b => ({ tipo: 'barbearia', texto: b.nome })),
-      ...cidades.map(c => ({ 
-        tipo: 'cidade', 
-        texto: c.cidade?.toString().replace(/"/g, '') 
+      ...cidades.map(c => ({
+        tipo: 'cidade',
+        texto: c.cidade
       }))
     ];
 
@@ -317,17 +322,20 @@ export async function obterDetalhesBarbearia(req: Request, res: Response) {
     const { id } = req.params;
 
     const [rows] = await getPool().execute<Barbearia[]>(
-      `SELECT 
+      `SELECT
         b.id,
         b.nome,
         b.descricao,
-        b.endereco,
-        b.contato,
+        b.endereco_rua,
+        b.endereco_numero,
+        b.endereco_bairro,
+        b.endereco_cidade,
+        b.endereco_estado,
+        b.endereco_cep,
+        b.contato_telefone,
+        b.contato_email,
+        b.contato_whatsapp,
         b.horario_funcionamento,
-        b.especialidades,
-        b.avaliacao_media,
-        b.total_avaliacoes,
-        b.preco_medio,
         b.data_cadastro
        FROM barbearias b
        WHERE b.id = ? AND b.status = 'ativa'`,
@@ -356,11 +364,24 @@ export async function obterDetalhesBarbearia(req: Request, res: Response) {
     );
 
     const resultado = {
-      ...barbearia,
-      endereco: typeof barbearia.endereco === 'string' ? JSON.parse(barbearia.endereco) : barbearia.endereco,
-      contato: typeof barbearia.contato === 'string' ? JSON.parse(barbearia.contato) : barbearia.contato,
+      id: barbearia.id,
+      nome: barbearia.nome,
+      descricao: barbearia.descricao,
+      endereco: {
+        rua: barbearia.endereco_rua,
+        numero: barbearia.endereco_numero,
+        bairro: barbearia.endereco_bairro,
+        cidade: barbearia.endereco_cidade,
+        estado: barbearia.endereco_estado,
+        cep: barbearia.endereco_cep
+      },
+      contato: {
+        telefone: barbearia.contato_telefone,
+        email: barbearia.contato_email,
+        whatsapp: barbearia.contato_whatsapp
+      },
       horario_funcionamento: typeof barbearia.horario_funcionamento === 'string' ? JSON.parse(barbearia.horario_funcionamento) : barbearia.horario_funcionamento,
-      especialidades: typeof barbearia.especialidades === 'string' ? JSON.parse(barbearia.especialidades) : barbearia.especialidades,
+      data_cadastro: barbearia.data_cadastro,
       barbeiros: barbeiros.map(b => ({
         ...b,
         especialidades: typeof b.especialidades === 'string' ? JSON.parse(b.especialidades) : b.especialidades
@@ -395,14 +416,14 @@ export async function listarPromocoes(req: Request, res: Response) {
         c.id,
         c.nome,
         c.descricao,
-        c.valorOriginal,
-        c.valorCombo,
-        c.tipoDesconto,
-        c.valorDesconto,
+        c.valor_original,
+        c.valor_combo,
+        c.tipo_desconto,
+        c.valor_desconto,
         c.ativo,
         b.nome as barbearia_nome,
-        JSON_EXTRACT(b.endereco, '$.cidade') as cidade,
-        JSON_EXTRACT(b.endereco, '$.estado') as estado
+        b.endereco_cidade as cidade,
+        b.endereco_estado as estado
       FROM combos c
       JOIN barbearias b ON c.barbeariaId = b.id
       WHERE c.ativo = 1 AND b.status = 'ativa'
@@ -411,12 +432,12 @@ export async function listarPromocoes(req: Request, res: Response) {
     const params: any[] = [];
 
     if (cidade) {
-      sql += ` AND JSON_EXTRACT(b.endereco, '$.cidade') = ?`;
+      sql += ` AND b.endereco_cidade = ?`;
       params.push(cidade);
     }
 
     if (estado) {
-      sql += ` AND JSON_EXTRACT(b.endereco, '$.estado') = ?`;
+      sql += ` AND b.endereco_estado = ?`;
       params.push(estado);
     }
 
@@ -426,10 +447,8 @@ export async function listarPromocoes(req: Request, res: Response) {
 
     const promocoes = rows.map(promo => ({
       ...promo,
-      cidade: promo.cidade?.toString().replace(/"/g, ''),
-      estado: promo.estado?.toString().replace(/"/g, ''),
-      economia: promo.valorOriginal - promo.valorCombo,
-      percentual_desconto: Math.round((1 - promo.valorCombo / promo.valorOriginal) * 100)
+      economia: promo.valor_original - promo.valor_combo,
+      percentual_desconto: Math.round((1 - promo.valor_combo / promo.valor_original) * 100)
     }));
 
     res.json({
