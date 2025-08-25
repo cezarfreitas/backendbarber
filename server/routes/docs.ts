@@ -280,15 +280,17 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--primary-dark) 100%);
             color: white;
-            padding: 80px 0;
+            padding: var(--spacing-3xl) var(--spacing-lg);
             text-align: center;
-            margin-bottom: 48px;
-            border-radius: 16px;
-            margin: 0 24px 48px 24px;
+            margin-bottom: var(--spacing-2xl);
+            border-radius: var(--border-radius-lg);
+            margin-left: var(--spacing-lg);
+            margin-right: var(--spacing-lg);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         .hero::before {
             content: '';
@@ -297,23 +299,27 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="10" cy="50" r="1" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.08"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.08"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.08"/><circle cx="10" cy="50" r="1" fill="white" opacity="0.08"/><circle cx="90" cy="30" r="1" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.4;
         }
-        .hero h1 { 
-            font-size: 3.5rem; 
-            margin-bottom: 16px; 
-            font-weight: 700;
+        .hero h1 {
+            font-size: 3.25rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 800;
             position: relative;
             z-index: 1;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
         }
-        .hero p { 
-            font-size: 1.25rem; 
-            opacity: 0.9; 
-            max-width: 600px; 
+        .hero p {
+            font-size: 1.1875rem;
+            opacity: 0.92;
+            max-width: 540px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         .section {
@@ -615,7 +621,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             🎁 Combos
                         </div>
                         <div class="nav-sub-items" id="combos-tree">
-                            <a href="#endpoints-combos" class="nav-sub-item">���� Listar Combos</a>
+                            <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
                             <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
