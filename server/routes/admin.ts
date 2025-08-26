@@ -205,8 +205,8 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const offset = (pagina - 1) * limite;
 
     const barbeiros = await executeQuery(
-      `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ? OFFSET ?`,
-      [barbeariaId, limite, offset],
+      `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ${limite} OFFSET ${offset}`,
+      [barbeariaId],
     );
 
     const baseUrl = req.protocol + '://' + req.get('host') + req.path;
