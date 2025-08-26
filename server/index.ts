@@ -119,9 +119,6 @@ export function createServer() {
   // Demo
   app.get("/api/demo", handleDemo);
 
-  // Endpoint temporário para criar barbearia de teste
-  app.post("/api/criar-barbearia-teste", criarBarbeariaTeste);
-
   // Barbearias
   app.get("/api/barbearias", listarBarbearias);
   app.get("/api/barbearias/:id", buscarBarbearia);
