@@ -681,7 +681,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     <div class="copy-feedback" id="copyFeedback">📋 Código copiado!</div>
     
     <div class="layout">
-        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <button class="sidebar-toggle" id="sidebarToggle">���</button>
 
         <nav class="sidebar active" id="sidebar">
             <div class="sidebar-header">
@@ -2612,11 +2612,96 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
               method: "GET",
               header: [],
               url: {
-                raw: "{{baseUrl}}/api/barbeiros",
+                raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10",
                 host: ["{{baseUrl}}"],
                 path: ["api", "barbeiros"],
+                query: [
+                  { key: "pagina", value: "1" },
+                  { key: "limite", value: "10" }
+                ]
               },
             },
+            response: [
+              {
+                name: "Exemplo - com resultados",
+                originalRequest: {
+                  method: "GET",
+                  header: [],
+                  url: {
+                    raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10",
+                    host: ["{{baseUrl}}"],
+                    path: ["api", "barbeiros"]
+                  }
+                },
+                status: "OK",
+                code: 200,
+                _postman_previewlanguage: "json",
+                header: [
+                  { key: "Content-Type", value: "application/json" }
+                ],
+                body: JSON.stringify({
+                  sucesso: true,
+                  dados: {
+                    barbeiros: [
+                      {
+                        id: "1",
+                        nome: "Carlos Silva",
+                        email: "carlos@barbeariadoroao.com",
+                        telefone: "(11) 98888-7777",
+                        cpf: "111.222.333-44",
+                        tipo: "comissionado",
+                        porcentagemComissao: 40,
+                        especialidades: ["Corte masculino", "Barba"],
+                        status: "ativo"
+                      }
+                    ],
+                    total: 1,
+                    pagina: 1,
+                    totalPaginas: 1
+                  },
+                  meta: {
+                    total: 1,
+                    pagina: 1,
+                    totalPaginas: 1,
+                    limite: 10
+                  }
+                }, null, 2)
+              },
+              {
+                name: "Exemplo - nenhum resultado",
+                originalRequest: {
+                  method: "GET",
+                  header: [],
+                  url: {
+                    raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10&barbeariaId=999",
+                    host: ["{{baseUrl}}"],
+                    path: ["api", "barbeiros"]
+                  }
+                },
+                status: "OK",
+                code: 200,
+                _postman_previewlanguage: "json",
+                header: [
+                  { key: "Content-Type", value: "application/json" }
+                ],
+                body: JSON.stringify({
+                  sucesso: true,
+                  dados: {
+                    barbeiros: [],
+                    total: 0,
+                    pagina: 1,
+                    totalPaginas: 0
+                  },
+                  meta: {
+                    total: 0,
+                    pagina: 1,
+                    totalPaginas: 0,
+                    limite: 10
+                  },
+                  mensagem: "Nenhum barbeiro encontrado para os filtros informados"
+                }, null, 2)
+              }
+            ]
           },
           {
             name: "Buscar Barbeiro por ID",
