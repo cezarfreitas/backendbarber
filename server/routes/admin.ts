@@ -5,17 +5,98 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 
 /**
+ * GET /api/admin/barbearia
+ * Buscar dados completos da barbearia do admin logado
+ */
+export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+
+    if (!userJWT || userJWT.userType !== 'barbearia') {
+      return res.status(403).json({
+        sucesso: false,
+        erro: "Acesso negado. Usuário não é uma barbearia.",
+      });
+    }
+
+    // Buscar dados completos da barbearia
+    const barbearia = await executeQuerySingle(
+      `
+      SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+             endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+             contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+             proprietario_email, horario_funcionamento, status, data_cadastro,
+             data_atualizacao, ultimo_login
+      FROM barbearias
+      WHERE id = ?
+    `,
+      [barbeariaId],
+    );
+
+    if (!barbearia) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Barbearia não encontrada",
+      });
+    }
+
+    // Mapear dados para formato da interface
+    const barbeariaFormatada = {
+      id: barbearia.id,
+      nome: barbearia.nome,
+      descricao: barbearia.descricao,
+      endereco: {
+        rua: barbearia.endereco_rua,
+        numero: barbearia.endereco_numero,
+        bairro: barbearia.endereco_bairro,
+        cidade: barbearia.endereco_cidade,
+        estado: barbearia.endereco_estado,
+        cep: barbearia.endereco_cep
+      },
+      contato: {
+        telefone: barbearia.contato_telefone,
+        email: barbearia.contato_email,
+        whatsapp: barbearia.contato_whatsapp
+      },
+      proprietario: {
+        nome: barbearia.proprietario_nome,
+        cpf: barbearia.proprietario_cpf,
+        email: barbearia.proprietario_email
+      },
+      horarioFuncionamento: barbearia.horario_funcionamento ?
+        JSON.parse(barbearia.horario_funcionamento) : {},
+      status: barbearia.status,
+      dataCadastro: barbearia.data_cadastro,
+      dataAtualizacao: barbearia.data_atualizacao,
+      ultimoLogin: barbearia.ultimo_login
+    };
+
+    const response: ApiResponse<any> = {
+      sucesso: true,
+      dados: barbeariaFormatada,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Erro ao buscar barbearia admin:", error);
+    res.status(500).json({ sucesso: false, erro: "Erro interno do servidor" });
+  }
+};
+
+/**
  * GET /api/admin/dashboard
  * Dashboard com estatísticas da barbearia do proprietário
  */
 export const dashboardAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
@@ -403,17 +484,17 @@ export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
  */
 export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
-    const { nome, descricao, endereco, contato, horario_funcionamento } =
-      req.body;
+    const { nome, descricao, endereco, contato, proprietario, horarioFuncionamento } = req.body;
 
     // Se email foi alterado, verificar se não existe
     if (contato?.email) {
@@ -445,7 +526,10 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         endereco_cep = COALESCE(?, endereco_cep),
         contato_telefone = COALESCE(?, contato_telefone),
         contato_email = COALESCE(?, contato_email),
-        contato_whatsapp = ?,
+        contato_whatsapp = COALESCE(?, contato_whatsapp),
+        proprietario_nome = COALESCE(?, proprietario_nome),
+        proprietario_cpf = COALESCE(?, proprietario_cpf),
+        proprietario_email = COALESCE(?, proprietario_email),
         horario_funcionamento = COALESCE(?, horario_funcionamento),
         data_atualizacao = CURRENT_TIMESTAMP
       WHERE id = ?
@@ -462,21 +546,62 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         contato?.telefone,
         contato?.email,
         contato?.whatsapp,
-        horario_funcionamento ? JSON.stringify(horario_funcionamento) : null,
+        proprietario?.nome,
+        proprietario?.cpf,
+        proprietario?.email,
+        horarioFuncionamento ? JSON.stringify(horarioFuncionamento) : null,
         barbeariaId,
       ],
     );
 
-    const barbeariaAtualizada = await executeQuerySingle(
+    // Buscar dados atualizados da barbearia
+    const barbearia = await executeQuerySingle(
       `
-      SELECT * FROM barbearias WHERE id = ?
+      SELECT id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+             endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+             contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+             proprietario_email, horario_funcionamento, status, data_cadastro,
+             data_atualizacao, ultimo_login
+      FROM barbearias WHERE id = ?
     `,
       [barbeariaId],
     );
 
-    const response: ApiResponse<Barbearia> = {
+    // Mapear dados para formato da interface
+    const barbeariaFormatada = {
+      id: barbearia.id,
+      nome: barbearia.nome,
+      descricao: barbearia.descricao,
+      endereco: {
+        rua: barbearia.endereco_rua,
+        numero: barbearia.endereco_numero,
+        bairro: barbearia.endereco_bairro,
+        cidade: barbearia.endereco_cidade,
+        estado: barbearia.endereco_estado,
+        cep: barbearia.endereco_cep
+      },
+      contato: {
+        telefone: barbearia.contato_telefone,
+        email: barbearia.contato_email,
+        whatsapp: barbearia.contato_whatsapp
+      },
+      proprietario: {
+        nome: barbearia.proprietario_nome,
+        cpf: barbearia.proprietario_cpf,
+        email: barbearia.proprietario_email
+      },
+      horarioFuncionamento: barbearia.horario_funcionamento ?
+        JSON.parse(barbearia.horario_funcionamento) : {},
+      status: barbearia.status,
+      dataCadastro: barbearia.data_cadastro,
+      dataAtualizacao: barbearia.data_atualizacao,
+      ultimoLogin: barbearia.ultimo_login
+    };
+
+    const response: ApiResponse<any> = {
       sucesso: true,
-      dados: barbeariaAtualizada as Barbearia,
+      dados: barbeariaFormatada,
+      mensagem: "Dados da barbearia atualizados com sucesso"
     };
 
     res.json(response);
