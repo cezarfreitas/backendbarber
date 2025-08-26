@@ -915,13 +915,28 @@ export const listarServicosAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
-    const { pagina: paginaRaw, limite: limiteRaw, categoria, ativo } = req.query as any;
+    const {
+      pagina: paginaRaw,
+      limite: limiteRaw,
+      categoria,
+      ativo,
+    } = req.query as any;
     const validacao = validarPaginaLimite(paginaRaw, limiteRaw);
     if (validacao.erro) {
-      return erroPadrao(res, 400, validacao.codigo || 'INVALID_PAGINATION', validacao.mensagem || 'Parâmetros de paginação inválidos');
+      return erroPadrao(
+        res,
+        400,
+        validacao.codigo || "INVALID_PAGINATION",
+        validacao.mensagem || "Parâmetros de paginação inválidos",
+      );
     }
 
     const pagina: number = validacao.pagina;
@@ -929,21 +944,26 @@ export const listarServicosAdmin: RequestHandler = async (req, res) => {
 
     // Garantir que barbeariaId é válido
     if (!barbeariaId) {
-      return erroPadrao(res, 400, 'INVALID_BARBEARIA_ID', 'ID da barbearia não encontrado');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_BARBEARIA_ID",
+        "ID da barbearia não encontrado",
+      );
     }
 
     // Construir WHERE clause com filtros
-    let whereClause = 'WHERE barbearia_id = ?';
+    let whereClause = "WHERE barbearia_id = ?";
     const params: any[] = [barbeariaId];
 
     if (categoria) {
-      whereClause += ' AND categoria = ?';
+      whereClause += " AND categoria = ?";
       params.push(categoria);
     }
 
     if (ativo !== undefined) {
-      const isAtivo = ativo === 'true';
-      whereClause += ' AND ativo = ?';
+      const isAtivo = ativo === "true";
+      whereClause += " AND ativo = ?";
       params.push(isAtivo);
     }
 
@@ -960,8 +980,18 @@ export const listarServicosAdmin: RequestHandler = async (req, res) => {
     const limiteNum = parseInt(String(limite), 10);
     const offsetNum = parseInt(String(offset), 10);
 
-    if (isNaN(limiteNum) || isNaN(offsetNum) || limiteNum < 1 || offsetNum < 0) {
-      return erroPadrao(res, 400, 'INVALID_PAGINATION_VALUES', 'Valores de paginação inválidos');
+    if (
+      isNaN(limiteNum) ||
+      isNaN(offsetNum) ||
+      limiteNum < 1 ||
+      offsetNum < 0
+    ) {
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_PAGINATION_VALUES",
+        "Valores de paginação inválidos",
+      );
     }
 
     const servicos = await executeQuery(
@@ -982,7 +1012,9 @@ export const listarServicosAdmin: RequestHandler = async (req, res) => {
     return res.json(response);
   } catch (error: any) {
     console.error("Erro ao listar serviços admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -996,29 +1028,43 @@ export const criarServicoAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
-    const {
-      nome,
-      descricao,
-      preco,
-      duracao_minutos,
-      categoria,
-    } = req.body;
+    const { nome, descricao, preco, duracao_minutos, categoria } = req.body;
 
     // Validações básicas
     if (!nome || !preco || !duracao_minutos) {
-      return erroPadrao(res, 400, 'MISSING_FIELDS', 'Campos obrigatórios: nome, preco, duracao_minutos');
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_FIELDS",
+        "Campos obrigatórios: nome, preco, duracao_minutos",
+      );
     }
 
     // Validar valores numéricos
     if (preco <= 0) {
-      return erroPadrao(res, 400, 'INVALID_PRICE', 'Preço deve ser maior que zero');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_PRICE",
+        "Preço deve ser maior que zero",
+      );
     }
 
     if (duracao_minutos <= 0) {
-      return erroPadrao(res, 400, 'INVALID_DURATION', 'Duração deve ser maior que zero');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_DURATION",
+        "Duração deve ser maior que zero",
+      );
     }
 
     // Verificar se nome já existe na barbearia
@@ -1028,7 +1074,12 @@ export const criarServicoAdmin: RequestHandler = async (req, res) => {
     );
 
     if (nomeExiste) {
-      return erroPadrao(res, 400, 'DUPLICATED_NAME', 'Já existe um serviço com este nome nesta barbearia');
+      return erroPadrao(
+        res,
+        400,
+        "DUPLICATED_NAME",
+        "Já existe um serviço com este nome nesta barbearia",
+      );
     }
 
     const id = uuidv4();
@@ -1060,7 +1111,9 @@ export const criarServicoAdmin: RequestHandler = async (req, res) => {
     res.status(201).json(response);
   } catch (error: any) {
     console.error("Erro ao criar serviço admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -1075,40 +1128,65 @@ export const atualizarServicoAdmin: RequestHandler = async (req, res) => {
     const servicoId = req.params.id;
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Verificar se o serviço pertence à barbearia do admin
-    const servico = await executeQuerySingle(`SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`, [servicoId, barbeariaId]);
+    const servico = await executeQuerySingle(
+      `SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`,
+      [servicoId, barbeariaId],
+    );
 
     if (!servico) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Serviço não encontrado ou não pertence à sua barbearia');
+      return erroPadrao(
+        res,
+        404,
+        "NOT_FOUND",
+        "Serviço não encontrado ou não pertence à sua barbearia",
+      );
     }
 
-    const {
-      nome,
-      descricao,
-      preco,
-      duracao_minutos,
-      categoria,
-      ativo,
-    } = req.body;
+    const { nome, descricao, preco, duracao_minutos, categoria, ativo } =
+      req.body;
 
     // Se nome foi alterado, verificar se não existe
     if (nome) {
-      const nomeExiste = await executeQuerySingle(`SELECT id FROM servicos WHERE nome = ? AND barbearia_id = ? AND id != ?`, [nome, barbeariaId, servicoId]);
+      const nomeExiste = await executeQuerySingle(
+        `SELECT id FROM servicos WHERE nome = ? AND barbearia_id = ? AND id != ?`,
+        [nome, barbeariaId, servicoId],
+      );
       if (nomeExiste) {
-        return erroPadrao(res, 400, 'DUPLICATED_NAME', 'Já existe um serviço com este nome nesta barbearia');
+        return erroPadrao(
+          res,
+          400,
+          "DUPLICATED_NAME",
+          "Já existe um serviço com este nome nesta barbearia",
+        );
       }
     }
 
     // Validar valores numéricos se fornecidos
     if (preco !== undefined && preco <= 0) {
-      return erroPadrao(res, 400, 'INVALID_PRICE', 'Preço deve ser maior que zero');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_PRICE",
+        "Preço deve ser maior que zero",
+      );
     }
 
     if (duracao_minutos !== undefined && duracao_minutos <= 0) {
-      return erroPadrao(res, 400, 'INVALID_DURATION', 'Duração deve ser maior que zero');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_DURATION",
+        "Duração deve ser maior que zero",
+      );
     }
 
     await executeQuery(
@@ -1124,7 +1202,10 @@ export const atualizarServicoAdmin: RequestHandler = async (req, res) => {
       ],
     );
 
-    const servicoAtualizado = await executeQuerySingle(`SELECT id, nome, descricao, preco, duracao_minutos, categoria, ativo, data_cadastro, data_atualizacao FROM servicos WHERE id = ?`, [servicoId]);
+    const servicoAtualizado = await executeQuerySingle(
+      `SELECT id, nome, descricao, preco, duracao_minutos, categoria, ativo, data_cadastro, data_atualizacao FROM servicos WHERE id = ?`,
+      [servicoId],
+    );
 
     const response: ApiResponse<any> = {
       sucesso: true,
@@ -1135,7 +1216,9 @@ export const atualizarServicoAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao atualizar serviço admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -1150,18 +1233,34 @@ export const removerServicoAdmin: RequestHandler = async (req, res) => {
     const servicoId = req.params.id;
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Verificar se o serviço pertence à barbearia do admin
-    const servico = await executeQuerySingle(`SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`, [servicoId, barbeariaId]);
+    const servico = await executeQuerySingle(
+      `SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`,
+      [servicoId, barbeariaId],
+    );
 
     if (!servico) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Serviço não encontrado ou não pertence à sua barbearia');
+      return erroPadrao(
+        res,
+        404,
+        "NOT_FOUND",
+        "Serviço não encontrado ou não pertence à sua barbearia",
+      );
     }
 
     // Soft delete - apenas marcar como inativo
-    await executeQuery(`UPDATE servicos SET ativo = false, data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`, [servicoId]);
+    await executeQuery(
+      `UPDATE servicos SET ativo = false, data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`,
+      [servicoId],
+    );
 
     const response: ApiResponse<null> = {
       sucesso: true,
@@ -1172,6 +1271,8 @@ export const removerServicoAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao remover serviço admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };

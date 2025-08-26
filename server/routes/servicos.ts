@@ -5,12 +5,18 @@ import {
   CriarServicoRequest,
   AtualizarServicoRequest,
   ListarServicosResponse,
-  ApiResponse
+  ApiResponse,
 } from "@shared/api";
 import { v4 as uuidv4 } from "uuid";
 
 // Helper para respostas de erro padronizadas
-const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, detalhes?: any) => {
+const erroPadrao = (
+  res: any,
+  status: number,
+  codigo: string,
+  mensagem: string,
+  detalhes?: any,
+) => {
   const payload: any = {
     sucesso: false,
     codigo,
@@ -25,25 +31,40 @@ const validarPaginaLimite = (paginaRaw: any, limiteRaw: any) => {
   let pagina = 1;
   let limite = 10;
 
-  if (paginaRaw !== undefined && paginaRaw !== null && paginaRaw !== '') {
+  if (paginaRaw !== undefined && paginaRaw !== null && paginaRaw !== "") {
     const paginaParsed = parseInt(String(paginaRaw), 10);
     if (!Number.isNaN(paginaParsed) && paginaParsed > 0) {
       pagina = paginaParsed;
     }
   }
 
-  if (limiteRaw !== undefined && limiteRaw !== null && limiteRaw !== '') {
+  if (limiteRaw !== undefined && limiteRaw !== null && limiteRaw !== "") {
     const limiteParsed = parseInt(String(limiteRaw), 10);
     if (!Number.isNaN(limiteParsed) && limiteParsed > 0) {
       limite = limiteParsed;
     }
   }
 
-  if (pagina < 1) return { erro: true, mensagem: 'Parâmetro pagina deve ser maior que 0', codigo: 'INVALID_PAGE' };
-  if (limite < 1) return { erro: true, mensagem: 'Parâmetro limite deve ser maior que 0', codigo: 'INVALID_LIMIT' };
+  if (pagina < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro pagina deve ser maior que 0",
+      codigo: "INVALID_PAGE",
+    };
+  if (limite < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro limite deve ser maior que 0",
+      codigo: "INVALID_LIMIT",
+    };
 
   const MAX_LIMIT = 100;
-  if (limite > MAX_LIMIT) return { erro: true, mensagem: `Limite máximo permitido é ${MAX_LIMIT}`, codigo: 'LIMIT_EXCEEDED' };
+  if (limite > MAX_LIMIT)
+    return {
+      erro: true,
+      mensagem: `Limite máximo permitido é ${MAX_LIMIT}`,
+      codigo: "LIMIT_EXCEEDED",
+    };
 
   return { erro: false, pagina, limite };
 };
@@ -66,26 +87,30 @@ export const listarServicos: RequestHandler = (req, res) => {
 
     // Filtrar por barbearia se fornecido
     if (barbeariaId) {
-      servicosFiltrados = servicosFiltrados.filter(s => s.barbeariaId === barbeariaId);
+      servicosFiltrados = servicosFiltrados.filter(
+        (s) => s.barbeariaId === barbeariaId,
+      );
     }
 
     // Filtrar por categoria se fornecido
     if (categoria) {
-      servicosFiltrados = servicosFiltrados.filter(s => s.categoria === categoria);
+      servicosFiltrados = servicosFiltrados.filter(
+        (s) => s.categoria === categoria,
+      );
     }
 
     // Filtrar por status ativo se fornecido
     if (ativo !== undefined) {
-      const isAtivo = ativo === 'true';
-      servicosFiltrados = servicosFiltrados.filter(s => s.ativo === isAtivo);
+      const isAtivo = ativo === "true";
+      servicosFiltrados = servicosFiltrados.filter((s) => s.ativo === isAtivo);
     }
 
     // Filtrar por faixa de preço
     if (!isNaN(precoMin)) {
-      servicosFiltrados = servicosFiltrados.filter(s => s.preco >= precoMin);
+      servicosFiltrados = servicosFiltrados.filter((s) => s.preco >= precoMin);
     }
     if (!isNaN(precoMax)) {
-      servicosFiltrados = servicosFiltrados.filter(s => s.preco <= precoMax);
+      servicosFiltrados = servicosFiltrados.filter((s) => s.preco <= precoMax);
     }
 
     const total = servicosFiltrados.length;
@@ -99,7 +124,7 @@ export const listarServicos: RequestHandler = (req, res) => {
       servicos: servicosPaginados,
       total,
       pagina,
-      totalPaginas
+      totalPaginas,
     };
 
     res.json(response);
@@ -107,7 +132,7 @@ export const listarServicos: RequestHandler = (req, res) => {
     console.error("Erro ao listar serviços:", error);
     res.status(500).json({
       sucesso: false,
-      erro: "Erro interno do servidor"
+      erro: "Erro interno do servidor",
     } as ApiResponse);
   }
 };
@@ -119,24 +144,24 @@ export const listarServicos: RequestHandler = (req, res) => {
 export const buscarServico: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
-    const servico = servicos.find(s => s.id === id);
+    const servico = servicos.find((s) => s.id === id);
 
     if (!servico) {
       return res.status(404).json({
         sucesso: false,
-        erro: "Serviço não encontrado"
+        erro: "Serviço não encontrado",
       } as ApiResponse);
     }
 
     res.json({
       sucesso: true,
-      dados: servico
+      dados: servico,
     } as ApiResponse<Servico>);
   } catch (error) {
     console.error("Erro ao buscar serviço:", error);
     res.status(500).json({
       sucesso: false,
-      erro: "Erro interno do servidor"
+      erro: "Erro interno do servidor",
     } as ApiResponse);
   }
 };
@@ -150,10 +175,15 @@ export const criarServico: RequestHandler = (req, res) => {
     const dadosServico: CriarServicoRequest = req.body;
 
     // Validações básicas
-    if (!dadosServico.nome || !dadosServico.preco || !dadosServico.duracaoMinutos || !dadosServico.barbeariaId) {
+    if (
+      !dadosServico.nome ||
+      !dadosServico.preco ||
+      !dadosServico.duracaoMinutos ||
+      !dadosServico.barbeariaId
+    ) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Dados obrigatórios não fornecidos: nome, preço, duração e barbeariaId são obrigatórios"
+        erro: "Dados obrigatórios não fornecidos: nome, preço, duração e barbeariaId são obrigatórios",
       } as ApiResponse);
     }
 
@@ -161,26 +191,27 @@ export const criarServico: RequestHandler = (req, res) => {
     if (dadosServico.preco <= 0) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Preço deve ser maior que zero"
+        erro: "Preço deve ser maior que zero",
       } as ApiResponse);
     }
 
     if (dadosServico.duracaoMinutos <= 0) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Duração deve ser maior que zero"
+        erro: "Duração deve ser maior que zero",
       } as ApiResponse);
     }
 
     // Verificar se já existe serviço com mesmo nome na mesma barbearia
-    const nomeExistente = servicos.find(s => 
-      s.nome.toLowerCase() === dadosServico.nome.toLowerCase() && 
-      s.barbeariaId === dadosServico.barbeariaId
+    const nomeExistente = servicos.find(
+      (s) =>
+        s.nome.toLowerCase() === dadosServico.nome.toLowerCase() &&
+        s.barbeariaId === dadosServico.barbeariaId,
     );
     if (nomeExistente) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Já existe um serviço com este nome nesta barbearia"
+        erro: "Já existe um serviço com este nome nesta barbearia",
       } as ApiResponse);
     }
 
@@ -190,7 +221,7 @@ export const criarServico: RequestHandler = (req, res) => {
       ...dadosServico,
       ativo: true,
       dataCadastro: agora,
-      dataAtualizacao: agora
+      dataAtualizacao: agora,
     };
 
     servicos.push(novoServico);
@@ -198,13 +229,13 @@ export const criarServico: RequestHandler = (req, res) => {
     res.status(201).json({
       sucesso: true,
       dados: novoServico,
-      mensagem: "Serviço cadastrado com sucesso"
+      mensagem: "Serviço cadastrado com sucesso",
     } as ApiResponse<Servico>);
   } catch (error) {
     console.error("Erro ao criar serviço:", error);
     res.status(500).json({
       sucesso: false,
-      erro: "Erro interno do servidor"
+      erro: "Erro interno do servidor",
     } as ApiResponse);
   }
 };
@@ -218,27 +249,31 @@ export const atualizarServico: RequestHandler = (req, res) => {
     const { id } = req.params;
     const dadosAtualizacao: AtualizarServicoRequest = req.body;
 
-    const indice = servicos.findIndex(s => s.id === id);
+    const indice = servicos.findIndex((s) => s.id === id);
     if (indice === -1) {
       return res.status(404).json({
         sucesso: false,
-        erro: "Serviço não encontrado"
+        erro: "Serviço não encontrado",
       } as ApiResponse);
     }
 
     const servicoExistente = servicos[indice];
 
     // Verificar se nome está sendo alterado e se já existe
-    if (dadosAtualizacao.nome && dadosAtualizacao.nome !== servicoExistente.nome) {
-      const nomeExistente = servicos.find(s => 
-        s.nome.toLowerCase() === dadosAtualizacao.nome?.toLowerCase() && 
-        s.barbeariaId === servicoExistente.barbeariaId && 
-        s.id !== id
+    if (
+      dadosAtualizacao.nome &&
+      dadosAtualizacao.nome !== servicoExistente.nome
+    ) {
+      const nomeExistente = servicos.find(
+        (s) =>
+          s.nome.toLowerCase() === dadosAtualizacao.nome?.toLowerCase() &&
+          s.barbeariaId === servicoExistente.barbeariaId &&
+          s.id !== id,
       );
       if (nomeExistente) {
         return res.status(400).json({
           sucesso: false,
-          erro: "Já existe um serviço com este nome nesta barbearia"
+          erro: "Já existe um serviço com este nome nesta barbearia",
         } as ApiResponse);
       }
     }
@@ -247,14 +282,17 @@ export const atualizarServico: RequestHandler = (req, res) => {
     if (dadosAtualizacao.preco !== undefined && dadosAtualizacao.preco <= 0) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Preço deve ser maior que zero"
+        erro: "Preço deve ser maior que zero",
       } as ApiResponse);
     }
 
-    if (dadosAtualizacao.duracaoMinutos !== undefined && dadosAtualizacao.duracaoMinutos <= 0) {
+    if (
+      dadosAtualizacao.duracaoMinutos !== undefined &&
+      dadosAtualizacao.duracaoMinutos <= 0
+    ) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Duração deve ser maior que zero"
+        erro: "Duração deve ser maior que zero",
       } as ApiResponse);
     }
 
@@ -262,7 +300,7 @@ export const atualizarServico: RequestHandler = (req, res) => {
     const servicoAtualizado: Servico = {
       ...servicoExistente,
       ...dadosAtualizacao,
-      dataAtualizacao: new Date().toISOString()
+      dataAtualizacao: new Date().toISOString(),
     };
 
     servicos[indice] = servicoAtualizado;
@@ -270,13 +308,13 @@ export const atualizarServico: RequestHandler = (req, res) => {
     res.json({
       sucesso: true,
       dados: servicoAtualizado,
-      mensagem: "Serviço atualizado com sucesso"
+      mensagem: "Serviço atualizado com sucesso",
     } as ApiResponse<Servico>);
   } catch (error) {
     console.error("Erro ao atualizar serviço:", error);
     res.status(500).json({
       sucesso: false,
-      erro: "Erro interno do servidor"
+      erro: "Erro interno do servidor",
     } as ApiResponse);
   }
 };
@@ -288,12 +326,12 @@ export const atualizarServico: RequestHandler = (req, res) => {
 export const excluirServico: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
-    const indice = servicos.findIndex(s => s.id === id);
+    const indice = servicos.findIndex((s) => s.id === id);
 
     if (indice === -1) {
       return res.status(404).json({
         sucesso: false,
-        erro: "Serviço não encontrado"
+        erro: "Serviço não encontrado",
       } as ApiResponse);
     }
 
@@ -301,13 +339,13 @@ export const excluirServico: RequestHandler = (req, res) => {
 
     res.json({
       sucesso: true,
-      mensagem: "Serviço excluído com sucesso"
+      mensagem: "Serviço excluído com sucesso",
     } as ApiResponse);
   } catch (error) {
     console.error("Erro ao excluir serviço:", error);
     res.status(500).json({
       sucesso: false,
-      erro: "Erro interno do servidor"
+      erro: "Erro interno do servidor",
     } as ApiResponse);
   }
 };
