@@ -690,7 +690,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
             
             <button class="postman-download" onclick="downloadPostmanCollection()">
-                ������ Baixar Collection Postman
+                ���� Baixar Collection Postman
             </button>
             
             <div class="sidebar-nav">
@@ -1063,6 +1063,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         
         // Copy to Clipboard (robust: tenta fallback primeiro, depois Clipboard API)
         async function copyToClipboard(button, text) {
+            try {
             // Verificar se button é válido
             if (!button || typeof button !== 'object') {
                 console.warn('copyToClipboard: botão inválido');
@@ -1119,7 +1120,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 const ok = tryFallbackCopy(text);
                 if (ok) {
                     const originalText = button.innerHTML;
-                    button.innerHTML = '✅ Copiado!';
+                    button.innerHTML = '�� Copiado!';
                     button.classList.add('copied');
                     showCopyFeedback();
                     setTimeout(() => {
@@ -1560,7 +1561,7 @@ function generateEndpointsDocumentation(): string {
                                     <tr>
                                         <td><code>ordenar</code></td>
                                         <td>string</td>
-                                        <td>Ordenação (relevancia, distancia, avaliacao)</td>
+                                        <td>Ordena��ão (relevancia, distancia, avaliacao)</td>
                                         <td>relevancia</td>
                                     </tr>
                                 </tbody>
@@ -2033,7 +2034,7 @@ function generateEndpointsDocumentation(): string {
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-}, null, 2))">���� Copiar</button>
+}, null, 2))">📋 Copiar</button>
                                 <pre>{
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }</pre>
@@ -2225,7 +2226,7 @@ function generateEndpointsDocumentation(): string {
                                 <tr>
                                     <td><code>403</code></td>
                                     <td><code>FORBIDDEN</code></td>
-                                    <td>Usuário não é uma barbearia ou não tem permissão</td>
+                                    <td>Usuário não é uma barbearia ou não tem permiss��o</td>
                                 </tr>
                                 <tr>
                                     <td><code>404</code></td>
