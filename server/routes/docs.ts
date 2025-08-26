@@ -2153,6 +2153,15 @@ function generateEndpointsDocumentation(): string {
                             </table>
                         </div>
 
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso (curl)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, 'curl -X GET "http://localhost:8080/api/admin/barbearia" -H "Authorization: Bearer TOKEN_JWT"')">📋 Copiar</button>
+                                <pre>curl -X GET "http://localhost:8080/api/admin/barbearia" \
+  -H "Authorization: Bearer TOKEN_JWT"</pre>
+                            </div>
+                        </div>
+
                         <div class="response">
                             <h4>Exemplo de Resposta</h4>
                             <div class="code-block">
