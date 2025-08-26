@@ -511,13 +511,6 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
 
     const { nome, descricao, endereco, contato, proprietario, horarioFuncionamento } = req.body;
 
-    console.log('Dados recebidos:', {
-      nome,
-      descricao,
-      horarioFuncionamento: typeof horarioFuncionamento,
-      horarioFuncionamentoValue: horarioFuncionamento
-    });
-
     // Se email foi alterado, verificar se não existe
     if (contato?.email) {
       const emailExiste = await executeQuerySingle(
