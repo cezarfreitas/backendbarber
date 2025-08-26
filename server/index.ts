@@ -217,6 +217,32 @@ export function createServer() {
     verificarAdminBarbearia,
     removerBarbeiroAdmin,
   );
+
+  // Admin - Serviços
+  app.get(
+    "/api/admin/servicos",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    listarServicosAdmin,
+  );
+  app.post(
+    "/api/admin/servicos",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    criarServicoAdmin,
+  );
+  app.put(
+    "/api/admin/servicos/:id",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    atualizarServicoAdmin,
+  );
+  app.delete(
+    "/api/admin/servicos/:id",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    removerServicoAdmin,
+  );
   app.put(
     "/api/admin/barbearia",
     verificarAutenticacao,
