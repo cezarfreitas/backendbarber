@@ -9,12 +9,14 @@
 ## 🚀 **DEPLOY NO EASYPANEL:**
 
 ### 📋 **Configuração:**
+
 ```
 Dockerfile: Dockerfile (padrão)
 Port: 80
 ```
 
 ### 🔧 **Environment Variables:**
+
 ```
 NODE_ENV=production
 PORT=80
@@ -29,6 +31,7 @@ JWT_SECRET=seu_jwt_secret_aqui
 ## 🎯 **Resultado esperado:**
 
 ### ✅ **Logs de sucesso:**
+
 ```
 🚀 API Barbearia SaaS running on port 80
 ✅ Conectado ao MySQL: server.idenegociosdigitais.com.br
@@ -36,18 +39,21 @@ JWT_SECRET=seu_jwt_secret_aqui
 ```
 
 ### 🌐 **Endpoints funcionando:**
+
 - `https://dominio.com/` → **Frontend React** ⚛️
 - `https://dominio.com/api/ping` → **API Health Check** 🏥
 - `https://dominio.com/api/barbearias` → **API Completa** 📊
 - `https://dominio.com/health` → **Container Health** 🐳
 
 ### 📱 **Fullstack completo:**
+
 - **Frontend**: React SPA com routing
 - **Backend**: API Express completa
 - **Database**: MySQL conectado
 - **Container**: Estável e funcionando
 
 ## ✅ **Status final:**
+
 - ✅ **Erro path-to-regexp** → RESOLVIDO
 - ✅ **Build funcionando** → OK (5.6s)
 - ✅ **Container estável** → Não reinicia mais
@@ -59,6 +65,7 @@ JWT_SECRET=seu_jwt_secret_aqui
 ## 🎯 **AÇÃO:**
 
 **Faça o deploy AGORA com:**
+
 - **Dockerfile**: `Dockerfile` (padrão)
 - **Port**: `80`
 - **Environment**: Variáveis acima
@@ -66,6 +73,7 @@ JWT_SECRET=seu_jwt_secret_aqui
 **Deve funcionar perfeitamente! 🚀**
 
 ### 📞 **Se ainda der problema:**
+
 Use `Dockerfile.emergency` como backup, mas a correção deve resolver tudo.
 
 **SUCESSO GARANTIDO! 🎉**
