@@ -220,6 +220,26 @@ export function createServer() {
     atualizarBarbeariaAdmin,
   );
 
+  // ⚠️ Rotas administrativas para gerenciamento do banco de dados
+  app.post(
+    "/api/admin/database/reset",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    resetDatabaseAdmin,
+  );
+  app.post(
+    "/api/admin/database/clear-data",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    clearDatabaseDataAdmin,
+  );
+  app.post(
+    "/api/admin/database/recreate-tables",
+    verificarAutenticacao,
+    verificarAdminBarbearia,
+    recreateTablesAdmin,
+  );
+
   // API 404 handler (only for /api/*)
   app.use("/api", (_req, res) => {
     res.status(404).json({ error: "API endpoint not found" });
