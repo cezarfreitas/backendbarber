@@ -167,8 +167,12 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
   try {
     const { email, senha }: LoginBarbeariaRequest = req.body;
 
+    // Log request (avoid logging password)
+    console.log(`[loginBarbearia] tentativa de login para email=${email}`);
+
     // Validações básicas
     if (!email || !senha) {
+      console.log("[loginBarbearia] email ou senha ausente");
       return res.status(400).json({
         sucesso: false,
         erro: "Email e senha são obrigatórios"
@@ -176,6 +180,7 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
     }
 
     if (!validarEmail(email)) {
+      console.log("[loginBarbearia] formato de email inválido:", email);
       return res.status(400).json({
         sucesso: false,
         erro: "Formato de email inválido"
@@ -183,11 +188,14 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
     }
 
     // Buscar barbearia no banco
+    console.log(`[loginBarbearia] consultando barbearia por email=${email}`);
     const barbearia = await executeQuerySingle(`
       SELECT id, nome, contato_email, senha_hash, status
       FROM barbearias
       WHERE contato_email = ?
     `, [email]);
+
+    console.log(`[loginBarbearia] resultado da query: ${barbearia ? 'encontrada' : 'nao encontrada'}`);
 
     if (!barbearia) {
       return res.status(401).json({
@@ -195,6 +203,8 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
         erro: "Email não encontrado"
       } as LoginBarbeariaResponse);
     }
+
+    console.log(`[loginBarbearia] barbearia id=${barbearia.id} status=${barbearia.status} temSenha=${!!barbearia.senha_hash}`);
 
     // Verificar status da barbearia
     if (barbearia.status !== 'ativa') {
@@ -205,12 +215,16 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
     }
 
     // Verificar senha
-    if (!barbearia.senha_hash || !await verificarSenha(senha, barbearia.senha_hash)) {
+    const senhaValida = barbearia.senha_hash ? await verificarSenha(senha, barbearia.senha_hash) : false;
+    if (!barbearia.senha_hash || !senhaValida) {
+      console.log(`[loginBarbearia] senha inválida para barbearia id=${barbearia.id}`);
       return res.status(401).json({
         sucesso: false,
         erro: "Senha incorreta"
       } as LoginBarbeariaResponse);
     }
+
+    console.log(`[loginBarbearia] senha verificada para barbearia id=${barbearia.id}`);
 
     // Gerar tokens
     const token = gerarToken({
@@ -227,6 +241,7 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
     await executeQuery(`
       UPDATE barbearias SET ultimo_login = CURRENT_TIMESTAMP WHERE id = ?
     `, [barbearia.id]);
+    console.log(`[loginBarbearia] ultimo_login atualizado para id=${barbearia.id}`);
 
     // Buscar dados completos da barbearia
     const barbeariaCompleta = await executeQuerySingle(`
@@ -238,6 +253,8 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
       FROM barbearias
       WHERE id = ?
     `, [barbearia.id]);
+
+    console.log(`[loginBarbearia] barbeariaCompleta encontrada id=${barbeariaCompleta ? barbeariaCompleta.id : 'null'}`);
 
     const response: LoginBarbeariaResponse = {
       sucesso: true,
