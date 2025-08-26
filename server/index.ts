@@ -199,7 +199,7 @@ export function createServer() {
     }
 
     // Para outras rotas, serve o frontend SPA
-    const indexPath = path.join(__dirname, "../spa/index.html");
+    const indexPath = path.resolve(__dirname, "../spa/index.html");
     res.sendFile(indexPath);
   });
 
