@@ -1,6 +1,7 @@
 # 🔧 Docker Build Fix - EasyPanel
 
 ## 🚨 **Erro corrigido:**
+
 ```
 "/dist": not found
 ```
@@ -10,11 +11,13 @@
 ## ✅ **Correção aplicada:**
 
 **Antes:**
+
 ```dockerfile
 COPY --from=builder dist ./dist  # ❌ Caminho relativo
 ```
 
 **Depois:**
+
 ```dockerfile
 COPY --from=builder /app/dist ./dist  # ✅ Caminho absoluto
 ```
@@ -22,18 +25,21 @@ COPY --from=builder /app/dist ./dist  # ✅ Caminho absoluto
 ## 🚀 **Dockerfiles disponíveis:**
 
 ### 1. **`Dockerfile`** - Multi-stage corrigido (PADRÃO)
+
 ```dockerfile
 # Otimizado com 2 estágios
 # Builder + Production stage
 ```
 
 ### 2. **`Dockerfile.simple-backup`** - Uma etapa só
+
 ```dockerfile
 # Se multi-stage falhar
 # Build + Run na mesma imagem
 ```
 
 ### 3. **`Dockerfile.ultra-simple`** - Zero complexidade
+
 ```dockerfile
 # Máximo de simplicidade
 # Build separado linha por linha
@@ -42,21 +48,25 @@ COPY --from=builder /app/dist ./dist  # ✅ Caminho absoluto
 ## 📋 **Para testar no EasyPanel:**
 
 ### 🎯 **Primeira tentativa:**
+
 ```
 Dockerfile: Dockerfile (padrão)
 ```
 
 ### 🔄 **Se falhar:**
+
 ```
 Dockerfile: Dockerfile.simple-backup
 ```
 
 ### 🆘 **Se ainda falhar:**
+
 ```
 Dockerfile: Dockerfile.ultra-simple
 ```
 
 ## 🛠️ **Environment Variables (para qualquer Dockerfile):**
+
 ```
 NODE_ENV=production
 PORT=80
@@ -69,6 +79,7 @@ JWT_SECRET=seu_jwt_secret
 ```
 
 ## ✅ **Status:**
+
 - ✅ **Paths corrigidos** no multi-stage
 - ✅ **3 opções** de Dockerfile
 - ✅ **Do mais otimizado** ao mais simples
