@@ -242,7 +242,6 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-
     if (!userJWT || userJWT.userType !== "barbearia") {
       return erroPadrao(
         res,
@@ -349,7 +348,9 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     );
   } catch (error: any) {
     console.error("Erro ao listar barbeiros admin:", error);
-    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
