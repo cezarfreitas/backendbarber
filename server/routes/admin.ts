@@ -571,6 +571,13 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
       [barbeariaId],
     );
 
+    if (!barbearia) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Barbearia não encontrada após atualização",
+      });
+    }
+
     // Mapear dados para formato da interface
     const barbeariaFormatada = {
       id: barbearia.id,
