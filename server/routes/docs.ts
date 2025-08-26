@@ -1223,10 +1223,19 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   res.setHeader("Content-Type", "text/html");
   // Sanitize onclick attributes that embed backtick template literals to avoid runtime JS parsing issues
   const fullHtml = html + endpointsHtml + footerHtml;
+
+  // Melhorar sanitização para evitar problemas de parsing
   const sanitizedHtml = fullHtml.replace(
     /onclick="copyToClipboard\(this,[\s\S]*?\)"/g,
-    'onclick="copyToClipboard(this)"',
+    function(match) {
+      // Se contém caracteres problemáticos, usar versão simples
+      if (match.includes('`') || match.includes('${') || match.includes('JSON.stringify')) {
+        return 'onclick="copyToClipboard(this)"';
+      }
+      return match; // Manter original se for simples
+    }
   );
+
   res.send(sanitizedHtml);
 };
 
@@ -3203,7 +3212,7 @@ function generateEndpointsDocumentation(): string {
     "whatsapp": "(11) 99999-9999"
   },
   "proprietario": {
-    "nome": "João da Silva",
+    "nome": "Jo��o da Silva",
     "cpf": "123.456.789-00",
     "email": "joao@barbearia.com"
   },
