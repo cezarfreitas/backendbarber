@@ -573,3 +573,97 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
     return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
   }
 };
+
+/**
+ * POST /api/admin/database/reset
+ * ⚠️ RESET COMPLETO DO BANCO - Remove e recria todas as tabelas
+ * Apenas para administradores de sistema
+ */
+export const resetDatabaseAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+
+    // Verificar se é uma barbearia autenticada
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem resetar o banco.');
+    }
+
+    console.log(`⚠️ RESET DO BANCO solicitado por: ${userJWT.email} (ID: ${userJWT.userId})`);
+
+    // Executar reset completo
+    await resetDatabase();
+
+    const response: ApiResponse<null> = {
+      sucesso: true,
+      dados: null,
+      mensagem: "Banco de dados resetado com sucesso! Todas as tabelas foram recriadas com dados iniciais.",
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao resetar banco de dados:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao resetar banco de dados', { message: error?.message });
+  }
+};
+
+/**
+ * POST /api/admin/database/clear-data
+ * Limpar dados das tabelas (manter estrutura)
+ */
+export const clearDatabaseDataAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+
+    // Verificar se é uma barbearia autenticada
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem limpar dados.');
+    }
+
+    console.log(`🧹 LIMPEZA DE DADOS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`);
+
+    // Limpar dados e reinserir dados iniciais
+    await clearData();
+
+    const response: ApiResponse<null> = {
+      sucesso: true,
+      dados: null,
+      mensagem: "Dados do banco limpos com sucesso! Dados iniciais foram restaurados.",
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao limpar dados do banco:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao limpar dados do banco', { message: error?.message });
+  }
+};
+
+/**
+ * POST /api/admin/database/recreate-tables
+ * Recriar estrutura das tabelas (força criação)
+ */
+export const recreateTablesAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+
+    // Verificar se é uma barbearia autenticada
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem recriar tabelas.');
+    }
+
+    console.log(`🔄 RECRIAÇÃO DE TABELAS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`);
+
+    // Forçar recriação das tabelas
+    await initializeTables();
+
+    const response: ApiResponse<null> = {
+      sucesso: true,
+      dados: null,
+      mensagem: "Estrutura das tabelas verificada e atualizada com sucesso!",
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao recriar tabelas:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao recriar tabelas', { message: error?.message });
+  }
+};
