@@ -276,17 +276,11 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
       );
     }
 
-    console.log(
-      `[DEBUG] listarBarbeirosAdmin - barbeariaId: ${barbeariaId}, pagina: ${pagina}, limite: ${limite}`,
-    );
-
     // Total de barbeiros
     const totalResult = await executeQuerySingle(
       `SELECT COUNT(*) as total FROM barbeiros WHERE barbearia_id = ?`,
       [barbeariaId],
     );
-
-    console.log(`[DEBUG] totalResult:`, totalResult);
     const total = (totalResult as any)?.total || 0;
     const totalPaginas = total === 0 ? 0 : Math.ceil(total / limite);
     const offset = (pagina - 1) * limite;
