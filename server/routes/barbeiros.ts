@@ -1,20 +1,26 @@
 import { RequestHandler } from "express";
-import { 
-  Barbeiro, 
-  CriarBarbeiroRequest, 
+import {
+  Barbeiro,
+  CriarBarbeiroRequest,
   AtualizarBarbeiroRequest,
   ListarBarbeirosResponse,
-  ApiResponse 
+  ApiResponse,
 } from "@shared/api";
 import { executeQuery, executeQuerySingle } from "../config/database";
 import { v4 as uuidv4 } from "uuid";
 
 // Helper para respostas de erro padronizadas
-const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, detalhes?: any) => {
+const erroPadrao = (
+  res: any,
+  status: number,
+  codigo: string,
+  mensagem: string,
+  detalhes?: any,
+) => {
   const payload: any = {
     sucesso: false,
     codigo,
-    erro: mensagem
+    erro: mensagem,
   };
   if (detalhes) payload.detalhes = detalhes;
   return res.status(status).json(payload as ApiResponse);
@@ -24,10 +30,25 @@ const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, 
 const validarPaginaLimite = (paginaRaw: any, limiteRaw: any) => {
   const pagina = parseInt(paginaRaw as string) || 1;
   const limite = parseInt(limiteRaw as string) || 10;
-  if (Number.isNaN(pagina) || pagina < 1) return { erro: true, mensagem: 'Parâmetro pagina inválido', codigo: 'INVALID_PAGE' };
-  if (Number.isNaN(limite) || limite < 1) return { erro: true, mensagem: 'Parâmetro limite inválido', codigo: 'INVALID_LIMIT' };
+  if (Number.isNaN(pagina) || pagina < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro pagina inválido",
+      codigo: "INVALID_PAGE",
+    };
+  if (Number.isNaN(limite) || limite < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro limite inválido",
+      codigo: "INVALID_LIMIT",
+    };
   const MAX_LIMIT = 100;
-  if (limite > MAX_LIMIT) return { erro: true, mensagem: `Limite máximo permitido é ${MAX_LIMIT}`, codigo: 'LIMIT_EXCEEDED' };
+  if (limite > MAX_LIMIT)
+    return {
+      erro: true,
+      mensagem: `Limite máximo permitido é ${MAX_LIMIT}`,
+      codigo: "LIMIT_EXCEEDED",
+    };
   return { erro: false, pagina, limite };
 };
 
@@ -41,7 +62,12 @@ export const listarBarbeiros: RequestHandler = async (req, res) => {
 
     const validacao = validarPaginaLimite(paginaRaw, limiteRaw);
     if (validacao.erro) {
-      return erroPadrao(res, 400, validacao.codigo || 'INVALID_PAGINATION', validacao.mensagem || 'Parâmetros de paginação inválidos');
+      return erroPadrao(
+        res,
+        400,
+        validacao.codigo || "INVALID_PAGINATION",
+        validacao.mensagem || "Parâmetros de paginação inválidos",
+      );
     }
 
     const pagina: number = validacao.pagina;
@@ -64,7 +90,7 @@ export const listarBarbeiros: RequestHandler = async (req, res) => {
 
     if (status) {
       // Sobrescrever o filtro padrão se status específico for fornecido
-      whereConditions = whereConditions.filter(c => !c.includes("status"));
+      whereConditions = whereConditions.filter((c) => !c.includes("status"));
       whereConditions.push("status = ?");
       queryParams.push(status);
     }
@@ -74,12 +100,15 @@ export const listarBarbeiros: RequestHandler = async (req, res) => {
       queryParams.push(tipo);
     }
 
-    const whereClause = whereConditions.length > 0 ? "WHERE " + whereConditions.join(" AND ") : "";
+    const whereClause =
+      whereConditions.length > 0
+        ? "WHERE " + whereConditions.join(" AND ")
+        : "";
 
     // Total de barbeiros
     const totalResult = await executeQuerySingle(
       `SELECT COUNT(*) as total FROM barbeiros ${whereClause}`,
-      queryParams
+      queryParams,
     );
     const total = (totalResult as any)?.total || 0;
     const totalPaginas = total === 0 ? 0 : Math.ceil(total / limite);
@@ -88,63 +117,81 @@ export const listarBarbeiros: RequestHandler = async (req, res) => {
     // Buscar barbeiros com paginação
     const barbeiros = await executeQuery(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, barbearia_id as barbeariaId FROM barbeiros ${whereClause} ORDER BY nome ASC LIMIT ? OFFSET ?`,
-      [...queryParams, limite, offset]
+      [...queryParams, limite, offset],
     );
 
     // Processar especialidades e horarioTrabalho (de JSON string para array/object)
-    const barbeirosProcessados = (barbeiros as any[]).map(barbeiro => ({
+    const barbeirosProcessados = (barbeiros as any[]).map((barbeiro) => ({
       ...barbeiro,
       especialidades: (() => {
         try {
-          return barbeiro.especialidades ? JSON.parse(barbeiro.especialidades) : [];
+          return barbeiro.especialidades
+            ? JSON.parse(barbeiro.especialidades)
+            : [];
         } catch {
           return [];
         }
       })(),
       horarioTrabalho: (() => {
         try {
-          return barbeiro.horario_trabalho ? JSON.parse(barbeiro.horario_trabalho) : {};
+          return barbeiro.horario_trabalho
+            ? JSON.parse(barbeiro.horario_trabalho)
+            : {};
         } catch {
           return {};
         }
-      })()
+      })(),
     }));
 
-    const baseUrl = req.protocol + '://' + req.get('host') + req.path;
+    const baseUrl = req.protocol + "://" + req.get("host") + req.path;
     const queryParams2 = { ...req.query } as any;
 
     const buildPageUrl = (p: number) => {
       queryParams2.pagina = p.toString();
       queryParams2.limite = limite.toString();
       const qs = Object.keys(queryParams2)
-        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryParams2[k])}`)
-        .join('&');
-      return baseUrl + '?' + qs;
+        .map(
+          (k) =>
+            `${encodeURIComponent(k)}=${encodeURIComponent(queryParams2[k])}`,
+        )
+        .join("&");
+      return baseUrl + "?" + qs;
     };
 
     const meta: any = {
       total,
       pagina,
       totalPaginas,
-      limite
+      limite,
     };
 
-    if (pagina > 1 && totalPaginas >= 1) meta.prevPage = buildPageUrl(pagina - 1);
+    if (pagina > 1 && totalPaginas >= 1)
+      meta.prevPage = buildPageUrl(pagina - 1);
     if (pagina < totalPaginas) meta.nextPage = buildPageUrl(pagina + 1);
 
     const response: ListarBarbeirosResponse = {
       barbeiros: barbeirosProcessados,
       total,
       pagina,
-      totalPaginas
+      totalPaginas,
     };
 
-    const mensagem = total === 0 ? 'Nenhum barbeiro encontrado para os filtros informados' : undefined;
+    const mensagem =
+      total === 0
+        ? "Nenhum barbeiro encontrado para os filtros informados"
+        : undefined;
 
-    return res.json({ sucesso: true, dados: response, meta, mensagem } as ApiResponse<ListarBarbeirosResponse>);
+    return res.json({
+      sucesso: true,
+      dados: response,
+      meta,
+      mensagem,
+    } as ApiResponse<ListarBarbeirosResponse>);
   } catch (error: any) {
     console.error("Erro ao listar barbeiros:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -155,15 +202,16 @@ export const listarBarbeiros: RequestHandler = async (req, res) => {
 export const buscarBarbeiro: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!id) return erroPadrao(res, 400, 'INVALID_ID', 'ID do barbeiro é obrigatório');
+    if (!id)
+      return erroPadrao(res, 400, "INVALID_ID", "ID do barbeiro é obrigatório");
 
     const barbeiro = await executeQuerySingle(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, barbearia_id as barbeariaId FROM barbeiros WHERE id = ? AND status = 'ativo'`,
-      [id]
+      [id],
     );
 
     if (!barbeiro) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbeiro não encontrado');
+      return erroPadrao(res, 404, "NOT_FOUND", "Barbeiro não encontrado");
     }
 
     // Processar especialidades e horarioTrabalho
@@ -171,24 +219,33 @@ export const buscarBarbeiro: RequestHandler = async (req, res) => {
       ...(barbeiro as any),
       especialidades: (() => {
         try {
-          return (barbeiro as any).especialidades ? JSON.parse((barbeiro as any).especialidades) : [];
+          return (barbeiro as any).especialidades
+            ? JSON.parse((barbeiro as any).especialidades)
+            : [];
         } catch {
           return [];
         }
       })(),
       horarioTrabalho: (() => {
         try {
-          return (barbeiro as any).horario_trabalho ? JSON.parse((barbeiro as any).horario_trabalho) : {};
+          return (barbeiro as any).horario_trabalho
+            ? JSON.parse((barbeiro as any).horario_trabalho)
+            : {};
         } catch {
           return {};
         }
-      })()
+      })(),
     };
 
-    return res.json({ sucesso: true, dados: barbeiroProcessado } as ApiResponse<Barbeiro>);
+    return res.json({
+      sucesso: true,
+      dados: barbeiroProcessado,
+    } as ApiResponse<Barbeiro>);
   } catch (error: any) {
     console.error("Erro ao buscar barbeiro:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -201,40 +258,89 @@ export const criarBarbeiro: RequestHandler = async (req, res) => {
     const dadosBarbeiro: CriarBarbeiroRequest = req.body;
 
     // Validações básicas
-    const obrigatorios = ['nome', 'email', 'telefone', 'cpf', 'tipo', 'barbeariaId'];
-    const faltando = obrigatorios.filter(k => !(dadosBarbeiro as any)[k]);
+    const obrigatorios = [
+      "nome",
+      "email",
+      "telefone",
+      "cpf",
+      "tipo",
+      "barbeariaId",
+    ];
+    const faltando = obrigatorios.filter((k) => !(dadosBarbeiro as any)[k]);
     if (faltando.length > 0) {
-      return erroPadrao(res, 400, 'MISSING_FIELDS', `Dados obrigatórios não fornecidos: ${faltando.join(', ')}`);
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_FIELDS",
+        `Dados obrigatórios não fornecidos: ${faltando.join(", ")}`,
+      );
     }
 
     // Verificar se já existe barbeiro com mesmo email ou CPF
     const emailExistente = await executeQuerySingle(
       `SELECT id FROM barbeiros WHERE email = ?`,
-      [dadosBarbeiro.email]
+      [dadosBarbeiro.email],
     );
     if (emailExistente) {
-      return erroPadrao(res, 400, 'DUPLICATED_EMAIL', 'Já existe um barbeiro cadastrado com este email');
+      return erroPadrao(
+        res,
+        400,
+        "DUPLICATED_EMAIL",
+        "Já existe um barbeiro cadastrado com este email",
+      );
     }
 
     const cpfExistente = await executeQuerySingle(
       `SELECT id FROM barbeiros WHERE cpf = ?`,
-      [dadosBarbeiro.cpf]
+      [dadosBarbeiro.cpf],
     );
     if (cpfExistente) {
-      return erroPadrao(res, 400, 'DUPLICATED_CPF', 'Já existe um barbeiro cadastrado com este CPF');
+      return erroPadrao(
+        res,
+        400,
+        "DUPLICATED_CPF",
+        "Já existe um barbeiro cadastrado com este CPF",
+      );
     }
 
     // Validações específicas por tipo
-    if (dadosBarbeiro.tipo === 'comissionado' && (dadosBarbeiro.porcentagemComissao === undefined || dadosBarbeiro.porcentagemComissao === null)) {
-      return erroPadrao(res, 400, 'MISSING_COMMISSION', 'Porcentagem de comissão é obrigatória para barbeiros comissionados');
+    if (
+      dadosBarbeiro.tipo === "comissionado" &&
+      (dadosBarbeiro.porcentagemComissao === undefined ||
+        dadosBarbeiro.porcentagemComissao === null)
+    ) {
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_COMMISSION",
+        "Porcentagem de comissão é obrigatória para barbeiros comissionados",
+      );
     }
 
-    if (dadosBarbeiro.tipo === 'funcionario' && (dadosBarbeiro.salarioFixo === undefined || dadosBarbeiro.salarioFixo === null)) {
-      return erroPadrao(res, 400, 'MISSING_SALARY', 'Salário fixo é obrigatório para funcionários');
+    if (
+      dadosBarbeiro.tipo === "funcionario" &&
+      (dadosBarbeiro.salarioFixo === undefined ||
+        dadosBarbeiro.salarioFixo === null)
+    ) {
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_SALARY",
+        "Salário fixo é obrigatório para funcionários",
+      );
     }
 
-    if (dadosBarbeiro.tipo === 'freelancer' && (dadosBarbeiro.valorHora === undefined || dadosBarbeiro.valorHora === null)) {
-      return erroPadrao(res, 400, 'MISSING_HOURLY_RATE', 'Valor por hora é obrigatório para freelancers');
+    if (
+      dadosBarbeiro.tipo === "freelancer" &&
+      (dadosBarbeiro.valorHora === undefined ||
+        dadosBarbeiro.valorHora === null)
+    ) {
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_HOURLY_RATE",
+        "Valor por hora é obrigatório para freelancers",
+      );
     }
 
     const id = uuidv4();
@@ -254,14 +360,14 @@ export const criarBarbeiro: RequestHandler = async (req, res) => {
         dadosBarbeiro.valorHora || null,
         dadosBarbeiro.barbeariaId,
         JSON.stringify(dadosBarbeiro.especialidades || []),
-        JSON.stringify(dadosBarbeiro.horarioTrabalho || {})
-      ]
+        JSON.stringify(dadosBarbeiro.horarioTrabalho || {}),
+      ],
     );
 
     // Buscar barbeiro criado
     const novoBarbeiro = await executeQuerySingle(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, barbearia_id as barbeariaId FROM barbeiros WHERE id = ?`,
-      [id]
+      [id],
     );
 
     // Processar dados
@@ -269,24 +375,36 @@ export const criarBarbeiro: RequestHandler = async (req, res) => {
       ...(novoBarbeiro as any),
       especialidades: (() => {
         try {
-          return (novoBarbeiro as any).especialidades ? JSON.parse((novoBarbeiro as any).especialidades) : [];
+          return (novoBarbeiro as any).especialidades
+            ? JSON.parse((novoBarbeiro as any).especialidades)
+            : [];
         } catch {
           return [];
         }
       })(),
       horarioTrabalho: (() => {
         try {
-          return (novoBarbeiro as any).horario_trabalho ? JSON.parse((novoBarbeiro as any).horario_trabalho) : {};
+          return (novoBarbeiro as any).horario_trabalho
+            ? JSON.parse((novoBarbeiro as any).horario_trabalho)
+            : {};
         } catch {
           return {};
         }
-      })()
+      })(),
     };
 
-    return res.status(201).json({ sucesso: true, dados: barbeiroProcessado, mensagem: 'Barbeiro cadastrado com sucesso' } as ApiResponse<Barbeiro>);
+    return res
+      .status(201)
+      .json({
+        sucesso: true,
+        dados: barbeiroProcessado,
+        mensagem: "Barbeiro cadastrado com sucesso",
+      } as ApiResponse<Barbeiro>);
   } catch (error: any) {
     console.error("Erro ao criar barbeiro:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -299,36 +417,53 @@ export const atualizarBarbeiro: RequestHandler = async (req, res) => {
     const { id } = req.params;
     const dadosAtualizacao: AtualizarBarbeiroRequest = req.body;
 
-    if (!id) return erroPadrao(res, 400, 'INVALID_ID', 'ID do barbeiro é obrigatório');
+    if (!id)
+      return erroPadrao(res, 400, "INVALID_ID", "ID do barbeiro é obrigatório");
 
     const barbeiroExistente = await executeQuerySingle(
       `SELECT * FROM barbeiros WHERE id = ?`,
-      [id]
+      [id],
     );
 
     if (!barbeiroExistente) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbeiro não encontrado');
+      return erroPadrao(res, 404, "NOT_FOUND", "Barbeiro não encontrado");
     }
 
     // Verificar se email está sendo alterado e se já existe
-    if (dadosAtualizacao.email && dadosAtualizacao.email !== (barbeiroExistente as any).email) {
+    if (
+      dadosAtualizacao.email &&
+      dadosAtualizacao.email !== (barbeiroExistente as any).email
+    ) {
       const emailExistente = await executeQuerySingle(
         `SELECT id FROM barbeiros WHERE email = ? AND id != ?`,
-        [dadosAtualizacao.email, id]
+        [dadosAtualizacao.email, id],
       );
       if (emailExistente) {
-        return erroPadrao(res, 400, 'DUPLICATED_EMAIL', 'Já existe um barbeiro cadastrado com este email');
+        return erroPadrao(
+          res,
+          400,
+          "DUPLICATED_EMAIL",
+          "Já existe um barbeiro cadastrado com este email",
+        );
       }
     }
 
     // Verificar se CPF está sendo alterado e se já existe
-    if (dadosAtualizacao.cpf && dadosAtualizacao.cpf !== (barbeiroExistente as any).cpf) {
+    if (
+      dadosAtualizacao.cpf &&
+      dadosAtualizacao.cpf !== (barbeiroExistente as any).cpf
+    ) {
       const cpfExistente = await executeQuerySingle(
         `SELECT id FROM barbeiros WHERE cpf = ? AND id != ?`,
-        [dadosAtualizacao.cpf, id]
+        [dadosAtualizacao.cpf, id],
       );
       if (cpfExistente) {
-        return erroPadrao(res, 400, 'DUPLICATED_CPF', 'Já existe um barbeiro cadastrado com este CPF');
+        return erroPadrao(
+          res,
+          400,
+          "DUPLICATED_CPF",
+          "Já existe um barbeiro cadastrado com este CPF",
+        );
       }
     }
 
@@ -344,17 +479,21 @@ export const atualizarBarbeiro: RequestHandler = async (req, res) => {
         dadosAtualizacao.porcentagemComissao,
         dadosAtualizacao.salarioFixo,
         dadosAtualizacao.valorHora,
-        dadosAtualizacao.especialidades ? JSON.stringify(dadosAtualizacao.especialidades) : null,
-        dadosAtualizacao.horarioTrabalho ? JSON.stringify(dadosAtualizacao.horarioTrabalho) : null,
+        dadosAtualizacao.especialidades
+          ? JSON.stringify(dadosAtualizacao.especialidades)
+          : null,
+        dadosAtualizacao.horarioTrabalho
+          ? JSON.stringify(dadosAtualizacao.horarioTrabalho)
+          : null,
         dadosAtualizacao.status,
-        id
-      ]
+        id,
+      ],
     );
 
     // Buscar barbeiro atualizado
     const barbeiroAtualizado = await executeQuerySingle(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, barbearia_id as barbeariaId FROM barbeiros WHERE id = ?`,
-      [id]
+      [id],
     );
 
     // Processar dados
@@ -362,24 +501,34 @@ export const atualizarBarbeiro: RequestHandler = async (req, res) => {
       ...(barbeiroAtualizado as any),
       especialidades: (() => {
         try {
-          return (barbeiroAtualizado as any).especialidades ? JSON.parse((barbeiroAtualizado as any).especialidades) : [];
+          return (barbeiroAtualizado as any).especialidades
+            ? JSON.parse((barbeiroAtualizado as any).especialidades)
+            : [];
         } catch {
           return [];
         }
       })(),
       horarioTrabalho: (() => {
         try {
-          return (barbeiroAtualizado as any).horario_trabalho ? JSON.parse((barbeiroAtualizado as any).horario_trabalho) : {};
+          return (barbeiroAtualizado as any).horario_trabalho
+            ? JSON.parse((barbeiroAtualizado as any).horario_trabalho)
+            : {};
         } catch {
           return {};
         }
-      })()
+      })(),
     };
 
-    return res.json({ sucesso: true, dados: barbeiroProcessado, mensagem: 'Barbeiro atualizado com sucesso' } as ApiResponse<Barbeiro>);
+    return res.json({
+      sucesso: true,
+      dados: barbeiroProcessado,
+      mensagem: "Barbeiro atualizado com sucesso",
+    } as ApiResponse<Barbeiro>);
   } catch (error: any) {
     console.error("Erro ao atualizar barbeiro:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -390,26 +539,32 @@ export const atualizarBarbeiro: RequestHandler = async (req, res) => {
 export const excluirBarbeiro: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!id) return erroPadrao(res, 400, 'INVALID_ID', 'ID do barbeiro é obrigatório');
+    if (!id)
+      return erroPadrao(res, 400, "INVALID_ID", "ID do barbeiro é obrigatório");
 
     const barbeiroExistente = await executeQuerySingle(
       `SELECT id FROM barbeiros WHERE id = ?`,
-      [id]
+      [id],
     );
 
     if (!barbeiroExistente) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbeiro não encontrado');
+      return erroPadrao(res, 404, "NOT_FOUND", "Barbeiro não encontrado");
     }
 
     // Soft delete - marcar como inativo
     await executeQuery(
       `UPDATE barbeiros SET status = 'inativo', data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`,
-      [id]
+      [id],
     );
 
-    return res.json({ sucesso: true, mensagem: 'Barbeiro excluído com sucesso' } as ApiResponse);
+    return res.json({
+      sucesso: true,
+      mensagem: "Barbeiro excluído com sucesso",
+    } as ApiResponse);
   } catch (error: any) {
     console.error("Erro ao excluir barbeiro:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
