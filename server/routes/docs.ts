@@ -734,7 +734,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <!-- Serviços -->
                     <div class="nav-tree">
                         <div class="nav-tree-item expandable" data-target="servicos-tree">
-                            ��️ Serviços
+                            ✂️ Serviços
                         </div>
                         <div class="nav-sub-items" id="servicos-tree">
                             <a href="#endpoints-servicos" class="nav-sub-item">📋 Listar Serviços</a>
@@ -2180,10 +2180,36 @@ function generateEndpointsDocumentation(): string {
       cpf: '123.456.789-00',
       email: 'joao@barbearia.com'
     },
-    horarioFuncionamento: {},
+    horarioFuncionamento: {
+      segunda: {
+        abertura: '10:00',
+        fechamento: '19:00'
+      },
+      terca: {
+        abertura: '10:00',
+        fechamento: '19:00'
+      },
+      quarta: {
+        abertura: '10:00',
+        fechamento: '19:00'
+      },
+      quinta: {
+        abertura: '10:00',
+        fechamento: '19:00'
+      },
+      sexta: {
+        abertura: '10:00',
+        fechamento: '19:00'
+      },
+      sabado: {
+        abertura: '09:00',
+        fechamento: '13:00'
+      }
+    },
     status: 'ativa',
     dataCadastro: '2025-08-26T13:58:10.000Z',
-    dataAtualizacao: '2025-08-26T14:03:00.000Z'
+    dataAtualizacao: '2025-08-26T14:03:00.000Z',
+    ultimoLogin: '2025-08-26T14:15:30.000Z'
   }
 }, null, 2))">📋 Copiar</button>
                                 <pre>{
@@ -2210,10 +2236,36 @@ function generateEndpointsDocumentation(): string {
       "cpf": "123.456.789-00",
       "email": "joao@barbearia.com"
     },
-    "horarioFuncionamento": {},
+    "horarioFuncionamento": {
+      "segunda": {
+        "abertura": "10:00",
+        "fechamento": "19:00"
+      },
+      "terca": {
+        "abertura": "10:00",
+        "fechamento": "19:00"
+      },
+      "quarta": {
+        "abertura": "10:00",
+        "fechamento": "19:00"
+      },
+      "quinta": {
+        "abertura": "10:00",
+        "fechamento": "19:00"
+      },
+      "sexta": {
+        "abertura": "10:00",
+        "fechamento": "19:00"
+      },
+      "sabado": {
+        "abertura": "09:00",
+        "fechamento": "13:00"
+      }
+    },
     "status": "ativa",
     "dataCadastro": "2025-08-26T13:58:10.000Z",
-    "dataAtualizacao": "2025-08-26T14:03:00.000Z"
+    "dataAtualizacao": "2025-08-26T14:03:00.000Z",
+    "ultimoLogin": "2025-08-26T14:15:30.000Z"
   }
 }</pre>
                             </div>
