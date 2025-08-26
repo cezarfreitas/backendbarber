@@ -303,21 +303,12 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
       );
     }
 
-    console.log(
-      `[DEBUG] Query params: barbeariaId=${barbeariaId}, limiteNum=${limiteNum}, offsetNum=${offsetNum}`,
-    );
-    console.log(
-      `[DEBUG] Query params types: barbeariaId=${typeof barbeariaId}, limiteNum=${typeof limiteNum}, offsetNum=${typeof offsetNum}`,
-    );
-
     // MySQL não permite parâmetros em LIMIT/OFFSET em prepared statements
     // Usar construção segura da query com validação prévia de tipos
     const barbeiros = await executeQuery(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ${limiteNum} OFFSET ${offsetNum}`,
       [barbeariaId],
     );
-
-    console.log(`[DEBUG] barbeiros result:`, barbeiros);
 
     const baseUrl = req.protocol + "://" + req.get("host") + req.path;
     const queryParams = { ...req.query } as any;
