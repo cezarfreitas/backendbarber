@@ -85,6 +85,7 @@ export function createServer() {
   app.get("/api/docs", mostrarDocumentacao);
   app.get("/api/docs/postman-collection", downloadPostmanCollection);
   app.get("/docs", mostrarDocumentacao);
+  app.get("/", (_req, res) => res.redirect("/api/docs"));
 
   // Health endpoints
   app.get("/api/ping", (_req, res) => {
