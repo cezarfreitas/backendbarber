@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import { initDatabase } from "./config/database";
 import { initializeTables, checkTables } from "./config/init-database";
 import { handleDemo } from "./routes/demo";
@@ -71,18 +73,23 @@ import {
 export function createServer() {
   const app = express();
 
+  // Configurar __dirname para ES modules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
   // Middleware
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // Servir arquivos estáticos do frontend (Vite build)
+  const staticPath = path.join(__dirname, "../spa");
+  app.use(express.static(staticPath));
+
   // Documentação da API
   app.get("/api/docs", mostrarDocumentacao);
   app.get("/api/docs/postman-collection", downloadPostmanCollection);
   app.get("/docs", mostrarDocumentacao);
-  app.get("/", (_req, res) => {
-    res.redirect("/docs");
-  });
 
   // Health check endpoint
   app.get("/api/ping", (_req, res) => {
@@ -180,6 +187,21 @@ export function createServer() {
     verificarBarbeiro,
     alterarSenhaBarbeiro,
   );
+
+  // SPA Fallback - serve index.html para rotas do frontend (deve ser a ÚLTIMA rota)
+  app.get("*", (req, res) => {
+    // Se for rota da API que não existe, retorna 404 JSON
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({
+        error: "API endpoint not found",
+        path: req.path
+      });
+    }
+
+    // Para outras rotas, serve o frontend SPA
+    const indexPath = path.join(__dirname, "../spa/index.html");
+    res.sendFile(indexPath);
+  });
 
   return app;
 }
