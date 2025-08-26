@@ -201,6 +201,9 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
+    console.log(`[DEBUG] listarBarbeirosAdmin - userJWT:`, userJWT);
+    console.log(`[DEBUG] listarBarbeirosAdmin - barbeariaId extraído:`, barbeariaId, typeof barbeariaId);
+
     if (!userJWT || userJWT.userType !== "barbearia") {
       return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
     }
