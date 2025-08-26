@@ -57,6 +57,7 @@ import {
   verificarBarbearia,
   verificarBarbeiro,
   verificarCliente,
+  verificarAdminBarbearia,
 } from "./utils/auth";
 import { mostrarDocumentacao, downloadPostmanCollection } from "./routes/docs";
 import {
@@ -68,6 +69,14 @@ import {
   obterDetalhesBarbearia,
   listarPromocoes,
 } from "./routes/diretorio";
+import {
+  dashboardAdmin,
+  listarBarbeirosAdmin,
+  criarBarbeiroAdmin,
+  atualizarBarbeiroAdmin,
+  removerBarbeiroAdmin,
+  atualizarBarbeariaAdmin,
+} from "./routes/admin";
 
 export function createServer() {
   const app = express();
@@ -162,6 +171,14 @@ export function createServer() {
   app.post("/api/clientes", criarCliente);
   app.put("/api/clientes/:id", verificarAutenticacao, atualizarCliente);
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente);
+
+  // Admin Barbearia (Dashboard)
+  app.get("/api/admin/dashboard", verificarAutenticacao, verificarAdminBarbearia, dashboardAdmin);
+  app.get("/api/admin/barbeiros", verificarAutenticacao, verificarAdminBarbearia, listarBarbeirosAdmin);
+  app.post("/api/admin/barbeiros", verificarAutenticacao, verificarAdminBarbearia, criarBarbeiroAdmin);
+  app.put("/api/admin/barbeiros/:id", verificarAutenticacao, verificarAdminBarbearia, atualizarBarbeiroAdmin);
+  app.delete("/api/admin/barbeiros/:id", verificarAutenticacao, verificarAdminBarbearia, removerBarbeiroAdmin);
+  app.put("/api/admin/barbearia", verificarAutenticacao, verificarAdminBarbearia, atualizarBarbeariaAdmin);
 
   // API 404 handler (only for /api/*)
   app.use("/api", (_req, res) => {
