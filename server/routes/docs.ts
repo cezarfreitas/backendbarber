@@ -690,7 +690,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
             
             <button class="postman-download" onclick="downloadPostmanCollection()">
-                ���� Baixar Collection Postman
+                ������ Baixar Collection Postman
             </button>
             
             <div class="sidebar-nav">
@@ -1156,8 +1156,39 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 }
             }
 
-            // Se tudo falhar, apenas exibir feedback (falso positivo) e não quebrar a página
-            showCopyFeedback();
+            // Se tudo falhar, tentar fallback final e exibir feedback
+            try {
+                const finalFallback = tryFallbackCopy(text);
+                if (finalFallback) {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '✅ Copiado!';
+                    button.classList.add('copied');
+                    showCopyFeedback();
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('copied');
+                    }, 2000);
+                } else {
+                    // Exibir feedback de erro em vez de falso positivo
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '❌ Erro';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                    }, 2000);
+                }
+            } catch (error) {
+                console.warn('Erro completo na cópia:', error);
+                // Feedback de erro
+                try {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '❌ Erro';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                    }, 2000);
+                } catch (e) {
+                    // Se nem isso funcionar, não fazer nada para não quebrar a página
+                }
+            }
         }
 
         function fallbackCopyTextToClipboard(text) {
@@ -2002,7 +2033,7 @@ function generateEndpointsDocumentation(): string {
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-}, null, 2))">📋 Copiar</button>
+}, null, 2))">���� Copiar</button>
                                 <pre>{
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }</pre>
@@ -2095,7 +2126,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="method post">POST</span>
                             <span class="url">/api/admin/database/clear-data</span>
                         </div>
-                        <h4>��� Limpar Dados das Tabelas</h4>
+                        <h4>🧹 Limpar Dados das Tabelas</h4>
                         <p>Remove todos os dados das tabelas mas mantém a estrutura. Reinsere dados iniciais.</p>
 
                         <div class="example-usage">
@@ -2926,7 +2957,7 @@ function generateEndpointsDocumentation(): string {
   sucesso: false,
   codigo: 'DUPLICATED_CPF',
   erro: 'CPF já cadastrado no sistema'
-}, null, 2))">�� Copiar</button>
+}, null, 2))">📋 Copiar</button>
                                 <pre>{
   "sucesso": false,
   "codigo": "DUPLICATED_CPF",
