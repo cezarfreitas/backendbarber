@@ -195,6 +195,11 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const pagina: number = validacao.pagina;
     const limite: number = validacao.limite;
 
+    // Garantir que barbeariaId, limite e offset sejam válidos
+    if (!barbeariaId) {
+      return erroPadrao(res, 400, 'INVALID_BARBEARIA_ID', 'ID da barbearia não encontrado');
+    }
+
     // Total de barbeiros
     const totalResult = await executeQuerySingle(
       `SELECT COUNT(*) as total FROM barbeiros WHERE barbearia_id = ?`,
@@ -204,9 +209,17 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const totalPaginas = total === 0 ? 0 : Math.ceil(total / limite);
     const offset = (pagina - 1) * limite;
 
+    // Garantir que limite e offset sejam números válidos
+    const limiteNum = parseInt(String(limite), 10);
+    const offsetNum = parseInt(String(offset), 10);
+
+    if (isNaN(limiteNum) || isNaN(offsetNum) || limiteNum < 1 || offsetNum < 0) {
+      return erroPadrao(res, 400, 'INVALID_PAGINATION_VALUES', 'Valores de paginação inválidos');
+    }
+
     const barbeiros = await executeQuery(
-      `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ${limite} OFFSET ${offset}`,
-      [barbeariaId],
+      `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ? OFFSET ?`,
+      [barbeariaId, limiteNum, offsetNum],
     );
 
     const baseUrl = req.protocol + '://' + req.get('host') + req.path;
