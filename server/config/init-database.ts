@@ -716,17 +716,3 @@ export const checkTables = async (): Promise<boolean> => {
     return false;
   }
 };
-
-// Executar inicialização se chamado diretamente
-if (import.meta.url === `file://${process.argv[1]}`) {
-  (async () => {
-    try {
-      await initDatabase();
-      await initializeTables();
-      process.exit(0);
-    } catch (error) {
-      console.error("Falha na inicialização:", error);
-      process.exit(1);
-    }
-  })();
-}
