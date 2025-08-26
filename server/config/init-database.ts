@@ -476,22 +476,6 @@ INSERT IGNORE INTO clientes (
 export const initializeTables = async (): Promise<void> => {
   try {
     console.log("🗄️ Inicializando estrutura do banco de dados...");
-<<<<<<< HEAD
-=======
-
-    // Verificar se já há dados para evitar execução desnecessária
-    const hasData =
-      (await checkDataExists("barbearias")) &&
-      (await checkDataExists("barbeiros")) &&
-      (await checkDataExists("servicos"));
-
-    if (hasData) {
-      console.log(
-        "ℹ️ Dados já existem no banco, pulando inicialização completa para evitar conflitos",
-      );
-      return;
-    }
->>>>>>> refs/remotes/origin/main
 
     // Migrar tabelas existentes PRIMEIRO, antes de criar novas
     console.log("🔄 Verificando e migrando tabelas para autenticação...");
@@ -520,48 +504,6 @@ export const initializeTables = async (): Promise<void> => {
     console.log("🔄 Verificando campos de autenticação novamente...");
     await migrarTabelasParaAutenticacao();
 
-<<<<<<< HEAD
-    // Inserir dados iniciais na ordem correta
-    console.log("📝 Inserindo dados iniciais...");
-    try {
-      await executeQuery(insertInitialBarbearias);
-    } catch (e: any) {
-      console.warn("⚠️ Seed barbearias ignorado:", e.message);
-    }
-    try {
-      await executeQuery(insertInitialBarbeiros);
-    } catch (e: any) {
-      console.warn("⚠️ Seed barbeiros ignorado:", e.message);
-    }
-    try {
-      await executeQuery(insertInitialServicos);
-    } catch (e: any) {
-      console.warn("⚠️ Seed servicos ignorado:", e.message);
-    }
-    try {
-      await executeQuery(insertInitialCombos);
-    } catch (e: any) {
-      console.warn("⚠️ Seed combos ignorado:", e.message);
-    }
-    try {
-      await executeQuery(insertInitialComboServicos);
-    } catch (e: any) {
-      console.warn("⚠️ Seed combo_servicos ignorado:", e.message);
-    }
-    try {
-      await executeQuery(insertInitialClientes);
-    } catch (e: any) {
-      console.warn("⚠️ Seed clientes ignorado:", e.message);
-    }
-
-    console.log("✅ Banco de dados inicializado com sucesso!");
-  } catch (error: any) {
-    console.error(
-      "❌ Erro ao inicializar banco de dados (não fatal):",
-      error.message,
-    );
-    // Não lançar erro para evitar que o servidor caia
-=======
     // Inserir dados iniciais na ordem correta (com verificação)
     console.log("📝 Inserindo dados iniciais...");
 
@@ -617,7 +559,6 @@ export const initializeTables = async (): Promise<void> => {
   } catch (error) {
     console.error("❌ Erro ao inicializar banco de dados:", error);
     throw error;
->>>>>>> refs/remotes/origin/main
   }
 };
 
@@ -658,7 +599,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
             ADD COLUMN senha_hash VARCHAR(255)
           `);
           console.log("✅ Campo senha_hash adicionado à tabela barbearias");
-        } catch (alterError) {
+        } catch (alterError: any) {
           console.error(
             "❌ Erro ao adicionar senha_hash à barbearias:",
             alterError.message,
@@ -678,7 +619,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
             ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
           console.log("✅ Campo ultimo_login adicionado à tabela barbearias");
-        } catch (alterError) {
+        } catch (alterError: any) {
           console.error(
             "❌ Erro ao adicionar ultimo_login à barbearias:",
             alterError.message,
@@ -721,7 +662,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
             ADD COLUMN senha_hash VARCHAR(255)
           `);
           console.log("✅ Campo senha_hash adicionado à tabela barbeiros");
-        } catch (alterError) {
+        } catch (alterError: any) {
           console.error(
             "❌ Erro ao adicionar senha_hash à barbeiros:",
             alterError.message,
@@ -739,7 +680,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
             ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
           console.log("✅ Campo ultimo_login adicionado à tabela barbeiros");
-        } catch (alterError) {
+        } catch (alterError: any) {
           console.error(
             "❌ Erro ao adicionar ultimo_login à barbeiros:",
             alterError.message,
@@ -751,7 +692,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
     }
 
     console.log("✅ Migração de autenticação concluída!");
-  } catch (error) {
+  } catch (error: any) {
     console.error("⚠️ Erro na migração de autenticação:", error.message);
     // Não falha o processo, pois pode ser que as tabelas ainda não existam
   }
