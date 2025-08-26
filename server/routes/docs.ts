@@ -720,7 +720,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <!-- Barbeiros -->
                     <div class="nav-tree">
                         <div class="nav-tree-item expandable" data-target="barbeiros-tree">
-                            ����‍♂️ Barbeiros
+                            💇‍♂️ Barbeiros
                         </div>
                         <div class="nav-sub-items" id="barbeiros-tree">
                             <a href="#endpoints-barbeiros" class="nav-sub-item">📋 Listar Barbeiros</a>
@@ -852,7 +852,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 
                 <!-- Autenticação -->
                 <div class="section" id="authentication">
-                    <h2>��� Autenticação</h2>
+                    <h2>🔐 Autenticação</h2>
                     <p>A API suporta múltiplos tipos de autenticação usando JWT tokens:</p>
                     
                     <h3>Headers de Autenticação</h3>
@@ -1725,6 +1725,149 @@ function generateEndpointsDocumentation(): string {
                         </div>
                     </div>
                     
+                    <div class="endpoint" id="endpoints-auth-barbearia">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/login/barbearia</span>
+                        </div>
+                        <h4>Login de barbearia</h4>
+                        <p>Autentica proprietário/administrador de barbearia usando email e senha.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  email: 'contato@barbeariadoroao.com',
+  senha: '123456'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "email": "contato@barbeariadoroao.com",
+  "senha": "123456"
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  refreshToken: 'rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  barbearia: {
+    id: '1',
+    nome: 'Barbearia do João',
+    email: 'contato@barbeariadoroao.com',
+    status: 'ativa',
+    userType: 'barbearia'
+  },
+  expiresIn: 604800,
+  mensagem: 'Login realizado com sucesso'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "barbearia": {
+    "id": "1",
+    "nome": "Barbearia do João",
+    "email": "contato@barbeariadoroao.com",
+    "status": "ativa",
+    "userType": "barbearia"
+  },
+  "expiresIn": 604800,
+  "mensagem": "Login realizado com sucesso"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-auth-barbeiro">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/login/barbeiro</span>
+                        </div>
+                        <h4>Login de barbeiro</h4>
+                        <p>Autentica barbeiro funcionário usando email e senha.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  email: 'carlos@barbeariadoroao.com',
+  senha: '123456'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "email": "carlos@barbeariadoroao.com",
+  "senha": "123456"
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  refreshToken: 'rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  barbeiro: {
+    id: '1',
+    nome: 'Carlos Silva',
+    email: 'carlos@barbeariadoroao.com',
+    barbearia_id: '1',
+    status: 'ativo',
+    userType: 'barbeiro'
+  },
+  expiresIn: 604800,
+  mensagem: 'Login realizado com sucesso'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "barbeiro": {
+    "id": "1",
+    "nome": "Carlos Silva",
+    "email": "carlos@barbeariadoroao.com",
+    "barbearia_id": "1",
+    "status": "ativo",
+    "userType": "barbeiro"
+  },
+  "expiresIn": 604800,
+  "mensagem": "Login realizado com sucesso"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-auth-google">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/login/google</span>
+                        </div>
+                        <h4>Login via Google</h4>
+                        <p>Autentica cliente usando Google OAuth token.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  googleToken: 'google_oauth_token_here',
+  nome: 'João Silva',
+  email: 'joao@gmail.com',
+  foto: 'https://lh3.googleusercontent.com/...'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "googleToken": "google_oauth_token_here",
+  "nome": "João Silva",
+  "email": "joao@gmail.com",
+  "foto": "https://lh3.googleusercontent.com/..."
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="endpoint" id="endpoints-auth-verify">
                         <div class="endpoint-header">
                             <span class="method post">POST</span>
@@ -1732,15 +1875,36 @@ function generateEndpointsDocumentation(): string {
                         </div>
                         <h4>Verificar token</h4>
                         <p>Verifica se um token JWT é válido.</p>
-                        
+
                         <div class="params">
                             <h4>Body (JSON)</h4>
                             <div class="code-block">
-                                <button class="copy-button" onclick="copyToClipboard(this, \`{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}\`)">📋 Copiar</button>
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+}, null, 2))">📋 Copiar</button>
                                 <pre>{
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-auth-refresh">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/auth/refresh-token</span>
+                        </div>
+                        <h4>Renovar token</h4>
+                        <p>Gera novo token usando refresh token.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  refreshToken: 'rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }</pre>
                             </div>
                         </div>
@@ -2139,7 +2303,7 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
         ],
       },
       {
-        name: "💇‍♂�� Barbeiros",
+        name: "💇‍♂️ Barbeiros",
         item: [
           {
             name: "Listar Barbeiros",
