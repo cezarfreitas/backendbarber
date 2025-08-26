@@ -3,10 +3,20 @@ import { executeQuery, executeQuerySingle } from "../config/database";
 import { ApiResponse, Barbearia, Barbeiro } from "@shared/api";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
-import { resetDatabase, clearData, initializeTables } from "../config/init-database";
+import {
+  resetDatabase,
+  clearData,
+  initializeTables,
+} from "../config/init-database";
 
 // Helper para respostas de erro padronizadas
-const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, detalhes?: any) => {
+const erroPadrao = (
+  res: any,
+  status: number,
+  codigo: string,
+  mensagem: string,
+  detalhes?: any,
+) => {
   const payload: any = {
     sucesso: false,
     codigo,
@@ -22,14 +32,14 @@ const validarPaginaLimite = (paginaRaw: any, limiteRaw: any) => {
   let pagina = 1;
   let limite = 10;
 
-  if (paginaRaw !== undefined && paginaRaw !== null && paginaRaw !== '') {
+  if (paginaRaw !== undefined && paginaRaw !== null && paginaRaw !== "") {
     const paginaParsed = parseInt(String(paginaRaw), 10);
     if (!Number.isNaN(paginaParsed) && paginaParsed > 0) {
       pagina = paginaParsed;
     }
   }
 
-  if (limiteRaw !== undefined && limiteRaw !== null && limiteRaw !== '') {
+  if (limiteRaw !== undefined && limiteRaw !== null && limiteRaw !== "") {
     const limiteParsed = parseInt(String(limiteRaw), 10);
     if (!Number.isNaN(limiteParsed) && limiteParsed > 0) {
       limite = limiteParsed;
@@ -37,11 +47,26 @@ const validarPaginaLimite = (paginaRaw: any, limiteRaw: any) => {
   }
 
   // Validações finais
-  if (pagina < 1) return { erro: true, mensagem: 'Parâmetro pagina deve ser maior que 0', codigo: 'INVALID_PAGE' };
-  if (limite < 1) return { erro: true, mensagem: 'Parâmetro limite deve ser maior que 0', codigo: 'INVALID_LIMIT' };
+  if (pagina < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro pagina deve ser maior que 0",
+      codigo: "INVALID_PAGE",
+    };
+  if (limite < 1)
+    return {
+      erro: true,
+      mensagem: "Parâmetro limite deve ser maior que 0",
+      codigo: "INVALID_LIMIT",
+    };
 
   const MAX_LIMIT = 100;
-  if (limite > MAX_LIMIT) return { erro: true, mensagem: `Limite máximo permitido é ${MAX_LIMIT}`, codigo: 'LIMIT_EXCEEDED' };
+  if (limite > MAX_LIMIT)
+    return {
+      erro: true,
+      mensagem: `Limite máximo permitido é ${MAX_LIMIT}`,
+      codigo: "LIMIT_EXCEEDED",
+    };
 
   return { erro: false, pagina, limite };
 };
@@ -56,7 +81,12 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Buscar dados completos da barbearia
@@ -74,7 +104,7 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
     );
 
     if (!barbearia) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbearia não encontrada');
+      return erroPadrao(res, 404, "NOT_FOUND", "Barbearia não encontrada");
     }
 
     // Mapear dados para formato da interface
@@ -127,7 +157,9 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao buscar barbearia admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -141,7 +173,12 @@ export const dashboardAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Estatísticas da barbearia
@@ -180,7 +217,9 @@ export const dashboardAdmin: RequestHandler = async (req, res) => {
           total_barbeiros: (totalBarbeiros as any[])[0]?.total || 0,
           total_servicos: (totalServicos as any[])[0]?.total || 0,
           total_combos: (totalCombos as any[])[0]?.total || 0,
-          preco_medio_servicos: parseFloat((precoMedio as any)?.preco_medio || 0),
+          preco_medio_servicos: parseFloat(
+            (precoMedio as any)?.preco_medio || 0,
+          ),
         },
       },
     };
@@ -188,7 +227,9 @@ export const dashboardAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro no dashboard admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -202,16 +243,30 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     console.log(`[DEBUG] listarBarbeirosAdmin - userJWT:`, userJWT);
-    console.log(`[DEBUG] listarBarbeirosAdmin - barbeariaId extraído:`, barbeariaId, typeof barbeariaId);
+    console.log(
+      `[DEBUG] listarBarbeirosAdmin - barbeariaId extraído:`,
+      barbeariaId,
+      typeof barbeariaId,
+    );
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     const { pagina: paginaRaw, limite: limiteRaw } = req.query as any;
     const validacao = validarPaginaLimite(paginaRaw, limiteRaw);
     if (validacao.erro) {
-      return erroPadrao(res, 400, validacao.codigo || 'INVALID_PAGINATION', validacao.mensagem || 'Parâmetros de paginação inválidos');
+      return erroPadrao(
+        res,
+        400,
+        validacao.codigo || "INVALID_PAGINATION",
+        validacao.mensagem || "Parâmetros de paginação inválidos",
+      );
     }
 
     const pagina: number = validacao.pagina;
@@ -219,10 +274,17 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
 
     // Garantir que barbeariaId, limite e offset sejam válidos
     if (!barbeariaId) {
-      return erroPadrao(res, 400, 'INVALID_BARBEARIA_ID', 'ID da barbearia não encontrado');
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_BARBEARIA_ID",
+        "ID da barbearia não encontrado",
+      );
     }
 
-    console.log(`[DEBUG] listarBarbeirosAdmin - barbeariaId: ${barbeariaId}, pagina: ${pagina}, limite: ${limite}`);
+    console.log(
+      `[DEBUG] listarBarbeirosAdmin - barbeariaId: ${barbeariaId}, pagina: ${pagina}, limite: ${limite}`,
+    );
 
     // Total de barbeiros
     const totalResult = await executeQuerySingle(
@@ -239,12 +301,26 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const limiteNum = parseInt(String(limite), 10);
     const offsetNum = parseInt(String(offset), 10);
 
-    if (isNaN(limiteNum) || isNaN(offsetNum) || limiteNum < 1 || offsetNum < 0) {
-      return erroPadrao(res, 400, 'INVALID_PAGINATION_VALUES', 'Valores de paginação inválidos');
+    if (
+      isNaN(limiteNum) ||
+      isNaN(offsetNum) ||
+      limiteNum < 1 ||
+      offsetNum < 0
+    ) {
+      return erroPadrao(
+        res,
+        400,
+        "INVALID_PAGINATION_VALUES",
+        "Valores de paginação inválidos",
+      );
     }
 
-    console.log(`[DEBUG] Query params: barbeariaId=${barbeariaId}, limiteNum=${limiteNum}, offsetNum=${offsetNum}`);
-    console.log(`[DEBUG] Query params types: barbeariaId=${typeof barbeariaId}, limiteNum=${typeof limiteNum}, offsetNum=${typeof offsetNum}`);
+    console.log(
+      `[DEBUG] Query params: barbeariaId=${barbeariaId}, limiteNum=${limiteNum}, offsetNum=${offsetNum}`,
+    );
+    console.log(
+      `[DEBUG] Query params types: barbeariaId=${typeof barbeariaId}, limiteNum=${typeof limiteNum}, offsetNum=${typeof offsetNum}`,
+    );
 
     const barbeiros = await executeQuery(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ? OFFSET ?`,
@@ -253,19 +329,23 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
 
     console.log(`[DEBUG] barbeiros result:`, barbeiros);
 
-    const baseUrl = req.protocol + '://' + req.get('host') + req.path;
+    const baseUrl = req.protocol + "://" + req.get("host") + req.path;
     const queryParams = { ...req.query } as any;
     const buildPageUrl = (p: number) => {
       queryParams.pagina = p.toString();
       queryParams.limite = limite.toString();
       const qs = Object.keys(queryParams)
-        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryParams[k])}`)
-        .join('&');
-      return baseUrl + '?' + qs;
+        .map(
+          (k) =>
+            `${encodeURIComponent(k)}=${encodeURIComponent(queryParams[k])}`,
+        )
+        .join("&");
+      return baseUrl + "?" + qs;
     };
 
     const meta: any = { total, pagina, totalPaginas, limite };
-    if (pagina > 1 && totalPaginas >= 1) meta.prevPage = buildPageUrl(pagina - 1);
+    if (pagina > 1 && totalPaginas >= 1)
+      meta.prevPage = buildPageUrl(pagina - 1);
     if (pagina < totalPaginas) meta.nextPage = buildPageUrl(pagina + 1);
 
     const response: ApiResponse<any> = {
@@ -278,18 +358,23 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
       },
     };
 
-    const mensagem = total === 0 ? 'Nenhum barbeiro encontrado para os filtros informados' : undefined;
+    const mensagem =
+      total === 0
+        ? "Nenhum barbeiro encontrado para os filtros informados"
+        : undefined;
 
-    return res.json(Object.assign(response, mensagem ? { mensagem, meta } : { meta }));
+    return res.json(
+      Object.assign(response, mensagem ? { mensagem, meta } : { meta }),
+    );
   } catch (error: any) {
     console.error("Erro ao listar barbeiros admin:", error);
     console.error("Stack trace:", error.stack);
     console.error("Código SQL error:", error.code);
     console.error("SQL State:", error.sqlState);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', {
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
       message: error?.message,
       code: error?.code,
-      sqlState: error?.sqlState
+      sqlState: error?.sqlState,
     });
   }
 };
@@ -304,7 +389,12 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     const {
@@ -323,7 +413,12 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
 
     // Validações básicas
     if (!nome || !email || !telefone || !cpf || !tipo) {
-      return erroPadrao(res, 400, 'MISSING_FIELDS', 'Campos obrigatórios: nome, email, telefone, cpf, tipo');
+      return erroPadrao(
+        res,
+        400,
+        "MISSING_FIELDS",
+        "Campos obrigatórios: nome, email, telefone, cpf, tipo",
+      );
     }
 
     // Verificar se email já existe
@@ -333,7 +428,12 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
     );
 
     if (emailExiste) {
-      return erroPadrao(res, 400, 'DUPLICATED_EMAIL', 'Email já cadastrado no sistema');
+      return erroPadrao(
+        res,
+        400,
+        "DUPLICATED_EMAIL",
+        "Email já cadastrado no sistema",
+      );
     }
 
     // Verificar se CPF já existe
@@ -343,7 +443,12 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
     );
 
     if (cpfExiste) {
-      return erroPadrao(res, 400, 'DUPLICATED_CPF', 'CPF já cadastrado no sistema');
+      return erroPadrao(
+        res,
+        400,
+        "DUPLICATED_CPF",
+        "CPF já cadastrado no sistema",
+      );
     }
 
     const id = uuidv4();
@@ -381,7 +486,9 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
     res.status(201).json(response);
   } catch (error: any) {
     console.error("Erro ao criar barbeiro admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -396,14 +503,27 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
     const barbeiroId = req.params.id;
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Verificar se o barbeiro pertence à barbearia do admin
-    const barbeiro = await executeQuerySingle(`SELECT id FROM barbeiros WHERE id = ? AND barbearia_id = ?`, [barbeiroId, barbeariaId]);
+    const barbeiro = await executeQuerySingle(
+      `SELECT id FROM barbeiros WHERE id = ? AND barbearia_id = ?`,
+      [barbeiroId, barbeariaId],
+    );
 
     if (!barbeiro) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbeiro não encontrado ou não pertence à sua barbearia');
+      return erroPadrao(
+        res,
+        404,
+        "NOT_FOUND",
+        "Barbeiro não encontrado ou não pertence à sua barbearia",
+      );
     }
 
     const {
@@ -421,9 +541,17 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
 
     // Se email foi alterado, verificar se não existe
     if (email) {
-      const emailExiste = await executeQuerySingle(`SELECT id FROM barbeiros WHERE email = ? AND id != ?`, [email, barbeiroId]);
+      const emailExiste = await executeQuerySingle(
+        `SELECT id FROM barbeiros WHERE email = ? AND id != ?`,
+        [email, barbeiroId],
+      );
       if (emailExiste) {
-        return erroPadrao(res, 400, 'DUPLICATED_EMAIL', 'Email já cadastrado para outro barbeiro');
+        return erroPadrao(
+          res,
+          400,
+          "DUPLICATED_EMAIL",
+          "Email já cadastrado para outro barbeiro",
+        );
       }
     }
 
@@ -444,7 +572,10 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
       ],
     );
 
-    const barbeiroAtualizado = await executeQuerySingle(`SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status FROM barbeiros WHERE id = ?`, [barbeiroId]);
+    const barbeiroAtualizado = await executeQuerySingle(
+      `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status FROM barbeiros WHERE id = ?`,
+      [barbeiroId],
+    );
 
     const response: ApiResponse<Barbeiro> = {
       sucesso: true,
@@ -454,7 +585,9 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao atualizar barbeiro admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -469,18 +602,34 @@ export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
     const barbeiroId = req.params.id;
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     // Verificar se o barbeiro pertence à barbearia do admin
-    const barbeiro = await executeQuerySingle(`SELECT id FROM barbeiros WHERE id = ? AND barbearia_id = ?`, [barbeiroId, barbeariaId]);
+    const barbeiro = await executeQuerySingle(
+      `SELECT id FROM barbeiros WHERE id = ? AND barbearia_id = ?`,
+      [barbeiroId, barbeariaId],
+    );
 
     if (!barbeiro) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbeiro não encontrado ou não pertence à sua barbearia');
+      return erroPadrao(
+        res,
+        404,
+        "NOT_FOUND",
+        "Barbeiro não encontrado ou não pertence à sua barbearia",
+      );
     }
 
     // Soft delete - apenas marcar como inativo
-    await executeQuery(`UPDATE barbeiros SET status = 'inativo', data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`, [barbeiroId]);
+    await executeQuery(
+      `UPDATE barbeiros SET status = 'inativo', data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`,
+      [barbeiroId],
+    );
 
     const response: ApiResponse<null> = {
       sucesso: true,
@@ -490,7 +639,9 @@ export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao remover barbeiro admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -504,7 +655,12 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Usuário não é uma barbearia.",
+      );
     }
 
     const {
@@ -518,10 +674,18 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
 
     // Se email foi alterado, verificar se não existe
     if (contato?.email) {
-      const emailExiste = await executeQuerySingle(`SELECT id FROM barbearias WHERE contato_email = ? AND id != ?`, [contato.email, barbeariaId]);
+      const emailExiste = await executeQuerySingle(
+        `SELECT id FROM barbearias WHERE contato_email = ? AND id != ?`,
+        [contato.email, barbeariaId],
+      );
 
       if (emailExiste) {
-        return erroPadrao(res, 400, 'DUPLICATED_EMAIL', 'Email já cadastrado para outra barbearia');
+        return erroPadrao(
+          res,
+          400,
+          "DUPLICATED_EMAIL",
+          "Email já cadastrado para outra barbearia",
+        );
       }
     }
 
@@ -544,7 +708,10 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         proprietario?.email || null,
         (() => {
           try {
-            if (horarioFuncionamento && typeof horarioFuncionamento === "object") {
+            if (
+              horarioFuncionamento &&
+              typeof horarioFuncionamento === "object"
+            ) {
               return JSON.stringify(horarioFuncionamento);
             } else if (typeof horarioFuncionamento === "string") {
               JSON.parse(horarioFuncionamento);
@@ -567,7 +734,12 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
     );
 
     if (!barbearia) {
-      return erroPadrao(res, 404, 'NOT_FOUND', 'Barbearia não encontrada após atualização');
+      return erroPadrao(
+        res,
+        404,
+        "NOT_FOUND",
+        "Barbearia não encontrada após atualização",
+      );
     }
 
     // Mapear dados para formato da interface
@@ -621,7 +793,9 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao atualizar barbearia admin:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
+      message: error?.message,
+    });
   }
 };
 
@@ -636,10 +810,17 @@ export const resetDatabaseAdmin: RequestHandler = async (req, res) => {
 
     // Verificar se é uma barbearia autenticada
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem resetar o banco.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Apenas administradores podem resetar o banco.",
+      );
     }
 
-    console.log(`⚠️ RESET DO BANCO solicitado por: ${userJWT.email} (ID: ${userJWT.userId})`);
+    console.log(
+      `⚠️ RESET DO BANCO solicitado por: ${userJWT.email} (ID: ${userJWT.userId})`,
+    );
 
     // Executar reset completo
     await resetDatabase();
@@ -647,13 +828,20 @@ export const resetDatabaseAdmin: RequestHandler = async (req, res) => {
     const response: ApiResponse<null> = {
       sucesso: true,
       dados: null,
-      mensagem: "Banco de dados resetado com sucesso! Todas as tabelas foram recriadas com dados iniciais.",
+      mensagem:
+        "Banco de dados resetado com sucesso! Todas as tabelas foram recriadas com dados iniciais.",
     };
 
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao resetar banco de dados:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao resetar banco de dados', { message: error?.message });
+    return erroPadrao(
+      res,
+      500,
+      "INTERNAL_ERROR",
+      "Erro ao resetar banco de dados",
+      { message: error?.message },
+    );
   }
 };
 
@@ -667,10 +855,17 @@ export const clearDatabaseDataAdmin: RequestHandler = async (req, res) => {
 
     // Verificar se é uma barbearia autenticada
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem limpar dados.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Apenas administradores podem limpar dados.",
+      );
     }
 
-    console.log(`🧹 LIMPEZA DE DADOS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`);
+    console.log(
+      `🧹 LIMPEZA DE DADOS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`,
+    );
 
     // Limpar dados e reinserir dados iniciais
     await clearData();
@@ -678,13 +873,20 @@ export const clearDatabaseDataAdmin: RequestHandler = async (req, res) => {
     const response: ApiResponse<null> = {
       sucesso: true,
       dados: null,
-      mensagem: "Dados do banco limpos com sucesso! Dados iniciais foram restaurados.",
+      mensagem:
+        "Dados do banco limpos com sucesso! Dados iniciais foram restaurados.",
     };
 
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao limpar dados do banco:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao limpar dados do banco', { message: error?.message });
+    return erroPadrao(
+      res,
+      500,
+      "INTERNAL_ERROR",
+      "Erro ao limpar dados do banco",
+      { message: error?.message },
+    );
   }
 };
 
@@ -698,10 +900,17 @@ export const recreateTablesAdmin: RequestHandler = async (req, res) => {
 
     // Verificar se é uma barbearia autenticada
     if (!userJWT || userJWT.userType !== "barbearia") {
-      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Apenas administradores podem recriar tabelas.');
+      return erroPadrao(
+        res,
+        403,
+        "FORBIDDEN",
+        "Acesso negado. Apenas administradores podem recriar tabelas.",
+      );
     }
 
-    console.log(`🔄 RECRIAÇÃO DE TABELAS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`);
+    console.log(
+      `🔄 RECRIAÇÃO DE TABELAS solicitada por: ${userJWT.email} (ID: ${userJWT.userId})`,
+    );
 
     // Forçar recriação das tabelas
     await initializeTables();
@@ -715,6 +924,8 @@ export const recreateTablesAdmin: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error: any) {
     console.error("Erro ao recriar tabelas:", error);
-    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro ao recriar tabelas', { message: error?.message });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro ao recriar tabelas", {
+      message: error?.message,
+    });
   }
 };
