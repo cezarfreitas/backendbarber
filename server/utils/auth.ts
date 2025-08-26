@@ -130,7 +130,8 @@ export const verificarBarbearia = (
   next: NextFunction,
 ) => {
   try {
-    const user = (req as any).user || (req as any).cliente || (req as any).usuario;
+    const user =
+      (req as any).user || (req as any).cliente || (req as any).usuario;
 
     if (!user || user.userType !== "barbearia") {
       return res.status(403).json({
@@ -157,7 +158,8 @@ export const verificarBarbeiro = (
   next: NextFunction,
 ) => {
   try {
-    const user = (req as any).user || (req as any).cliente || (req as any).usuario;
+    const user =
+      (req as any).user || (req as any).cliente || (req as any).usuario;
 
     if (!user || user.userType !== "barbeiro") {
       return res.status(403).json({
@@ -184,7 +186,8 @@ export const verificarCliente = (
   next: NextFunction,
 ) => {
   try {
-    const user = (req as any).user || (req as any).cliente || (req as any).usuario;
+    const user =
+      (req as any).user || (req as any).cliente || (req as any).usuario;
 
     if (!user || user.userType !== "cliente") {
       return res.status(403).json({
@@ -211,7 +214,8 @@ export const verificarProfissional = (
   next: NextFunction,
 ) => {
   try {
-    const user = (req as any).user || (req as any).cliente || (req as any).usuario;
+    const user =
+      (req as any).user || (req as any).cliente || (req as any).usuario;
 
     if (
       !user ||
@@ -241,7 +245,8 @@ export const verificarAdminBarbearia = (
   next: NextFunction,
 ) => {
   try {
-    const user = (req as any).user || (req as any).cliente || (req as any).usuario;
+    const user =
+      (req as any).user || (req as any).cliente || (req as any).usuario;
 
     if (!user || user.userType !== "barbearia") {
       return res.status(403).json({
@@ -284,7 +289,8 @@ export const verificarAutenticacaoOpcional = (
         (req as any).usuario = payload;
         (req as any).user = {
           id: (payload as any).userId || (payload as any).clienteId || null,
-          userType: (payload as any).userType || (payload as any).type || "cliente",
+          userType:
+            (payload as any).userType || (payload as any).type || "cliente",
           barbeariaId:
             (payload as any).barbeariaId ||
             (payload as any).userId ||
