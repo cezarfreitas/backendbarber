@@ -91,6 +91,11 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
     // Adicionar dados do usuário ao request (compatibilidade mantida com .cliente)
     (req as any).cliente = payload;
     (req as any).usuario = payload; // Nova propriedade mais genérica
+    (req as any).user = {
+      id: payload.userId,
+      userType: payload.userType,
+      barbeariaId: payload.barbeariaId || null
+    };
     next();
 
   } catch (error) {
@@ -189,6 +194,36 @@ export const verificarProfissional = (req: Request, res: Response, next: NextFun
     return res.status(401).json({
       sucesso: false,
       erro: 'Erro na verificação do tipo de usuário'
+    });
+  }
+};
+
+/**
+ * Middleware para verificar se é admin de barbearia (proprietário)
+ */
+export const verificarAdminBarbearia = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = (req as any).cliente || (req as any).usuario;
+
+    if (!user || user.userType !== 'barbearia') {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Acesso restrito a administradores de barbearia'
+      });
+    }
+
+    if (!user.barbeariaId) {
+      return res.status(403).json({
+        sucesso: false,
+        erro: 'Usuário não associado a uma barbearia'
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      sucesso: false,
+      erro: 'Erro na verificação do admin'
     });
   }
 };
