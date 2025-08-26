@@ -1,12 +1,13 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import { JWTPayload } from '@shared/api';
-import { Request, Response, NextFunction } from 'express';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { JWTPayload } from "@shared/api";
+import { Request, Response, NextFunction } from "express";
 
 // Configurações JWT
-const JWT_SECRET = process.env.JWT_SECRET || 'seu-jwt-secret-super-seguro-aqui-em-producao';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '30d';
+const JWT_SECRET =
+  process.env.JWT_SECRET || "seu-jwt-secret-super-seguro-aqui-em-producao";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || "30d";
 
 /**
  * Gera hash da senha
@@ -19,16 +20,21 @@ export const hashSenha = async (senha: string): Promise<string> => {
 /**
  * Verifica se a senha está correta
  */
-export const verificarSenha = async (senha: string, hash: string): Promise<boolean> => {
+export const verificarSenha = async (
+  senha: string,
+  hash: string,
+): Promise<boolean> => {
   return bcrypt.compare(senha, hash);
 };
 
 /**
  * Gera token JWT
  */
-export const gerarToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => {
+export const gerarToken = (
+  payload: Omit<JWTPayload, "iat" | "exp">,
+): string => {
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN
+    expiresIn: JWT_EXPIRES_IN,
   });
 };
 
@@ -36,8 +42,8 @@ export const gerarToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => 
  * Gera refresh token JWT
  */
 export const gerarRefreshToken = (clienteId: string): string => {
-  return jwt.sign({ clienteId, type: 'refresh' }, JWT_SECRET, {
-    expiresIn: REFRESH_TOKEN_EXPIRES_IN
+  return jwt.sign({ clienteId, type: "refresh" }, JWT_SECRET, {
+    expiresIn: REFRESH_TOKEN_EXPIRES_IN,
   });
 };
 
@@ -58,24 +64,28 @@ export const verificarToken = (token: string): JWTPayload | null => {
  */
 export const extrairToken = (authHeader?: string): string | null => {
   if (!authHeader) return null;
-  
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') return null;
-  
+
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") return null;
+
   return parts[1];
 };
 
 /**
  * Middleware para verificar autenticação
  */
-export const verificarAutenticacao = (req: Request, res: Response, next: NextFunction) => {
+export const verificarAutenticacao = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const token = extrairToken(req.headers.authorization);
 
     if (!token) {
       return res.status(401).json({
         sucesso: false,
-        erro: 'Token de acesso requerido'
+        erro: "Token de acesso requerido",
       });
     }
 
@@ -84,7 +94,7 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
     if (!payload) {
       return res.status(401).json({
         sucesso: false,
-        erro: 'Token inválido ou expirado'
+        erro: "Token inválido ou expirado",
       });
     }
 
@@ -94,14 +104,13 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
     (req as any).user = {
       id: payload.userId,
       userType: payload.userType,
-      barbeariaId: payload.barbeariaId || null
+      barbeariaId: payload.barbeariaId || null,
     };
     next();
-
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do token'
+      erro: "Erro na verificação do token",
     });
   }
 };
@@ -109,14 +118,18 @@ export const verificarAutenticacao = (req: Request, res: Response, next: NextFun
 /**
  * Middleware para verificar se é uma barbearia autenticada
  */
-export const verificarBarbearia = (req: Request, res: Response, next: NextFunction) => {
+export const verificarBarbearia = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = (req as any).cliente || (req as any).usuario;
 
-    if (!user || user.userType !== 'barbearia') {
+    if (!user || user.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Acesso restrito a barbearias'
+        erro: "Acesso restrito a barbearias",
       });
     }
 
@@ -124,7 +137,7 @@ export const verificarBarbearia = (req: Request, res: Response, next: NextFuncti
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do tipo de usuário'
+      erro: "Erro na verificação do tipo de usuário",
     });
   }
 };
@@ -132,14 +145,18 @@ export const verificarBarbearia = (req: Request, res: Response, next: NextFuncti
 /**
  * Middleware para verificar se é um barbeiro autenticado
  */
-export const verificarBarbeiro = (req: Request, res: Response, next: NextFunction) => {
+export const verificarBarbeiro = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = (req as any).cliente || (req as any).usuario;
 
-    if (!user || user.userType !== 'barbeiro') {
+    if (!user || user.userType !== "barbeiro") {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Acesso restrito a barbeiros'
+        erro: "Acesso restrito a barbeiros",
       });
     }
 
@@ -147,7 +164,7 @@ export const verificarBarbeiro = (req: Request, res: Response, next: NextFunctio
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do tipo de usuário'
+      erro: "Erro na verificação do tipo de usuário",
     });
   }
 };
@@ -155,14 +172,18 @@ export const verificarBarbeiro = (req: Request, res: Response, next: NextFunctio
 /**
  * Middleware para verificar se é um cliente autenticado
  */
-export const verificarCliente = (req: Request, res: Response, next: NextFunction) => {
+export const verificarCliente = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = (req as any).cliente || (req as any).usuario;
 
-    if (!user || user.userType !== 'cliente') {
+    if (!user || user.userType !== "cliente") {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Acesso restrito a clientes'
+        erro: "Acesso restrito a clientes",
       });
     }
 
@@ -170,7 +191,7 @@ export const verificarCliente = (req: Request, res: Response, next: NextFunction
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do tipo de usuário'
+      erro: "Erro na verificação do tipo de usuário",
     });
   }
 };
@@ -178,14 +199,21 @@ export const verificarCliente = (req: Request, res: Response, next: NextFunction
 /**
  * Middleware para verificar se é barbearia OU barbeiro (profissionais)
  */
-export const verificarProfissional = (req: Request, res: Response, next: NextFunction) => {
+export const verificarProfissional = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = (req as any).cliente || (req as any).usuario;
 
-    if (!user || (user.userType !== 'barbearia' && user.userType !== 'barbeiro')) {
+    if (
+      !user ||
+      (user.userType !== "barbearia" && user.userType !== "barbeiro")
+    ) {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Acesso restrito a profissionais (barbearias ou barbeiros)'
+        erro: "Acesso restrito a profissionais (barbearias ou barbeiros)",
       });
     }
 
@@ -193,7 +221,7 @@ export const verificarProfissional = (req: Request, res: Response, next: NextFun
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do tipo de usuário'
+      erro: "Erro na verificação do tipo de usuário",
     });
   }
 };
@@ -201,21 +229,25 @@ export const verificarProfissional = (req: Request, res: Response, next: NextFun
 /**
  * Middleware para verificar se é admin de barbearia (proprietário)
  */
-export const verificarAdminBarbearia = (req: Request, res: Response, next: NextFunction) => {
+export const verificarAdminBarbearia = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = (req as any).cliente || (req as any).usuario;
 
-    if (!user || user.userType !== 'barbearia') {
+    if (!user || user.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Acesso restrito a administradores de barbearia'
+        erro: "Acesso restrito a administradores de barbearia",
       });
     }
 
     if (!user.barbeariaId) {
       return res.status(403).json({
         sucesso: false,
-        erro: 'Usuário não associado a uma barbearia'
+        erro: "Usuário não associado a uma barbearia",
       });
     }
 
@@ -223,7 +255,7 @@ export const verificarAdminBarbearia = (req: Request, res: Response, next: NextF
   } catch (error) {
     return res.status(401).json({
       sucesso: false,
-      erro: 'Erro na verificação do admin'
+      erro: "Erro na verificação do admin",
     });
   }
 };
@@ -231,19 +263,22 @@ export const verificarAdminBarbearia = (req: Request, res: Response, next: NextF
 /**
  * Middleware opcional para verificar autenticação (não bloqueia se não tiver token)
  */
-export const verificarAutenticacaoOpcional = (req: Request, res: Response, next: NextFunction) => {
+export const verificarAutenticacaoOpcional = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const token = extrairToken(req.headers.authorization);
-    
+
     if (token) {
       const payload = verificarToken(token);
       if (payload) {
         (req as any).cliente = payload;
       }
     }
-    
+
     next();
-    
   } catch (error) {
     // Continua mesmo com erro no token
     next();
@@ -255,8 +290,8 @@ export const verificarAutenticacaoOpcional = (req: Request, res: Response, next:
  */
 export const validarCelular = (celular: string): boolean => {
   // Remove caracteres especiais
-  const celularLimpo = celular.replace(/\D/g, '');
-  
+  const celularLimpo = celular.replace(/\D/g, "");
+
   // Valida formato brasileiro: 11 dígitos (DDD + 9 + 8 dígitos)
   return /^[1-9]{2}9[0-9]{8}$/.test(celularLimpo);
 };
@@ -265,12 +300,12 @@ export const validarCelular = (celular: string): boolean => {
  * Formata celular para padrão brasileiro
  */
 export const formatarCelular = (celular: string): string => {
-  const celularLimpo = celular.replace(/\D/g, '');
-  
+  const celularLimpo = celular.replace(/\D/g, "");
+
   if (celularLimpo.length === 11) {
     return `(${celularLimpo.slice(0, 2)}) ${celularLimpo.slice(2, 7)}-${celularLimpo.slice(7)}`;
   }
-  
+
   return celular; // Retorna original se não conseguir formatar
 };
 
