@@ -28,8 +28,8 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
-# Expor a porta usada pelo Express (80 em produção)
-EXPOSE 80
+# Expor a porta usada pelo Express (8001 em produção)
+EXPOSE 8001
 
 # Iniciar a aplicação
 ENV NODE_ENV=production

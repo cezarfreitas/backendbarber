@@ -1,6 +1,6 @@
 import { createServer, initializeDatabase } from "./index.js";
 
-const PORT = parseInt(process.env.PORT || "80");
+const PORT = parseInt(process.env.PORT || "8001");
 
 async function startServer() {
   console.log("🚀 Starting Barbearia SaaS API...");

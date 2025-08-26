@@ -8,13 +8,13 @@ services:
     env_file:
       - .env
     environment:
-      - PORT=80
+      - PORT=8001
       - NODE_ENV=production
     ports:
-      - "80:80"
+      - "8001:8001"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:80/health || exit 1"]
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8001/health || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 5
