@@ -14,9 +14,25 @@ export default defineConfig({
     ssr: true,
     rollupOptions: {
       external: [
-        "express", "cors", "mysql2", "jsonwebtoken", "bcryptjs", 
-        "uuid", "dotenv", "zod", "fs", "path", "url", "http", 
-        "https", "os", "crypto", "stream", "util", "events", "buffer"
+        "express",
+        "cors",
+        "mysql2",
+        "jsonwebtoken",
+        "bcryptjs",
+        "uuid",
+        "dotenv",
+        "zod",
+        "fs",
+        "path",
+        "url",
+        "http",
+        "https",
+        "os",
+        "crypto",
+        "stream",
+        "util",
+        "events",
+        "buffer",
       ],
       output: {
         format: "es",

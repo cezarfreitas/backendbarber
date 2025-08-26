@@ -3,12 +3,14 @@
 ## 🎯 **Problema identificado e corrigido:**
 
 **❌ Código problemático:**
+
 ```typescript
 const indexPath = path.join(__dirname, "../spa/index.html");
 res.sendFile(indexPath); // ← Caminho relativo causava path-to-regexp error
 ```
 
 **✅ Código corrigido:**
+
 ```typescript
 const indexPath = path.resolve(__dirname, "../spa/index.html");
 res.sendFile(indexPath); // ← Caminho ABSOLUTO resolve o problema
@@ -36,6 +38,7 @@ Trocamos `path.join()` por `path.resolve()` que **garante caminho absoluto** com
 ## 📋 **Para deploy no EasyPanel:**
 
 **Agora use o Dockerfile PADRÃO:**
+
 ```
 Dockerfile: Dockerfile
 Port: 80
@@ -59,6 +62,7 @@ Environment Variables:
 ```
 
 **SEM MAIS:**
+
 ```
 TypeError: Missing parameter name at 1: path-to-regexp ❌
 ```
