@@ -821,6 +821,9 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <div class="nav-tree-item expandable" data-target="admin-tree">
                             🔧 Admin Dashboard
                         </div>
+                        <div class="nav-tree-item" onclick="scrollToSection('endpoints-admin-servicos')">
+                            <a href="#endpoints-admin-servicos">✂️ Admin - Serviços</a>
+                        </div>
                         <div class="nav-sub-items" id="admin-tree">
                             <a href="#endpoints-admin-dashboard" class="nav-sub-item">📊 Dashboard</a>
                             <a href="#endpoints-admin-barbearia-get" class="nav-sub-item">🏪 Buscar Barbearia</a>
@@ -2259,7 +2262,7 @@ function generateEndpointsDocumentation(): string {
                                 <tr>
                                     <td><code>400</code></td>
                                     <td><code>VALIDATION_ERROR</code></td>
-                                    <td>Dados inválidos ou campos obrigat��rios ausentes</td>
+                                    <td>Dados inválidos ou campos obrigatórios ausentes</td>
                                 </tr>
                                 <tr>
                                     <td><code>500</code></td>
