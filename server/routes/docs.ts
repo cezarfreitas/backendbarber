@@ -681,7 +681,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     <div class="copy-feedback" id="copyFeedback">📋 Código copiado!</div>
     
     <div class="layout">
-        <button class="sidebar-toggle" id="sidebarToggle">���</button>
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
 
         <nav class="sidebar active" id="sidebar">
             <div class="sidebar-header">
@@ -766,7 +766,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="clientes-tree">
                             <a href="#endpoints-clientes" class="nav-sub-item">📋 Listar Clientes</a>
-                            <a href="#endpoints-cliente-id" class="nav-sub-item">🔍 Buscar por ID</a>
+                            <a href="#endpoints-cliente-id" class="nav-sub-item">��� Buscar por ID</a>
                             <a href="#endpoints-clientes-create" class="nav-sub-item">➕ Criar Cliente</a>
                             <a href="#endpoints-clientes-update" class="nav-sub-item">✏️ Atualizar Cliente</a>
                             <a href="#endpoints-clientes-delete" class="nav-sub-item">🗑️ Excluir Cliente</a>
@@ -2067,39 +2067,97 @@ function generateEndpointsDocumentation(): string {
                         <p>Lista todos os barbeiros associados à barbearia do administrador logado.</p>
 
                         <div class="response">
-                            <h4>Exemplo de Resposta</h4>
+                            <h4>Exemplo de Resposta (com paginação)</h4>
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   sucesso: true,
-  dados: [
-    {
-      id: '1',
-      nome: 'Carlos Silva',
-      email: 'carlos@barbeariadoroao.com',
-      telefone: '(11) 98888-7777',
-      cpf: '111.222.333-44',
-      tipo: 'comissionado',
-      porcentagem_comissao: 40.00,
-      especialidades: ['Corte masculino', 'Barba', 'Bigode'],
-      status: 'ativo'
-    }
-  ]
+  dados: {
+    barbeiros: [
+      {
+        id: '1',
+        nome: 'Carlos Silva',
+        email: 'carlos@barbeariadoroao.com',
+        telefone: '(11) 98888-7777',
+        cpf: '111.222.333-44',
+        tipo: 'comissionado',
+        porcentagem_comissao: 40.00,
+        especialidades: ['Corte masculino', 'Barba', 'Bigode'],
+        status: 'ativo'
+      }
+    ],
+    total: 1,
+    pagina: 1,
+    totalPaginas: 1
+  },
+  meta: {
+    total: 1,
+    pagina: 1,
+    totalPaginas: 1,
+    limite: 10
+  }
 }, null, 2))">📋 Copiar</button>
                                 <pre>{
   "sucesso": true,
-  "dados": [
-    {
-      "id": "1",
-      "nome": "Carlos Silva",
-      "email": "carlos@barbeariadoroao.com",
-      "telefone": "(11) 98888-7777",
-      "cpf": "111.222.333-44",
-      "tipo": "comissionado",
-      "porcentagem_comissao": 40.00,
-      "especialidades": ["Corte masculino", "Barba", "Bigode"],
-      "status": "ativo"
-    }
-  ]
+  "dados": {
+    "barbeiros": [
+      {
+        "id": "1",
+        "nome": "Carlos Silva",
+        "email": "carlos@barbeariadoroao.com",
+        "telefone": "(11) 98888-7777",
+        "cpf": "111.222.333-44",
+        "tipo": "comissionado",
+        "porcentagem_comissao": 40.00,
+        "especialidades": ["Corte masculino", "Barba", "Bigode"],
+        "status": "ativo"
+      }
+    ],
+    "total": 1,
+    "pagina": 1,
+    "totalPaginas": 1
+  },
+  "meta": {
+    "total": 1,
+    "pagina": 1,
+    "totalPaginas": 1,
+    "limite": 10
+  }
+}</pre>
+                            </div>
+
+                            <h4>Exemplo de Resposta (nenhum resultado)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  dados: {
+    barbeiros: [],
+    total: 0,
+    pagina: 1,
+    totalPaginas: 0
+  },
+  meta: {
+    total: 0,
+    pagina: 1,
+    totalPaginas: 0,
+    limite: 10
+  },
+  mensagem: 'Nenhum barbeiro encontrado para os filtros informados'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "barbeiros": [],
+    "total": 0,
+    "pagina": 1,
+    "totalPaginas": 0
+  },
+  "meta": {
+    "total": 0,
+    "pagina": 1,
+    "totalPaginas": 0,
+    "limite": 10
+  },
+  "mensagem": "Nenhum barbeiro encontrado para os filtros informados"
 }</pre>
                             </div>
                         </div>
@@ -2617,8 +2675,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 path: ["api", "barbeiros"],
                 query: [
                   { key: "pagina", value: "1" },
-                  { key: "limite", value: "10" },
-                ],
+                  { key: "limite", value: "10" }
+                ]
               },
             },
             response: [
@@ -2630,44 +2688,42 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   url: {
                     raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "barbeiros"],
-                  },
+                    path: ["api", "barbeiros"]
+                  }
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [{ key: "Content-Type", value: "application/json" }],
-                body: JSON.stringify(
-                  {
-                    sucesso: true,
-                    dados: {
-                      barbeiros: [
-                        {
-                          id: "1",
-                          nome: "Carlos Silva",
-                          email: "carlos@barbeariadoroao.com",
-                          telefone: "(11) 98888-7777",
-                          cpf: "111.222.333-44",
-                          tipo: "comissionado",
-                          porcentagemComissao: 40,
-                          especialidades: ["Corte masculino", "Barba"],
-                          status: "ativo",
-                        },
-                      ],
-                      total: 1,
-                      pagina: 1,
-                      totalPaginas: 1,
-                    },
-                    meta: {
-                      total: 1,
-                      pagina: 1,
-                      totalPaginas: 1,
-                      limite: 10,
-                    },
+                header: [
+                  { key: "Content-Type", value: "application/json" }
+                ],
+                body: JSON.stringify({
+                  sucesso: true,
+                  dados: {
+                    barbeiros: [
+                      {
+                        id: "1",
+                        nome: "Carlos Silva",
+                        email: "carlos@barbeariadoroao.com",
+                        telefone: "(11) 98888-7777",
+                        cpf: "111.222.333-44",
+                        tipo: "comissionado",
+                        porcentagemComissao: 40,
+                        especialidades: ["Corte masculino", "Barba"],
+                        status: "ativo"
+                      }
+                    ],
+                    total: 1,
+                    pagina: 1,
+                    totalPaginas: 1
                   },
-                  null,
-                  2,
-                ),
+                  meta: {
+                    total: 1,
+                    pagina: 1,
+                    totalPaginas: 1,
+                    limite: 10
+                  }
+                }, null, 2)
               },
               {
                 name: "Exemplo - nenhum resultado",
@@ -2677,36 +2733,33 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   url: {
                     raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10&barbeariaId=999",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "barbeiros"],
-                  },
+                    path: ["api", "barbeiros"]
+                  }
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [{ key: "Content-Type", value: "application/json" }],
-                body: JSON.stringify(
-                  {
-                    sucesso: true,
-                    dados: {
-                      barbeiros: [],
-                      total: 0,
-                      pagina: 1,
-                      totalPaginas: 0,
-                    },
-                    meta: {
-                      total: 0,
-                      pagina: 1,
-                      totalPaginas: 0,
-                      limite: 10,
-                    },
-                    mensagem:
-                      "Nenhum barbeiro encontrado para os filtros informados",
+                header: [
+                  { key: "Content-Type", value: "application/json" }
+                ],
+                body: JSON.stringify({
+                  sucesso: true,
+                  dados: {
+                    barbeiros: [],
+                    total: 0,
+                    pagina: 1,
+                    totalPaginas: 0
                   },
-                  null,
-                  2,
-                ),
-              },
-            ],
+                  meta: {
+                    total: 0,
+                    pagina: 1,
+                    totalPaginas: 0,
+                    limite: 10
+                  },
+                  mensagem: "Nenhum barbeiro encontrado para os filtros informados"
+                }, null, 2)
+              }
+            ]
           },
           {
             name: "Buscar Barbeiro por ID",
