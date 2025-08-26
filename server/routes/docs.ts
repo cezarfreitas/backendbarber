@@ -751,7 +751,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             🎁 Combos
                         </div>
                         <div class="nav-sub-items" id="combos-tree">
-                            <a href="#endpoints-combos" class="nav-sub-item">��� Listar Combos</a>
+                            <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
                             <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
@@ -826,7 +826,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         <main class="main-content shifted" id="mainContent">
             <div class="container">
                 <div class="hero">
-                    <h1>���� API Barbearia SaaS</h1>
+                    <h1>🪒 API Barbearia SaaS</h1>
                     <p>Sistema completo para gestão de barbearias, barbeiros, serviços e clientes com autenticação robusta e APIs públicas.</p>
                 </div>
                 
@@ -898,7 +898,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 
                 <!-- Códigos de Erro -->
                 <div class="section" id="errors">
-                    <h2>⚠��� Códigos de Erro</h2>
+                    <h2>⚠️ Códigos de Erro</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -1446,7 +1446,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/diretorio/barbearias</span>
                         </div>
                         <h4>Busca pública de barbearias</h4>
-                        <p>API pública para buscar barbearias com filtros avançados.</p>
+                        <p>API pública para buscar barbearias com filtros avan��ados.</p>
                         
                         <div class="params">
                             <h4>Query Parameters</h4>
@@ -2039,7 +2039,7 @@ function generateEndpointsDocumentation(): string {
                                 <tr>
                                     <th>Código HTTP</th>
                                     <th>Código da API</th>
-                                    <th>Descriç��o</th>
+                                    <th>Descrição</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2191,39 +2191,120 @@ function generateEndpointsDocumentation(): string {
                         </div>
                     </div>
 
+                    <!-- Gestão de Barbeiros -->
                     <div class="endpoint" id="endpoints-admin-barbeiros-list">
                         <div class="endpoint-header">
                             <span class="method get">GET</span>
                             <span class="url">/api/admin/barbeiros</span>
                         </div>
-                        <h4>Listar barbeiros da barbearia</h4>
-                        <p>Lista todos os barbeiros associados à barbearia do administrador logado.</p>
+                        <h4>👥 Listar Barbeiros da Barbearia</h4>
+                        <p>Lista todos os barbeiros associados à barbearia do administrador logado, com suporte completo à paginação e filtros.</p>
+
+                        <div class="params">
+                            <h4>Query Parameters (Opcionais)</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Padrão</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>pagina</code></td>
+                                        <td>integer</td>
+                                        <td>1</td>
+                                        <td>Número da página (mínimo: 1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>limite</code></td>
+                                        <td>integer</td>
+                                        <td>10</td>
+                                        <td>Itens por página (máximo: 100)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="example-usage">
+                            <h4>Exemplos de Uso</h4>
+
+                            <h5>Listar todos os barbeiros (primeira página)</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, 'curl -X GET \"{{baseUrl}}/api/admin/barbeiros\" \\\n  -H \"Authorization: Bearer seu_jwt_token\"')">📋 Copiar</button>
+                                <pre>curl -X GET "{{baseUrl}}/api/admin/barbeiros" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+
+                            <h5>Listar com paginação específica</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, 'curl -X GET \"{{baseUrl}}/api/admin/barbeiros?pagina=2&limite=5\" \\\n  -H \"Authorization: Bearer seu_jwt_token\"')">📋 Copiar</button>
+                                <pre>curl -X GET "{{baseUrl}}/api/admin/barbeiros?pagina=2&limite=5" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
 
                         <div class="response">
-                            <h4>Exemplo de Resposta (com paginação)</h4>
+                            <h4>Resposta de Sucesso (200) - Com Resultados</h4>
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   sucesso: true,
   dados: {
     barbeiros: [
       {
-        id: '1',
+        id: 'b1f7c123-45d6-789e-bcde-f012345678ab',
         nome: 'Carlos Silva',
-        email: 'carlos@barbeariadoroao.com',
+        email: 'carlos@barbeariapremium.com',
         telefone: '(11) 98888-7777',
         cpf: '111.222.333-44',
         tipo: 'comissionado',
-        porcentagem_comissao: 40.00,
-        especialidades: ['Corte masculino', 'Barba', 'Bigode'],
-        status: 'ativo'
+        porcentagem_comissao: 45.00,
+        salario_fixo: null,
+        valor_hora: null,
+        especialidades: ['Corte masculino', 'Barba', 'Bigode', 'Relaxamento'],
+        horario_trabalho: {
+          segunda: { inicio: '08:00', fim: '18:00' },
+          terca: { inicio: '08:00', fim: '18:00' },
+          quarta: { inicio: '08:00', fim: '18:00' },
+          quinta: { inicio: '08:00', fim: '18:00' },
+          sexta: { inicio: '08:00', fim: '18:00' },
+          sabado: { inicio: '08:00', fim: '16:00' }
+        },
+        status: 'ativo',
+        data_cadastro: '2024-01-15T10:30:00Z',
+        ultimo_login: '2024-03-15T09:15:00Z'
+      },
+      {
+        id: 'b2f8d234-56e7-890f-cdef-012345678abc',
+        nome: 'Ana Costa',
+        email: 'ana@barbeariapremium.com',
+        telefone: '(11) 97777-6666',
+        cpf: '222.333.444-55',
+        tipo: 'funcionario',
+        porcentagem_comissao: null,
+        salario_fixo: 3500.00,
+        valor_hora: null,
+        especialidades: ['Corte feminino', 'Coloração', 'Tratamentos', 'Manicure'],
+        horario_trabalho: {
+          terca: { inicio: '09:00', fim: '19:00' },
+          quarta: { inicio: '09:00', fim: '19:00' },
+          quinta: { inicio: '09:00', fim: '19:00' },
+          sexta: { inicio: '09:00', fim: '19:00' },
+          sabado: { inicio: '09:00', fim: '17:00' }
+        },
+        status: 'ativo',
+        data_cadastro: '2024-02-01T14:20:00Z',
+        ultimo_login: '2024-03-14T16:45:00Z'
       }
     ],
-    total: 1,
+    total: 2,
     pagina: 1,
     totalPaginas: 1
   },
   meta: {
-    total: 1,
+    total: 2,
     pagina: 1,
     totalPaginas: 1,
     limite: 10
@@ -2234,23 +2315,57 @@ function generateEndpointsDocumentation(): string {
   "dados": {
     "barbeiros": [
       {
-        "id": "1",
+        "id": "b1f7c123-45d6-789e-bcde-f012345678ab",
         "nome": "Carlos Silva",
-        "email": "carlos@barbeariadoroao.com",
+        "email": "carlos@barbeariapremium.com",
         "telefone": "(11) 98888-7777",
         "cpf": "111.222.333-44",
         "tipo": "comissionado",
-        "porcentagem_comissao": 40.00,
-        "especialidades": ["Corte masculino", "Barba", "Bigode"],
-        "status": "ativo"
+        "porcentagem_comissao": 45.00,
+        "salario_fixo": null,
+        "valor_hora": null,
+        "especialidades": ["Corte masculino", "Barba", "Bigode", "Relaxamento"],
+        "horario_trabalho": {
+          "segunda": {"inicio": "08:00", "fim": "18:00"},
+          "terca": {"inicio": "08:00", "fim": "18:00"},
+          "quarta": {"inicio": "08:00", "fim": "18:00"},
+          "quinta": {"inicio": "08:00", "fim": "18:00"},
+          "sexta": {"inicio": "08:00", "fim": "18:00"},
+          "sabado": {"inicio": "08:00", "fim": "16:00"}
+        },
+        "status": "ativo",
+        "data_cadastro": "2024-01-15T10:30:00Z",
+        "ultimo_login": "2024-03-15T09:15:00Z"
+      },
+      {
+        "id": "b2f8d234-56e7-890f-cdef-012345678abc",
+        "nome": "Ana Costa",
+        "email": "ana@barbeariapremium.com",
+        "telefone": "(11) 97777-6666",
+        "cpf": "222.333.444-55",
+        "tipo": "funcionario",
+        "porcentagem_comissao": null,
+        "salario_fixo": 3500.00,
+        "valor_hora": null,
+        "especialidades": ["Corte feminino", "Coloração", "Tratamentos", "Manicure"],
+        "horario_trabalho": {
+          "terca": {"inicio": "09:00", "fim": "19:00"},
+          "quarta": {"inicio": "09:00", "fim": "19:00"},
+          "quinta": {"inicio": "09:00", "fim": "19:00"},
+          "sexta": {"inicio": "09:00", "fim": "19:00"},
+          "sabado": {"inicio": "09:00", "fim": "17:00"}
+        },
+        "status": "ativo",
+        "data_cadastro": "2024-02-01T14:20:00Z",
+        "ultimo_login": "2024-03-14T16:45:00Z"
       }
     ],
-    "total": 1,
+    "total": 2,
     "pagina": 1,
     "totalPaginas": 1
   },
   "meta": {
-    "total": 1,
+    "total": 2,
     "pagina": 1,
     "totalPaginas": 1,
     "limite": 10
@@ -2258,7 +2373,7 @@ function generateEndpointsDocumentation(): string {
 }</pre>
                             </div>
 
-                            <h4>Exemplo de Resposta (nenhum resultado)</h4>
+                            <h4>Resposta de Sucesso (200) - Nenhum Resultado</h4>
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   sucesso: true,
@@ -2291,6 +2406,20 @@ function generateEndpointsDocumentation(): string {
     "limite": 10
   },
   "mensagem": "Nenhum barbeiro encontrado para os filtros informados"
+}</pre>
+                            </div>
+
+                            <h4>Resposta de Erro (400) - Parâmetros Inválidos</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: false,
+  codigo: 'INVALID_PAGINATION',
+  erro: 'Parâmetro limite inválido'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": false,
+  "codigo": "INVALID_PAGINATION",
+  "erro": "Parâmetro limite inválido"
 }</pre>
                             </div>
                         </div>
