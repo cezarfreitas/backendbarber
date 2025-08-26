@@ -2298,6 +2298,37 @@ function generateEndpointsDocumentation(): string {
     telefone: '(11) 99999-9999',
     email: 'contato@barbeariadoroao.com',
     whatsapp: '(11) 99999-9999'
+  },
+  proprietario: {
+    nome: 'João da Silva',
+    cpf: '123.456.789-00',
+    email: 'joao@barbearia.com'
+  },
+  horarioFuncionamento: {
+    segunda: {
+      abertura: '10:00',
+      fechamento: '19:00'
+    },
+    terca: {
+      abertura: '10:00',
+      fechamento: '19:00'
+    },
+    quarta: {
+      abertura: '10:00',
+      fechamento: '19:00'
+    },
+    quinta: {
+      abertura: '10:00',
+      fechamento: '19:00'
+    },
+    sexta: {
+      abertura: '10:00',
+      fechamento: '19:00'
+    },
+    sabado: {
+      abertura: '09:00',
+      fechamento: '13:00'
+    }
   }
 }, null, 2))">📋 Copiar</button>
                                 <pre>{
@@ -2315,6 +2346,37 @@ function generateEndpointsDocumentation(): string {
     "telefone": "(11) 99999-9999",
     "email": "contato@barbeariadoroao.com",
     "whatsapp": "(11) 99999-9999"
+  },
+  "proprietario": {
+    "nome": "João da Silva",
+    "cpf": "123.456.789-00",
+    "email": "joao@barbearia.com"
+  },
+  "horarioFuncionamento": {
+    "segunda": {
+      "abertura": "10:00",
+      "fechamento": "19:00"
+    },
+    "terca": {
+      "abertura": "10:00",
+      "fechamento": "19:00"
+    },
+    "quarta": {
+      "abertura": "10:00",
+      "fechamento": "19:00"
+    },
+    "quinta": {
+      "abertura": "10:00",
+      "fechamento": "19:00"
+    },
+    "sexta": {
+      "abertura": "10:00",
+      "fechamento": "19:00"
+    },
+    "sabado": {
+      "abertura": "09:00",
+      "fechamento": "13:00"
+    }
   }
 }</pre>
                             </div>
