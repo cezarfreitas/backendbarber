@@ -20,7 +20,11 @@
     "start": "node dist/server/production.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "db:reset": "tsx server/scripts/reset-database.ts reset",
+    "db:clear": "tsx server/scripts/reset-database.ts clear",
+    "db:init": "tsx server/scripts/reset-database.ts init",
+    "db:help": "tsx server/scripts/reset-database.ts help"
   },
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",
