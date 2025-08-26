@@ -751,7 +751,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             🎁 Combos
                         </div>
                         <div class="nav-sub-items" id="combos-tree">
-                            <a href="#endpoints-combos" class="nav-sub-item">📋 Listar Combos</a>
+                            <a href="#endpoints-combos" class="nav-sub-item">��� Listar Combos</a>
                             <a href="#endpoints-combo-id" class="nav-sub-item">🔍 Buscar por ID</a>
                             <a href="#endpoints-combos-create" class="nav-sub-item">➕ Criar Combo</a>
                             <a href="#endpoints-combos-update" class="nav-sub-item">✏️ Atualizar Combo</a>
@@ -826,7 +826,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         <main class="main-content shifted" id="mainContent">
             <div class="container">
                 <div class="hero">
-                    <h1>🪒 API Barbearia SaaS</h1>
+                    <h1>���� API Barbearia SaaS</h1>
                     <p>Sistema completo para gestão de barbearias, barbeiros, serviços e clientes com autenticação robusta e APIs públicas.</p>
                 </div>
                 
@@ -898,7 +898,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 
                 <!-- Códigos de Erro -->
                 <div class="section" id="errors">
-                    <h2>⚠️ Códigos de Erro</h2>
+                    <h2>⚠��� Códigos de Erro</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -1987,18 +1987,102 @@ function generateEndpointsDocumentation(): string {
                 <!-- Admin Dashboard Endpoints -->
                 <div class="section" id="endpoints-admin-dashboard">
                     <h2>🔧 Admin Dashboard</h2>
-                    <p>APIs exclusivas para administradores (proprietários) de barbearias. Requer autenticação como barbearia.</p>
+                    <p class="section-description">
+                        APIs exclusivas para administradores (proprietários) de barbearias. Fornece acesso completo às funcionalidades de gestão de negócio, incluindo estatísticas, gerenciamento de barbeiros, configurações da barbearia e muito mais.
+                    </p>
 
-                    <div class="endpoint">
+                    <!-- Autenticação Admin -->
+                    <div class="auth-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3>🔐 Autenticação Administrativa</h3>
+                        <p>Todos os endpoints da seção Admin Dashboard requerem autenticação como <strong>barbearia</strong>. O token JWT deve ser obtido através do endpoint de login de barbearia.</p>
+
+                        <h4>Headers Obrigatórios</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Header</th>
+                                    <th>Formato</th>
+                                    <th>Descrição</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Authorization</code></td>
+                                    <td><code>Bearer {jwt_token}</code></td>
+                                    <td>Token JWT válido de uma barbearia autenticada</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Content-Type</code></td>
+                                    <td><code>application/json</code></td>
+                                    <td>Obrigatório para requisições POST/PUT</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Como obter o token JWT</h4>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyToClipboard(this, 'curl -X POST \"{{baseUrl}}/api/auth/login/barbearia\" \\\n  -H \"Content-Type: application/json\" \\\n  -d \'{\n    \"email\": \"admin@barbearia.com\",\n    \"senha\": \"sua_senha\"\n  }\'')">📋 Copiar</button>
+                            <pre>curl -X POST "{{baseUrl}}/api/auth/login/barbearia" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@barbearia.com",
+    "senha": "sua_senha"
+  }'</pre>
+                        </div>
+                    </div>
+
+                    <!-- Códigos de Erro Comuns -->
+                    <div class="error-codes" style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h3>⚠️ Códigos de Erro Comuns</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Código HTTP</th>
+                                    <th>Código da API</th>
+                                    <th>Descriç��o</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>401</code></td>
+                                    <td><code>UNAUTHORIZED</code></td>
+                                    <td>Token JWT ausente ou inválido</td>
+                                </tr>
+                                <tr>
+                                    <td><code>403</code></td>
+                                    <td><code>FORBIDDEN</code></td>
+                                    <td>Usuário não é uma barbearia ou não tem permissão</td>
+                                </tr>
+                                <tr>
+                                    <td><code>404</code></td>
+                                    <td><code>NOT_FOUND</code></td>
+                                    <td>Recurso não encontrado ou não pertence à barbearia</td>
+                                </tr>
+                                <tr>
+                                    <td><code>400</code></td>
+                                    <td><code>VALIDATION_ERROR</code></td>
+                                    <td>Dados inválidos ou campos obrigatórios ausentes</td>
+                                </tr>
+                                <tr>
+                                    <td><code>500</code></td>
+                                    <td><code>INTERNAL_ERROR</code></td>
+                                    <td>Erro interno do servidor</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Dashboard Overview -->
+                    <div class="endpoint" id="admin-dashboard-overview">
                         <div class="endpoint-header">
                             <span class="method get">GET</span>
                             <span class="url">/api/admin/dashboard</span>
                         </div>
-                        <h4>Dashboard com estatísticas</h4>
-                        <p>Retorna estatísticas da barbearia e dados gerais para o dashboard administrativo.</p>
+                        <h4>📊 Dashboard - Visão Geral e Estatísticas</h4>
+                        <p>Retorna estatísticas completas da barbearia e dados essenciais para o dashboard administrativo. Ideal para tela inicial do painel admin.</p>
 
                         <div class="params">
-                            <h4>Headers</h4>
+                            <h4>Headers Obrigatórios</h4>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -2010,30 +2094,52 @@ function generateEndpointsDocumentation(): string {
                                 <tbody>
                                     <tr>
                                         <td><code>Authorization</code></td>
-                                        <td>Bearer {token}</td>
-                                        <td>Token JWT da barbearia</td>
+                                        <td>Bearer {jwt_token}</td>
+                                        <td>Token JWT da barbearia autenticada</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, 'curl -X GET \"{{baseUrl}}/api/admin/dashboard\" \\\n  -H \"Authorization: Bearer seu_jwt_token\"')">📋 Copiar</button>
+                                <pre>curl -X GET "{{baseUrl}}/api/admin/dashboard" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+
                         <div class="response">
-                            <h4>Exemplo de Resposta</h4>
+                            <h4>Resposta de Sucesso (200)</h4>
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   sucesso: true,
   dados: {
     barbearia: {
-      id: '1',
-      nome: 'Barbearia do João',
-      descricao: 'A melhor barbearia do bairro',
-      status: 'ativa'
+      id: 'c48db985-4ab2-431a-8e42-ecf60048e261',
+      nome: 'Barbearia Premium',
+      descricao: 'A melhor barbearia da região',
+      status: 'ativa',
+      endereco: {
+        cidade: 'São Paulo',
+        estado: 'SP',
+        bairro: 'Centro'
+      },
+      contato: {
+        telefone: '(11) 99999-9999',
+        email: 'contato@barbeariapremium.com'
+      }
     },
     estatisticas: {
-      total_barbeiros: 3,
-      total_servicos: 8,
-      total_combos: 4,
-      preco_medio_servicos: 45.50
+      total_barbeiros: 5,
+      total_servicos: 12,
+      total_combos: 3,
+      preco_medio_servicos: 47.50,
+      barbeiros_ativos: 4,
+      barbeiros_inativos: 1,
+      servicos_ativos: 11,
+      servicos_inativos: 1
     }
   }
 }, null, 2))">📋 Copiar</button>
@@ -2041,18 +2147,45 @@ function generateEndpointsDocumentation(): string {
   "sucesso": true,
   "dados": {
     "barbearia": {
-      "id": "1",
-      "nome": "Barbearia do João",
-      "descricao": "A melhor barbearia do bairro",
-      "status": "ativa"
+      "id": "c48db985-4ab2-431a-8e42-ecf60048e261",
+      "nome": "Barbearia Premium",
+      "descricao": "A melhor barbearia da região",
+      "status": "ativa",
+      "endereco": {
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "bairro": "Centro"
+      },
+      "contato": {
+        "telefone": "(11) 99999-9999",
+        "email": "contato@barbeariapremium.com"
+      }
     },
     "estatisticas": {
-      "total_barbeiros": 3,
-      "total_servicos": 8,
-      "total_combos": 4,
-      "preco_medio_servicos": 45.50
+      "total_barbeiros": 5,
+      "total_servicos": 12,
+      "total_combos": 3,
+      "preco_medio_servicos": 47.50,
+      "barbeiros_ativos": 4,
+      "barbeiros_inativos": 1,
+      "servicos_ativos": 11,
+      "servicos_inativos": 1
     }
   }
+}</pre>
+                            </div>
+
+                            <h4>Resposta de Erro (403)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: false,
+  codigo: 'FORBIDDEN',
+  erro: 'Acesso negado. Usuário não é uma barbearia.'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": false,
+  "codigo": "FORBIDDEN",
+  "erro": "Acesso negado. Usuário não é uma barbearia."
 }</pre>
                             </div>
                         </div>
