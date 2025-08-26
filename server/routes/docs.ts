@@ -1289,13 +1289,17 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   // Melhorar sanitização para evitar problemas de parsing
   const sanitizedHtml = fullHtml.replace(
     /onclick="copyToClipboard\(this,[\s\S]*?\)"/g,
-    function(match) {
+    function (match) {
       // Se contém caracteres problemáticos, usar versão simples
-      if (match.includes('`') || match.includes('${') || match.includes('JSON.stringify')) {
+      if (
+        match.includes("`") ||
+        match.includes("${") ||
+        match.includes("JSON.stringify")
+      ) {
         return 'onclick="copyToClipboard(this)"';
       }
       return match; // Manter original se for simples
-    }
+    },
   );
 
   res.send(sanitizedHtml);

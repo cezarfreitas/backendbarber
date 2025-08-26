@@ -2,17 +2,21 @@
 
 /**
  * Script para reset manual do banco de dados
- * 
+ *
  * Execute com: npm run reset-db
  * ou: npx ts-node server/scripts/reset-database.ts
  */
 
 import { initDatabase } from "../config/database";
-import { resetDatabase, clearData, initializeTables } from "../config/init-database";
+import {
+  resetDatabase,
+  clearData,
+  initializeTables,
+} from "../config/init-database";
 
 async function main() {
   console.log("🚀 Iniciando script de reset do banco de dados...");
-  
+
   try {
     // Conectar ao banco
     await initDatabase();
@@ -20,28 +24,28 @@ async function main() {
 
     // Obter argumentos da linha de comando
     const args = process.argv.slice(2);
-    const operation = args[0] || 'help';
+    const operation = args[0] || "help";
 
     switch (operation) {
-      case 'reset':
+      case "reset":
         console.log("⚠️ INICIANDO RESET COMPLETO...");
         await resetDatabase();
         console.log("✅ Reset completo finalizado!");
         break;
 
-      case 'clear':
+      case "clear":
         console.log("🧹 INICIANDO LIMPEZA DE DADOS...");
         await clearData();
         console.log("✅ Limpeza de dados finalizada!");
         break;
 
-      case 'init':
+      case "init":
         console.log("🔄 INICIANDO VERIFICAÇÃO E CRIAÇÃO DE TABELAS...");
         await initializeTables();
         console.log("✅ Inicialização finalizada!");
         break;
 
-      case 'help':
+      case "help":
       default:
         console.log(`
 📖 Como usar este script:
@@ -58,7 +62,6 @@ npm run reset-db help      - Mostra esta ajuda
         `);
         break;
     }
-
   } catch (error) {
     console.error("❌ Erro durante a operação:", error);
     process.exit(1);

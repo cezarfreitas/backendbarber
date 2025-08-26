@@ -839,16 +839,16 @@ export const resetDatabase = async (): Promise<void> => {
     console.log("⚠️ ATENÇÃO: Todos os dados serão perdidos!");
 
     // Desabilitar verificações de foreign key temporariamente
-    await executeQuery('SET FOREIGN_KEY_CHECKS = 0');
+    await executeQuery("SET FOREIGN_KEY_CHECKS = 0");
 
     // Dropar tabelas na ordem inversa (para respeitar foreign keys)
     const tablesToDrop = [
-      'combo_servicos',
-      'combos',
-      'servicos',
-      'barbeiros',
-      'clientes',
-      'barbearias'
+      "combo_servicos",
+      "combos",
+      "servicos",
+      "barbeiros",
+      "clientes",
+      "barbearias",
     ];
 
     for (const table of tablesToDrop) {
@@ -862,7 +862,7 @@ export const resetDatabase = async (): Promise<void> => {
     }
 
     // Reabilitar verificações de foreign key
-    await executeQuery('SET FOREIGN_KEY_CHECKS = 1');
+    await executeQuery("SET FOREIGN_KEY_CHECKS = 1");
 
     console.log("✅ Todas as tabelas foram removidas com sucesso!");
     console.log("🔄 Recriando estrutura do banco...");
@@ -870,7 +870,9 @@ export const resetDatabase = async (): Promise<void> => {
     // Recriar toda a estrutura
     await initializeTables();
 
-    console.log("✅ RESET COMPLETO CONCLUÍDO! Banco de dados recriado com dados iniciais.");
+    console.log(
+      "✅ RESET COMPLETO CONCLUÍDO! Banco de dados recriado com dados iniciais.",
+    );
   } catch (error) {
     console.error("❌ Erro durante o reset do banco:", error);
     throw error;
@@ -885,16 +887,16 @@ export const clearData = async (): Promise<void> => {
     console.log("🧹 Limpando dados das tabelas...");
 
     // Desabilitar verificações de foreign key temporariamente
-    await executeQuery('SET FOREIGN_KEY_CHECKS = 0');
+    await executeQuery("SET FOREIGN_KEY_CHECKS = 0");
 
     // Limpar tabelas na ordem correta
     const tablesToClear = [
-      'combo_servicos',
-      'combos',
-      'servicos',
-      'barbeiros',
-      'clientes',
-      'barbearias'
+      "combo_servicos",
+      "combos",
+      "servicos",
+      "barbeiros",
+      "clientes",
+      "barbearias",
     ];
 
     for (const table of tablesToClear) {
@@ -908,7 +910,7 @@ export const clearData = async (): Promise<void> => {
     }
 
     // Reabilitar verificações de foreign key
-    await executeQuery('SET FOREIGN_KEY_CHECKS = 1');
+    await executeQuery("SET FOREIGN_KEY_CHECKS = 1");
 
     console.log("✅ Dados removidos com sucesso!");
     console.log("🔄 Inserindo dados iniciais...");
