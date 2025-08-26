@@ -21,9 +21,9 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Copiar apenas os arquivos essenciais do builder
-COPY --from=builder package.json ./
-COPY --from=builder node_modules ./node_modules
-COPY --from=builder dist ./dist
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
 # Expor a porta usada pelo Express (EasyPanel usa 80)
 EXPOSE 80
