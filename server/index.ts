@@ -175,6 +175,11 @@ export function createServer() {
 
   // Admin Barbearia (Dashboard)
   app.get(
+    "/api/admin/barbearia",
+    verificarAutenticacao,
+    buscarBarbeariaAdmin,
+  );
+  app.get(
     "/api/admin/dashboard",
     verificarAutenticacao,
     verificarAdminBarbearia,
