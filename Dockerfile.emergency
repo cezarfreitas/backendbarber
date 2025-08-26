@@ -10,11 +10,11 @@ RUN npm install --only=production
 # Copiar código
 COPY . .
 
-# Build só o servidor robusto (sem rotas complexas)
-RUN npm run build:robust
+# Build servidor de emergência (sem rotas complexas)
+RUN npm run build:emergency
 
 # Porta
 EXPOSE 80
 
-# Servidor que NUNCA falha
-CMD ["node", "dist/server/robust.mjs"]
+# Servidor de emergência que NUNCA falha
+CMD ["node", "dist/server/emergency.mjs"]
