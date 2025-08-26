@@ -77,6 +77,7 @@ import {
   removerBarbeiroAdmin,
   atualizarBarbeariaAdmin,
 } from "./routes/admin";
+import { criarBarbeariaTeste } from "./routes/criar-teste";
 
 export function createServer() {
   const app = express();
