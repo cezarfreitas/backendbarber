@@ -445,7 +445,7 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
 export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
   try {
     const userJWT = (req as any).cliente || (req as any).usuario;
-    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId �� o ID da própria barbearia
     const barbeiroId = req.params.id;
 
     if (!userJWT || userJWT.userType !== 'barbearia') {
@@ -564,7 +564,21 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         proprietario?.nome || null,
         proprietario?.cpf || null,
         proprietario?.email || null,
-        horarioFuncionamento ? JSON.stringify(horarioFuncionamento) : null,
+        (() => {
+          try {
+            if (horarioFuncionamento && typeof horarioFuncionamento === 'object') {
+              return JSON.stringify(horarioFuncionamento);
+            } else if (typeof horarioFuncionamento === 'string') {
+              // Se já é string, verifica se é JSON válido
+              JSON.parse(horarioFuncionamento);
+              return horarioFuncionamento;
+            } else {
+              return null;
+            }
+          } catch (error) {
+            return null;
+          }
+        })(),
         barbeariaId,
       ],
     );
