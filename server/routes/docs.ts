@@ -678,7 +678,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
     </style>
 </head>
 <body>
-    <div class="copy-feedback" id="copyFeedback">📋 Código copiado!</div>
+    <div class="copy-feedback" id="copyFeedback">📋 C��digo copiado!</div>
     
     <div class="layout">
         <button class="sidebar-toggle" id="sidebarToggle">☰</button>
@@ -829,6 +829,10 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-admin-barbeiros-create" class="nav-sub-item">�� Criar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-update" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-delete" class="nav-sub-item">🗑️ Remover Barbeiro</a>
+                            <a href="#endpoints-admin-servicos-list" class="nav-sub-item">✂️ Listar Serviços</a>
+                            <a href="#endpoints-admin-servicos-create" class="nav-sub-item">➕ Criar Serviço</a>
+                            <a href="#endpoints-admin-servicos-update" class="nav-sub-item">✏️ Atualizar Serviço</a>
+                            <a href="#endpoints-admin-servicos-delete" class="nav-sub-item">🗑️ Remover Serviço</a>
                         </div>
                     </div>
                 </div>
@@ -2624,7 +2628,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="method post">POST</span>
                             <span class="url">/api/admin/barbeiros</span>
                         </div>
-                        <h4>➕ Criar Novo Barbeiro</h4>
+                        <h4>��� Criar Novo Barbeiro</h4>
                         <p>Adiciona um novo barbeiro à barbearia do administrador. Permite diferentes tipos de remuneração e configurações personalizadas.</p>
 
                         <div class="params">
