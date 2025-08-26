@@ -904,3 +904,274 @@ export const recreateTablesAdmin: RequestHandler = async (req, res) => {
     });
   }
 };
+
+/**
+ * GET /api/admin/servicos
+ * Listar serviços da barbearia do admin (com paginação)
+ */
+export const listarServicosAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+    }
+
+    const { pagina: paginaRaw, limite: limiteRaw, categoria, ativo } = req.query as any;
+    const validacao = validarPaginaLimite(paginaRaw, limiteRaw);
+    if (validacao.erro) {
+      return erroPadrao(res, 400, validacao.codigo || 'INVALID_PAGINATION', validacao.mensagem || 'Parâmetros de paginação inválidos');
+    }
+
+    const pagina: number = validacao.pagina;
+    const limite: number = validacao.limite;
+
+    // Garantir que barbeariaId é válido
+    if (!barbeariaId) {
+      return erroPadrao(res, 400, 'INVALID_BARBEARIA_ID', 'ID da barbearia não encontrado');
+    }
+
+    // Construir WHERE clause com filtros
+    let whereClause = 'WHERE barbearia_id = ?';
+    const params: any[] = [barbeariaId];
+
+    if (categoria) {
+      whereClause += ' AND categoria = ?';
+      params.push(categoria);
+    }
+
+    if (ativo !== undefined) {
+      const isAtivo = ativo === 'true';
+      whereClause += ' AND ativo = ?';
+      params.push(isAtivo);
+    }
+
+    // Total de serviços
+    const totalResult = await executeQuerySingle(
+      `SELECT COUNT(*) as total FROM servicos ${whereClause}`,
+      params,
+    );
+    const total = (totalResult as any)?.total || 0;
+    const totalPaginas = total === 0 ? 0 : Math.ceil(total / limite);
+    const offset = (pagina - 1) * limite;
+
+    // Garantir que limite e offset sejam números válidos
+    const limiteNum = parseInt(String(limite), 10);
+    const offsetNum = parseInt(String(offset), 10);
+
+    if (isNaN(limiteNum) || isNaN(offsetNum) || limiteNum < 1 || offsetNum < 0) {
+      return erroPadrao(res, 400, 'INVALID_PAGINATION_VALUES', 'Valores de paginação inválidos');
+    }
+
+    const servicos = await executeQuery(
+      `SELECT id, nome, descricao, preco, duracao_minutos, categoria, ativo, data_cadastro, data_atualizacao FROM servicos ${whereClause} ORDER BY nome ASC LIMIT ${limiteNum} OFFSET ${offsetNum}`,
+      params,
+    );
+
+    const response: ApiResponse<any> = {
+      sucesso: true,
+      dados: {
+        servicos: servicos,
+        total,
+        pagina,
+        totalPaginas,
+      },
+    };
+
+    return res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao listar serviços admin:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+  }
+};
+
+/**
+ * POST /api/admin/servicos
+ * Criar novo serviço na barbearia do admin
+ */
+export const criarServicoAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+    }
+
+    const {
+      nome,
+      descricao,
+      preco,
+      duracao_minutos,
+      categoria,
+    } = req.body;
+
+    // Validações básicas
+    if (!nome || !preco || !duracao_minutos) {
+      return erroPadrao(res, 400, 'MISSING_FIELDS', 'Campos obrigatórios: nome, preco, duracao_minutos');
+    }
+
+    // Validar valores numéricos
+    if (preco <= 0) {
+      return erroPadrao(res, 400, 'INVALID_PRICE', 'Preço deve ser maior que zero');
+    }
+
+    if (duracao_minutos <= 0) {
+      return erroPadrao(res, 400, 'INVALID_DURATION', 'Duração deve ser maior que zero');
+    }
+
+    // Verificar se nome já existe na barbearia
+    const nomeExiste = await executeQuerySingle(
+      `SELECT id FROM servicos WHERE nome = ? AND barbearia_id = ?`,
+      [nome, barbeariaId],
+    );
+
+    if (nomeExiste) {
+      return erroPadrao(res, 400, 'DUPLICATED_NAME', 'Já existe um serviço com este nome nesta barbearia');
+    }
+
+    const id = uuidv4();
+
+    await executeQuery(
+      `INSERT INTO servicos (id, nome, descricao, preco, duracao_minutos, barbearia_id, categoria, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, true)`,
+      [
+        id,
+        nome,
+        descricao || null,
+        preco,
+        duracao_minutos,
+        barbeariaId,
+        categoria || null,
+      ],
+    );
+
+    const novoServico = await executeQuerySingle(
+      `SELECT id, nome, descricao, preco, duracao_minutos, categoria, ativo, data_cadastro, data_atualizacao FROM servicos WHERE id = ?`,
+      [id],
+    );
+
+    const response: ApiResponse<any> = {
+      sucesso: true,
+      dados: novoServico,
+      mensagem: "Serviço criado com sucesso",
+    };
+
+    res.status(201).json(response);
+  } catch (error: any) {
+    console.error("Erro ao criar serviço admin:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+  }
+};
+
+/**
+ * PUT /api/admin/servicos/:id
+ * Atualizar serviço da barbearia do admin
+ */
+export const atualizarServicoAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+    const servicoId = req.params.id;
+
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+    }
+
+    // Verificar se o serviço pertence à barbearia do admin
+    const servico = await executeQuerySingle(`SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`, [servicoId, barbeariaId]);
+
+    if (!servico) {
+      return erroPadrao(res, 404, 'NOT_FOUND', 'Serviço não encontrado ou não pertence à sua barbearia');
+    }
+
+    const {
+      nome,
+      descricao,
+      preco,
+      duracao_minutos,
+      categoria,
+      ativo,
+    } = req.body;
+
+    // Se nome foi alterado, verificar se não existe
+    if (nome) {
+      const nomeExiste = await executeQuerySingle(`SELECT id FROM servicos WHERE nome = ? AND barbearia_id = ? AND id != ?`, [nome, barbeariaId, servicoId]);
+      if (nomeExiste) {
+        return erroPadrao(res, 400, 'DUPLICATED_NAME', 'Já existe um serviço com este nome nesta barbearia');
+      }
+    }
+
+    // Validar valores numéricos se fornecidos
+    if (preco !== undefined && preco <= 0) {
+      return erroPadrao(res, 400, 'INVALID_PRICE', 'Preço deve ser maior que zero');
+    }
+
+    if (duracao_minutos !== undefined && duracao_minutos <= 0) {
+      return erroPadrao(res, 400, 'INVALID_DURATION', 'Duração deve ser maior que zero');
+    }
+
+    await executeQuery(
+      `UPDATE servicos SET nome = COALESCE(?, nome), descricao = COALESCE(?, descricao), preco = COALESCE(?, preco), duracao_minutos = COALESCE(?, duracao_minutos), categoria = COALESCE(?, categoria), ativo = COALESCE(?, ativo), data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`,
+      [
+        nome || null,
+        descricao,
+        preco || null,
+        duracao_minutos || null,
+        categoria,
+        ativo,
+        servicoId,
+      ],
+    );
+
+    const servicoAtualizado = await executeQuerySingle(`SELECT id, nome, descricao, preco, duracao_minutos, categoria, ativo, data_cadastro, data_atualizacao FROM servicos WHERE id = ?`, [servicoId]);
+
+    const response: ApiResponse<any> = {
+      sucesso: true,
+      dados: servicoAtualizado,
+      mensagem: "Serviço atualizado com sucesso",
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao atualizar serviço admin:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+  }
+};
+
+/**
+ * DELETE /api/admin/servicos/:id
+ * Remover serviço da barbearia do admin
+ */
+export const removerServicoAdmin: RequestHandler = async (req, res) => {
+  try {
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
+    const servicoId = req.params.id;
+
+    if (!userJWT || userJWT.userType !== "barbearia") {
+      return erroPadrao(res, 403, 'FORBIDDEN', 'Acesso negado. Usuário não é uma barbearia.');
+    }
+
+    // Verificar se o serviço pertence à barbearia do admin
+    const servico = await executeQuerySingle(`SELECT id FROM servicos WHERE id = ? AND barbearia_id = ?`, [servicoId, barbeariaId]);
+
+    if (!servico) {
+      return erroPadrao(res, 404, 'NOT_FOUND', 'Serviço não encontrado ou não pertence à sua barbearia');
+    }
+
+    // Soft delete - apenas marcar como inativo
+    await executeQuery(`UPDATE servicos SET ativo = false, data_atualizacao = CURRENT_TIMESTAMP WHERE id = ?`, [servicoId]);
+
+    const response: ApiResponse<null> = {
+      sucesso: true,
+      dados: null,
+      mensagem: "Serviço removido com sucesso",
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    console.error("Erro ao remover serviço admin:", error);
+    return erroPadrao(res, 500, 'INTERNAL_ERROR', 'Erro interno do servidor', { message: error?.message });
+  }
+};
