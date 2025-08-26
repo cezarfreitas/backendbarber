@@ -336,10 +336,14 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Erro no login de barbearia:", error);
+    const detalhe = error && (error as any).message ? (error as any).message : String(error);
+    const stack = error && (error as any).stack ? (error as any).stack.split('\n').map((s: string) => s.trim()) : undefined;
     res.status(500).json({
       sucesso: false,
       erro: "Erro interno do servidor",
-    } as LoginBarbeariaResponse);
+      detalhe,
+      stack,
+    } as any);
   }
 };
 
@@ -1083,7 +1087,7 @@ export const refreshTokenAuth: RequestHandler = async (req, res) => {
       } as LoginResponse);
     }
 
-    // Buscar usuário baseado no tipo (legado - assumindo cliente se não especificado)
+    // Buscar usu��rio baseado no tipo (legado - assumindo cliente se não especificado)
     const userId = (payload as any).clienteId || (payload as any).userId;
 
     // Para compatibilidade com tokens antigos, assumir cliente se não tiver userType
