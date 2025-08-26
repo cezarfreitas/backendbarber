@@ -16,8 +16,17 @@ export default defineConfig({
       external: [
         "express",
         "cors",
-        "fs", "path", "url", "http", "https", "os", 
-        "crypto", "stream", "util", "events", "buffer"
+        "fs",
+        "path",
+        "url",
+        "http",
+        "https",
+        "os",
+        "crypto",
+        "stream",
+        "util",
+        "events",
+        "buffer",
       ],
       output: {
         format: "es",
