@@ -3,12 +3,14 @@
 ## ✅ **Implementado:**
 
 ### 🔧 **Express agora serve Frontend + API:**
+
 - ✅ **Frontend**: Arquivos estáticos em `/dist/spa/`
 - ✅ **API**: Todas as rotas `/api/*`
 - ✅ **SPA Routing**: Fallback para `index.html`
 - ✅ **Uma porta só**: 80 (EasyPanel)
 
 ### 📊 **Rotas funcionando:**
+
 ```
 GET /                    → Frontend React (index.html)
 GET /barbearias          → Frontend React (SPA route)
@@ -35,12 +37,14 @@ CMD ["node", "dist/server/production.mjs"]
 ## 🛠️ **Configuração EasyPanel:**
 
 ### 📋 **Settings:**
+
 ```
 Dockerfile: Dockerfile.fullstack-final
 Port: 80
 ```
 
 ### 🔧 **Environment Variables:**
+
 ```
 NODE_ENV=production
 PORT=80
@@ -55,11 +59,13 @@ JWT_SECRET=seu_jwt_secret_seguro_aqui
 ## 🎯 **Resultado após deploy:**
 
 ### 🌐 **Frontend (React):**
+
 - `https://seu-dominio.com/` → **App React**
 - `https://seu-dominio.com/barbearias` → **Página de barbearias**
 - `https://seu-dominio.com/qualquer-rota` → **SPA routing**
 
 ### 🔌 **API (Express):**
+
 - `https://seu-dominio.com/api/ping` → **Health check**
 - `https://seu-dominio.com/api/barbearias` → **Lista barbearias**
 - `https://seu-dominio.com/api/docs` → **Documentação**
@@ -74,6 +80,7 @@ JWT_SECRET=seu_jwt_secret_seguro_aqui
 4. **SPA routing** → Navegue no frontend
 
 ## ✅ **Status:**
+
 - ✅ **Express configurado** para servir frontend + API
 - ✅ **Dockerfile otimizado** (multi-stage)
 - ✅ **Build funciona** (frontend + backend)
