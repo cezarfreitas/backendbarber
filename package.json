@@ -17,6 +17,7 @@
     "build:server": "vite build --config vite.config.server.ts",
     "build:robust": "vite build --config vite.config.robust.ts",
     "build:emergency": "vite build --config vite.config.emergency.ts",
+    "build:test": "vite build --config vite.config.test.ts",
     "start": "node dist/server/production.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
