@@ -1,103 +1,51 @@
 import { RequestHandler } from "express";
-import { 
-  Servico, 
-  CriarServicoRequest, 
+import { executeQuery, executeQuerySingle } from "../config/database";
+import {
+  Servico,
+  CriarServicoRequest,
   AtualizarServicoRequest,
   ListarServicosResponse,
-  ApiResponse 
+  ApiResponse
 } from "@shared/api";
+import { v4 as uuidv4 } from "uuid";
 
-// Simulação de banco de dados em memória para serviços
-let servicos: Servico[] = [
-  {
-    id: "1",
-    nome: "Corte Masculino Tradicional",
-    descricao: "Corte clássico masculino com acabamento na navalha",
-    preco: 35.00,
-    duracaoMinutos: 45,
-    barbeariaId: "1",
-    categoria: "corte",
-    ativo: true,
-    dataCadastro: "2024-01-15T10:00:00Z",
-    dataAtualizacao: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "2",
-    nome: "Barba Completa",
-    descricao: "Aparar, modelar e finalizar barba com produtos premium",
-    preco: 25.00,
-    duracaoMinutos: 30,
-    barbeariaId: "1",
-    categoria: "barba",
-    ativo: true,
-    dataCadastro: "2024-01-15T10:00:00Z",
-    dataAtualizacao: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "3",
-    nome: "Corte + Barba",
-    descricao: "Pacote completo de corte masculino + barba",
-    preco: 55.00,
-    duracaoMinutos: 75,
-    barbeariaId: "1",
-    categoria: "combo",
-    ativo: true,
-    dataCadastro: "2024-01-15T10:00:00Z",
-    dataAtualizacao: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "4",
-    nome: "Sobrancelha Masculina",
-    descricao: "Design e limpeza de sobrancelhas masculinas",
-    preco: 20.00,
-    duracaoMinutos: 20,
-    barbeariaId: "1",
-    categoria: "design",
-    ativo: true,
-    dataCadastro: "2024-01-15T10:00:00Z",
-    dataAtualizacao: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "5",
-    nome: "Corte Premium Executive",
-    descricao: "Corte executivo com lavagem, corte e finalizações premium",
-    preco: 80.00,
-    duracaoMinutos: 60,
-    barbeariaId: "2",
-    categoria: "corte",
-    ativo: true,
-    dataCadastro: "2024-01-20T14:30:00Z",
-    dataAtualizacao: "2024-01-20T14:30:00Z"
-  },
-  {
-    id: "6",
-    nome: "Barba Premium",
-    descricao: "Tratamento completo da barba com produtos importados",
-    preco: 50.00,
-    duracaoMinutos: 45,
-    barbeariaId: "2",
-    categoria: "barba",
-    ativo: true,
-    dataCadastro: "2024-01-20T14:30:00Z",
-    dataAtualizacao: "2024-01-20T14:30:00Z"
-  },
-  {
-    id: "7",
-    nome: "Tratamento Capilar",
-    descricao: "Hidratação e tratamento do couro cabeludo",
-    preco: 40.00,
-    duracaoMinutos: 30,
-    barbeariaId: "2",
-    categoria: "tratamento",
-    ativo: true,
-    dataCadastro: "2024-01-20T14:30:00Z",
-    dataAtualizacao: "2024-01-20T14:30:00Z"
+// Helper para respostas de erro padronizadas
+const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, detalhes?: any) => {
+  const payload: any = {
+    sucesso: false,
+    codigo,
+    erro: mensagem,
+  };
+  if (detalhes) payload.detalhes = detalhes;
+  return res.status(status).json(payload as ApiResponse);
+};
+
+// Helper para validar paginação
+const validarPaginaLimite = (paginaRaw: any, limiteRaw: any) => {
+  let pagina = 1;
+  let limite = 10;
+
+  if (paginaRaw !== undefined && paginaRaw !== null && paginaRaw !== '') {
+    const paginaParsed = parseInt(String(paginaRaw), 10);
+    if (!Number.isNaN(paginaParsed) && paginaParsed > 0) {
+      pagina = paginaParsed;
+    }
   }
-];
 
-// Função para gerar ID único
-const gerarId = (): string => {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  if (limiteRaw !== undefined && limiteRaw !== null && limiteRaw !== '') {
+    const limiteParsed = parseInt(String(limiteRaw), 10);
+    if (!Number.isNaN(limiteParsed) && limiteParsed > 0) {
+      limite = limiteParsed;
+    }
+  }
+
+  if (pagina < 1) return { erro: true, mensagem: 'Parâmetro pagina deve ser maior que 0', codigo: 'INVALID_PAGE' };
+  if (limite < 1) return { erro: true, mensagem: 'Parâmetro limite deve ser maior que 0', codigo: 'INVALID_LIMIT' };
+
+  const MAX_LIMIT = 100;
+  if (limite > MAX_LIMIT) return { erro: true, mensagem: `Limite máximo permitido é ${MAX_LIMIT}`, codigo: 'LIMIT_EXCEEDED' };
+
+  return { erro: false, pagina, limite };
 };
 
 /**
