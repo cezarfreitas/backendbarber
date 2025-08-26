@@ -77,6 +77,9 @@ import {
   atualizarBarbeiroAdmin,
   removerBarbeiroAdmin,
   atualizarBarbeariaAdmin,
+  resetDatabaseAdmin,
+  clearDatabaseDataAdmin,
+  recreateTablesAdmin,
 } from "./routes/admin";
 
 export function createServer() {
