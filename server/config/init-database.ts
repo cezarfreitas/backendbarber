@@ -54,7 +54,6 @@ CREATE TABLE IF NOT EXISTS barbeiros (
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   ultimo_login TIMESTAMP NULL, -- Data do último login
-  FOREIGN KEY (barbearia_id) REFERENCES barbearias(id) ON DELETE CASCADE,
   INDEX idx_barbearia (barbearia_id),
   INDEX idx_status (status),
   INDEX idx_tipo (tipo),
@@ -76,7 +75,6 @@ CREATE TABLE IF NOT EXISTS servicos (
   ativo BOOLEAN DEFAULT TRUE,
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbearia_id) REFERENCES barbearias(id) ON DELETE CASCADE,
   INDEX idx_barbearia (barbearia_id),
   INDEX idx_categoria (categoria),
   INDEX idx_ativo (ativo),
@@ -100,7 +98,6 @@ CREATE TABLE IF NOT EXISTS combos (
   ativo BOOLEAN DEFAULT TRUE,
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (barbearia_id) REFERENCES barbearias(id) ON DELETE CASCADE,
   INDEX idx_barbearia (barbearia_id),
   INDEX idx_ativo (ativo),
   INDEX idx_valor_combo (valor_combo),
@@ -116,8 +113,6 @@ CREATE TABLE IF NOT EXISTS combo_servicos (
   servico_id VARCHAR(36) NOT NULL,
   ordem INT DEFAULT 1,
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (combo_id) REFERENCES combos(id) ON DELETE CASCADE,
-  FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,
   UNIQUE KEY unique_combo_servico (combo_id, servico_id),
   INDEX idx_combo (combo_id),
   INDEX idx_servico (servico_id)
@@ -151,8 +146,6 @@ CREATE TABLE IF NOT EXISTS clientes (
   data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   ultimo_login TIMESTAMP NULL,
-  FOREIGN KEY (barbearia_preferida) REFERENCES barbearias(id) ON DELETE SET NULL,
-  FOREIGN KEY (barbeiro_preferido) REFERENCES barbeiros(id) ON DELETE SET NULL,
   INDEX idx_celular (celular),
   INDEX idx_email (email),
   INDEX idx_google_id (google_id),
@@ -521,7 +514,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         try {
           await executeQuery(`
             ALTER TABLE barbearias
-            ADD COLUMN senha_hash VARCHAR(255) AFTER proprietario_email
+            ADD COLUMN senha_hash VARCHAR(255)
           `);
           console.log('✅ Campo senha_hash adicionado à tabela barbearias');
         } catch (alterError) {
@@ -536,7 +529,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         try {
           await executeQuery(`
             ALTER TABLE barbearias
-            ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+            ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
           console.log('✅ Campo ultimo_login adicionado à tabela barbearias');
         } catch (alterError) {
@@ -572,7 +565,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         try {
           await executeQuery(`
             ALTER TABLE barbeiros
-            ADD COLUMN senha_hash VARCHAR(255) AFTER cpf
+            ADD COLUMN senha_hash VARCHAR(255)
           `);
           console.log('✅ Campo senha_hash adicionado à tabela barbeiros');
         } catch (alterError) {
@@ -587,7 +580,7 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         try {
           await executeQuery(`
             ALTER TABLE barbeiros
-            ADD COLUMN ultimo_login TIMESTAMP NULL AFTER data_atualizacao
+            ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
           console.log('✅ Campo ultimo_login adicionado à tabela barbeiros');
         } catch (alterError) {
