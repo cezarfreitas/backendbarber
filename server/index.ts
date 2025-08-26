@@ -70,6 +70,7 @@ import {
   listarPromocoes,
 } from "./routes/diretorio";
 import {
+  buscarBarbeariaAdmin,
   dashboardAdmin,
   listarBarbeirosAdmin,
   criarBarbeiroAdmin,
