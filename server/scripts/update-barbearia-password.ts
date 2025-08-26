@@ -78,7 +78,5 @@ async function updateBarbeariaPassword() {
   }
 }
 
-// Executar apenas se for chamado diretamente
-if (require.main === module) {
-  updateBarbeariaPassword();
-}
+// Executar script
+updateBarbeariaPassword();
