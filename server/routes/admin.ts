@@ -349,14 +349,7 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     );
   } catch (error: any) {
     console.error("Erro ao listar barbeiros admin:", error);
-    console.error("Stack trace:", error.stack);
-    console.error("Código SQL error:", error.code);
-    console.error("SQL State:", error.sqlState);
-    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", {
-      message: error?.message,
-      code: error?.code,
-      sqlState: error?.sqlState,
-    });
+    return erroPadrao(res, 500, "INTERNAL_ERROR", "Erro interno do servidor", { message: error?.message });
   }
 };
 
