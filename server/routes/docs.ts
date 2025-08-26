@@ -803,6 +803,21 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-diretorio-promocoes" class="nav-sub-item">🎯 Promoções</a>
                         </div>
                     </div>
+
+                    <!-- Admin Dashboard -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="admin-tree">
+                            🔧 Admin Dashboard
+                        </div>
+                        <div class="nav-sub-items" id="admin-tree">
+                            <a href="#endpoints-admin-dashboard" class="nav-sub-item">📊 Dashboard</a>
+                            <a href="#endpoints-admin-barbeiros-list" class="nav-sub-item">📋 Listar Barbeiros</a>
+                            <a href="#endpoints-admin-barbeiros-create" class="nav-sub-item">➕ Criar Barbeiro</a>
+                            <a href="#endpoints-admin-barbeiros-update" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
+                            <a href="#endpoints-admin-barbeiros-delete" class="nav-sub-item">🗑️ Remover Barbeiro</a>
+                            <a href="#endpoints-admin-barbearia-update" class="nav-sub-item">🏪 Atualizar Barbearia</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
