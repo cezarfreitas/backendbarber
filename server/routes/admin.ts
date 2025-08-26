@@ -64,8 +64,19 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
         cpf: barbearia.proprietario_cpf,
         email: barbearia.proprietario_email
       },
-      horarioFuncionamento: barbearia.horario_funcionamento ?
-        JSON.parse(barbearia.horario_funcionamento) : {},
+      horarioFuncionamento: (() => {
+        try {
+          if (typeof barbearia.horario_funcionamento === 'string') {
+            return JSON.parse(barbearia.horario_funcionamento);
+          } else if (typeof barbearia.horario_funcionamento === 'object') {
+            return barbearia.horario_funcionamento;
+          } else {
+            return {};
+          }
+        } catch (error) {
+          return {};
+        }
+      })(),
       status: barbearia.status,
       dataCadastro: barbearia.data_cadastro,
       dataAtualizacao: barbearia.data_atualizacao,
