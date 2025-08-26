@@ -250,10 +250,11 @@ export const verificarAdminBarbearia = (
       });
     }
 
-    if (!user.barbeariaId) {
+    // Para barbearias, o userId já é o ID da própria barbearia
+    if (!user.userId) {
       return res.status(403).json({
         sucesso: false,
-        erro: "Usuário não associado a uma barbearia",
+        erro: "Usuário não possui ID válido",
       });
     }
 
