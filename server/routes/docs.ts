@@ -1063,15 +1063,30 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         
         // Copy to Clipboard (robust: tenta fallback primeiro, depois Clipboard API)
         async function copyToClipboard(button, text) {
+            // Verificar se button é válido
+            if (!button || typeof button !== 'object') {
+                console.warn('copyToClipboard: botão inválido');
+                return;
+            }
+
             // Se text não fornecido, tentar extrair do <pre> adjacente
             if (typeof text === 'undefined' || text === null) {
                 try {
                     const pre = button.parentElement ? button.parentElement.querySelector('pre') : null;
-                    if (pre) text = pre.innerText || pre.textContent || '';
-                    else text = '';
+                    if (pre) {
+                        text = pre.innerText || pre.textContent || '';
+                    } else {
+                        text = '';
+                    }
                 } catch (e) {
+                    console.warn('Erro ao extrair texto:', e);
                     text = '';
                 }
+            }
+
+            // Garantir que text é string
+            if (typeof text !== 'string') {
+                text = String(text || '');
             }
 
             // Função fallback síncrona
@@ -2080,7 +2095,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="method post">POST</span>
                             <span class="url">/api/admin/database/clear-data</span>
                         </div>
-                        <h4>🧹 Limpar Dados das Tabelas</h4>
+                        <h4>��� Limpar Dados das Tabelas</h4>
                         <p>Remove todos os dados das tabelas mas mantém a estrutura. Reinsere dados iniciais.</p>
 
                         <div class="example-usage">
@@ -2911,7 +2926,7 @@ function generateEndpointsDocumentation(): string {
   sucesso: false,
   codigo: 'DUPLICATED_CPF',
   erro: 'CPF já cadastrado no sistema'
-}, null, 2))">📋 Copiar</button>
+}, null, 2))">�� Copiar</button>
                                 <pre>{
   "sucesso": false,
   "codigo": "DUPLICATED_CPF",
@@ -3212,7 +3227,7 @@ function generateEndpointsDocumentation(): string {
     "whatsapp": "(11) 99999-9999"
   },
   "proprietario": {
-    "nome": "Jo��o da Silva",
+    "nome": "João da Silva",
     "cpf": "123.456.789-00",
     "email": "joao@barbearia.com"
   },
