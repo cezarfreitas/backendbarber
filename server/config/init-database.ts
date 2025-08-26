@@ -1,4 +1,4 @@
-import { executeQuery, initDatabase } from './database';
+import { executeQuery, initDatabase } from "./database";
 
 /**
  * Script para criar e inicializar as tabelas do banco de dados
@@ -438,48 +438,74 @@ INSERT IGNORE INTO clientes (
  */
 export const initializeTables = async (): Promise<void> => {
   try {
-    console.log('🗄️ Inicializando estrutura do banco de dados...');
+    console.log("🗄️ Inicializando estrutura do banco de dados...");
 
     // Migrar tabelas existentes PRIMEIRO, antes de criar novas
-    console.log('🔄 Verificando e migrando tabelas para autenticação...');
+    console.log("🔄 Verificando e migrando tabelas para autenticação...");
     await migrarTabelasParaAutenticacao();
 
     // Criar tabelas na ordem correta (respeitando foreign keys)
-    console.log('📋 Criando tabela barbearias...');
+    console.log("📋 Criando tabela barbearias...");
     await executeQuery(createBarbeariasTable);
 
-    console.log('👨‍💼 Criando tabela barbeiros...');
+    console.log("👨‍💼 Criando tabela barbeiros...");
     await executeQuery(createBarbeirosTable);
 
-    console.log('✂️ Criando tabela servicos...');
+    console.log("✂️ Criando tabela servicos...");
     await executeQuery(createServicosTable);
 
-    console.log('🎁 Criando tabela combos...');
+    console.log("🎁 Criando tabela combos...");
     await executeQuery(createCombosTable);
 
-    console.log('🔗 Criando tabela combo_servicos...');
+    console.log("🔗 Criando tabela combo_servicos...");
     await executeQuery(createComboServicosTable);
 
-    console.log('👥 Criando tabela clientes...');
+    console.log("👥 Criando tabela clientes...");
     await executeQuery(createClientesTable);
 
     // Migrar novamente após criação das tabelas para garantir que todas tenham os campos
-    console.log('🔄 Verificando campos de autenticação novamente...');
+    console.log("🔄 Verificando campos de autenticação novamente...");
     await migrarTabelasParaAutenticacao();
 
     // Inserir dados iniciais na ordem correta
-    console.log('📝 Inserindo dados iniciais...');
-    try { await executeQuery(insertInitialBarbearias); } catch (e:any) { console.warn('⚠️ Seed barbearias ignorado:', e.message); }
-    try { await executeQuery(insertInitialBarbeiros); } catch (e:any) { console.warn('⚠️ Seed barbeiros ignorado:', e.message); }
-    try { await executeQuery(insertInitialServicos); } catch (e:any) { console.warn('⚠️ Seed servicos ignorado:', e.message); }
-    try { await executeQuery(insertInitialCombos); } catch (e:any) { console.warn('⚠️ Seed combos ignorado:', e.message); }
-    try { await executeQuery(insertInitialComboServicos); } catch (e:any) { console.warn('⚠️ Seed combo_servicos ignorado:', e.message); }
-    try { await executeQuery(insertInitialClientes); } catch (e:any) { console.warn('⚠️ Seed clientes ignorado:', e.message); }
+    console.log("📝 Inserindo dados iniciais...");
+    try {
+      await executeQuery(insertInitialBarbearias);
+    } catch (e: any) {
+      console.warn("⚠️ Seed barbearias ignorado:", e.message);
+    }
+    try {
+      await executeQuery(insertInitialBarbeiros);
+    } catch (e: any) {
+      console.warn("⚠️ Seed barbeiros ignorado:", e.message);
+    }
+    try {
+      await executeQuery(insertInitialServicos);
+    } catch (e: any) {
+      console.warn("⚠️ Seed servicos ignorado:", e.message);
+    }
+    try {
+      await executeQuery(insertInitialCombos);
+    } catch (e: any) {
+      console.warn("⚠️ Seed combos ignorado:", e.message);
+    }
+    try {
+      await executeQuery(insertInitialComboServicos);
+    } catch (e: any) {
+      console.warn("⚠️ Seed combo_servicos ignorado:", e.message);
+    }
+    try {
+      await executeQuery(insertInitialClientes);
+    } catch (e: any) {
+      console.warn("⚠️ Seed clientes ignorado:", e.message);
+    }
 
-    console.log('✅ Banco de dados inicializado com sucesso!');
-
-  } catch (error:any) {
-    console.error('❌ Erro ao inicializar banco de dados (não fatal):', error.message);
+    console.log("✅ Banco de dados inicializado com sucesso!");
+  } catch (error: any) {
+    console.error(
+      "❌ Erro ao inicializar banco de dados (não fatal):",
+      error.message,
+    );
     // Não lançar erro para evitar que o servidor caia
   }
 };
@@ -506,37 +532,49 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         AND TABLE_NAME = 'barbearias'
       `);
 
-      const hasPasswordHash = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
-      const hasLastLogin = (barbeariaColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+      const hasPasswordHash = (barbeariaColumns as any[]).some(
+        (col) => col.COLUMN_NAME === "senha_hash",
+      );
+      const hasLastLogin = (barbeariaColumns as any[]).some(
+        (col) => col.COLUMN_NAME === "ultimo_login",
+      );
 
       if (!hasPasswordHash) {
-        console.log('🔧 Adicionando campo senha_hash na tabela barbearias...');
+        console.log("🔧 Adicionando campo senha_hash na tabela barbearias...");
         try {
           await executeQuery(`
             ALTER TABLE barbearias
             ADD COLUMN senha_hash VARCHAR(255)
           `);
-          console.log('✅ Campo senha_hash adicionado à tabela barbearias');
+          console.log("✅ Campo senha_hash adicionado à tabela barbearias");
         } catch (alterError) {
-          console.error('❌ Erro ao adicionar senha_hash à barbearias:', alterError.message);
+          console.error(
+            "❌ Erro ao adicionar senha_hash à barbearias:",
+            alterError.message,
+          );
         }
       } else {
-        console.log('ℹ️ Campo senha_hash já existe na tabela barbearias');
+        console.log("ℹ️ Campo senha_hash já existe na tabela barbearias");
       }
 
       if (!hasLastLogin) {
-        console.log('🔧 Adicionando campo ultimo_login na tabela barbearias...');
+        console.log(
+          "🔧 Adicionando campo ultimo_login na tabela barbearias...",
+        );
         try {
           await executeQuery(`
             ALTER TABLE barbearias
             ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
-          console.log('✅ Campo ultimo_login adicionado à tabela barbearias');
+          console.log("✅ Campo ultimo_login adicionado à tabela barbearias");
         } catch (alterError) {
-          console.error('❌ Erro ao adicionar ultimo_login à barbearias:', alterError.message);
+          console.error(
+            "❌ Erro ao adicionar ultimo_login à barbearias:",
+            alterError.message,
+          );
         }
       } else {
-        console.log('ℹ️ Campo ultimo_login já existe na tabela barbearias');
+        console.log("ℹ️ Campo ultimo_login já existe na tabela barbearias");
       }
     }
 
@@ -557,44 +595,53 @@ const migrarTabelasParaAutenticacao = async (): Promise<void> => {
         AND TABLE_NAME = 'barbeiros'
       `);
 
-      const barbeiroHasPasswordHash = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'senha_hash');
-      const barbeiroHasLastLogin = (barbeiroColumns as any[]).some(col => col.COLUMN_NAME === 'ultimo_login');
+      const barbeiroHasPasswordHash = (barbeiroColumns as any[]).some(
+        (col) => col.COLUMN_NAME === "senha_hash",
+      );
+      const barbeiroHasLastLogin = (barbeiroColumns as any[]).some(
+        (col) => col.COLUMN_NAME === "ultimo_login",
+      );
 
       if (!barbeiroHasPasswordHash) {
-        console.log('🔧 Adicionando campo senha_hash na tabela barbeiros...');
+        console.log("🔧 Adicionando campo senha_hash na tabela barbeiros...");
         try {
           await executeQuery(`
             ALTER TABLE barbeiros
             ADD COLUMN senha_hash VARCHAR(255)
           `);
-          console.log('✅ Campo senha_hash adicionado à tabela barbeiros');
+          console.log("✅ Campo senha_hash adicionado à tabela barbeiros");
         } catch (alterError) {
-          console.error('❌ Erro ao adicionar senha_hash à barbeiros:', alterError.message);
+          console.error(
+            "❌ Erro ao adicionar senha_hash à barbeiros:",
+            alterError.message,
+          );
         }
       } else {
-        console.log('ℹ️ Campo senha_hash já existe na tabela barbeiros');
+        console.log("ℹ️ Campo senha_hash já existe na tabela barbeiros");
       }
 
       if (!barbeiroHasLastLogin) {
-        console.log('🔧 Adicionando campo ultimo_login na tabela barbeiros...');
+        console.log("🔧 Adicionando campo ultimo_login na tabela barbeiros...");
         try {
           await executeQuery(`
             ALTER TABLE barbeiros
             ADD COLUMN ultimo_login TIMESTAMP NULL
           `);
-          console.log('✅ Campo ultimo_login adicionado à tabela barbeiros');
+          console.log("✅ Campo ultimo_login adicionado à tabela barbeiros");
         } catch (alterError) {
-          console.error('❌ Erro ao adicionar ultimo_login à barbeiros:', alterError.message);
+          console.error(
+            "❌ Erro ao adicionar ultimo_login à barbeiros:",
+            alterError.message,
+          );
         }
       } else {
-        console.log('ℹ️ Campo ultimo_login já existe na tabela barbeiros');
+        console.log("ℹ️ Campo ultimo_login já existe na tabela barbeiros");
       }
     }
 
-    console.log('✅ Migração de autenticação concluída!');
-
+    console.log("✅ Migração de autenticação concluída!");
   } catch (error) {
-    console.error('⚠️ Erro na migração de autenticação:', error.message);
+    console.error("⚠️ Erro na migração de autenticação:", error.message);
     // Não falha o processo, pois pode ser que as tabelas ainda não existam
   }
 };
@@ -613,7 +660,7 @@ export const checkTables = async (): Promise<boolean> => {
 
     return (tables as any[]).length === 6;
   } catch (error) {
-    console.error('Erro ao verificar tabelas:', error);
+    console.error("Erro ao verificar tabelas:", error);
     return false;
   }
 };
@@ -626,7 +673,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       await initializeTables();
       process.exit(0);
     } catch (error) {
-      console.error('Falha na inicialização:', error);
+      console.error("Falha na inicialização:", error);
       process.exit(1);
     }
   })();

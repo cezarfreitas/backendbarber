@@ -9,28 +9,28 @@ import {
   buscarBarbearia,
   criarBarbearia,
   atualizarBarbearia,
-  excluirBarbearia
+  excluirBarbearia,
 } from "./routes/barbearias";
 import {
   listarBarbeiros,
   buscarBarbeiro,
   criarBarbeiro,
   atualizarBarbeiro,
-  excluirBarbeiro
+  excluirBarbeiro,
 } from "./routes/barbeiros";
 import {
   listarServicos,
   buscarServico,
   criarServico,
   atualizarServico,
-  excluirServico
+  excluirServico,
 } from "./routes/servicos";
 import {
   listarCombos,
   buscarCombo,
   criarCombo,
   atualizarCombo,
-  excluirCombo
+  excluirCombo,
 } from "./routes/combos";
 import {
   listarClientes,
@@ -38,7 +38,7 @@ import {
   criarCliente,
   atualizarCliente,
   excluirCliente,
-  buscarPerfilCliente
+  buscarPerfilCliente,
 } from "./routes/clientes";
 import {
   loginCelular,
@@ -49,13 +49,13 @@ import {
   alterarSenha,
   alterarSenhaBarbearia,
   alterarSenhaBarbeiro,
-  refreshTokenAuth
+  refreshTokenAuth,
 } from "./routes/auth";
 import {
   verificarAutenticacao,
   verificarBarbearia,
   verificarBarbeiro,
-  verificarCliente
+  verificarCliente,
 } from "./utils/auth";
 import { mostrarDocumentacao, downloadPostmanCollection } from "./routes/docs";
 import {
@@ -64,7 +64,7 @@ import {
   obterEstatisticas,
   obterSugestoes,
   obterDetalhesBarbearia,
-  listarPromocoes
+  listarPromocoes,
 } from "./routes/diretorio";
 
 export function createServer() {
@@ -144,15 +144,30 @@ export function createServer() {
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente); // TODO: Verificar se é o próprio cliente ou admin
 
   // Rotas de autenticação (privadas - requer login)
-  app.post("/api/auth/alterar-senha", verificarAutenticacao, verificarCliente, alterarSenha);
-  app.post("/api/auth/alterar-senha/barbearia", verificarAutenticacao, verificarBarbearia, alterarSenhaBarbearia);
-  app.post("/api/auth/alterar-senha/barbeiro", verificarAutenticacao, verificarBarbeiro, alterarSenhaBarbeiro);
+  app.post(
+    "/api/auth/alterar-senha",
+    verificarAutenticacao,
+    verificarCliente,
+    alterarSenha,
+  );
+  app.post(
+    "/api/auth/alterar-senha/barbearia",
+    verificarAutenticacao,
+    verificarBarbearia,
+    alterarSenhaBarbearia,
+  );
+  app.post(
+    "/api/auth/alterar-senha/barbeiro",
+    verificarAutenticacao,
+    verificarBarbeiro,
+    alterarSenhaBarbeiro,
+  );
 
   return app;
 }
 
 // Inicializar banco de dados ao iniciar o servidor
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== "test") {
   (async () => {
     try {
       await initDatabase();
@@ -160,17 +175,18 @@ if (process.env.NODE_ENV !== 'test') {
       // Verificar se as tabelas existem
       const tablesExist = await checkTables();
       if (!tablesExist) {
-        console.log('🔧 Tabelas não encontradas, criando estrutura do banco...');
+        console.log(
+          "🔧 Tabelas não encontradas, criando estrutura do banco...",
+        );
         await initializeTables();
       } else {
-        console.log('✅ Estrutura do banco de dados verificada');
+        console.log("✅ Estrutura do banco de dados verificada");
         // Força a criação das tabelas de combos se não existirem
-        console.log('🔄 Verificando tabelas de combos...');
+        console.log("🔄 Verificando tabelas de combos...");
         await initializeTables();
       }
-
     } catch (error) {
-      console.error('Falha ao inicializar banco de dados:', error);
+      console.error("Falha ao inicializar banco de dados:", error);
       process.exit(1);
     }
   })();
