@@ -3,6 +3,7 @@ import { executeQuery, executeQuerySingle } from "../config/database";
 import { ApiResponse, Barbearia, Barbeiro } from "@shared/api";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
+import { resetDatabase, clearData, initializeTables } from "../config/init-database";
 
 // Helper para respostas de erro padronizadas
 const erroPadrao = (res: any, status: number, codigo: string, mensagem: string, detalhes?: any) => {
