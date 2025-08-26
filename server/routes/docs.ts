@@ -734,7 +734,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <!-- Serviços -->
                     <div class="nav-tree">
                         <div class="nav-tree-item expandable" data-target="servicos-tree">
-                            ✂️ Serviços
+                            ��️ Serviços
                         </div>
                         <div class="nav-sub-items" id="servicos-tree">
                             <a href="#endpoints-servicos" class="nav-sub-item">📋 Listar Serviços</a>
@@ -811,11 +811,12 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="admin-tree">
                             <a href="#endpoints-admin-dashboard" class="nav-sub-item">📊 Dashboard</a>
+                            <a href="#endpoints-admin-barbearia-get" class="nav-sub-item">🏪 Buscar Barbearia</a>
+                            <a href="#endpoints-admin-barbearia-update" class="nav-sub-item">✏️ Atualizar Barbearia</a>
                             <a href="#endpoints-admin-barbeiros-list" class="nav-sub-item">📋 Listar Barbeiros</a>
                             <a href="#endpoints-admin-barbeiros-create" class="nav-sub-item">➕ Criar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-update" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-delete" class="nav-sub-item">🗑️ Remover Barbeiro</a>
-                            <a href="#endpoints-admin-barbearia-update" class="nav-sub-item">🏪 Atualizar Barbearia</a>
                         </div>
                     </div>
                 </div>
