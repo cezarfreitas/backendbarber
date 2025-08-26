@@ -321,9 +321,17 @@ export const loginBarbearia: RequestHandler = async (req, res) => {
               cpf: barbeariaCompleta.proprietario_cpf,
               email: barbeariaCompleta.proprietario_email,
             },
-            horarioFuncionamento: barbeariaCompleta.horario_funcionamento
-              ? JSON.parse(barbeariaCompleta.horario_funcionamento)
-              : {},
+            horarioFuncionamento: (() => {
+              try {
+                const hf = barbeariaCompleta.horario_funcionamento;
+                if (!hf) return {};
+                if (typeof hf === "string") return JSON.parse(hf);
+                return hf;
+              } catch (e) {
+                console.error('[loginBarbearia] erro parse horario_funcionamento', e);
+                return {};
+              }
+            })(),
             status: barbeariaCompleta.status,
             dataCadastro: barbeariaCompleta.data_cadastro,
             dataAtualizacao: barbeariaCompleta.data_atualizacao,
