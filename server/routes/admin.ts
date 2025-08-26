@@ -162,12 +162,13 @@ export const dashboardAdmin: RequestHandler = async (req, res) => {
  */
 export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
@@ -201,12 +202,13 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
  */
 export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
@@ -317,13 +319,14 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
  */
 export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
     const barbeiroId = req.params.id;
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
@@ -430,13 +433,14 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
  */
 export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
   try {
-    const barbeariaId = req.user?.barbeariaId;
+    const userJWT = (req as any).cliente || (req as any).usuario;
+    const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
     const barbeiroId = req.params.id;
 
-    if (!barbeariaId) {
+    if (!userJWT || userJWT.userType !== 'barbearia') {
       return res.status(403).json({
         sucesso: false,
-        erro: "Acesso negado. Usuário não associado a uma barbearia.",
+        erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
