@@ -846,8 +846,8 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     
                     <h3>🌐 Base URL</h3>
                     <div class="code-block">
-                        <button class="copy-button" onclick="copyToClipboard(this, 'https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev')">📋 Copiar</button>
-                        <pre>https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev</pre>
+                        <button class="copy-button" onclick="copyToClipboard(this, 'https://ide-teste3.jzo3qo.easypanel.host')">📋 Copiar</button>
+                        <pre>https://ide-teste3.jzo3qo.easypanel.host</pre>
                     </div>
                 </div>
                 
