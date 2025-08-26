@@ -244,6 +244,115 @@ INSERT IGNORE INTO barbearias (
 `;
 
 // Dados iniciais para barbeiros
+const insertMoreBarbearias = `
+INSERT IGNORE INTO barbearias (
+  id, nome, descricao, endereco_rua, endereco_numero, endereco_bairro,
+  endereco_cidade, endereco_estado, endereco_cep, contato_telefone,
+  contato_email, contato_whatsapp, proprietario_nome, proprietario_cpf,
+  proprietario_email, senha_hash, horario_funcionamento, status
+) VALUES
+(
+  '3',
+  'Barbearia Central',
+  'Clássica no coração do Rio',
+  'Rua da Lapa',
+  '45',
+  'Centro',
+  'Rio de Janeiro',
+  'RJ',
+  '20021-180',
+  '(21) 99999-1111',
+  'contato@barbeariacentral.com',
+  '(21) 99999-1111',
+  'Paulo Nogueira',
+  '123.321.123-00',
+  'paulo@barbeariacentral.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2',
+  '{"segunda": {"abertura": "09:00", "fechamento": "19:00"}, "terca": {"abertura": "09:00", "fechamento": "19:00"}, "quarta": {"abertura": "09:00", "fechamento": "19:00"}, "quinta": {"abertura": "09:00", "fechamento": "19:00"}, "sexta": {"abertura": "09:00", "fechamento": "19:00"}, "sabado": {"abertura": "09:00", "fechamento": "15:00"}}',
+  'ativa'
+),
+(
+  '4',
+  'Barba & Bigode',
+  'Atendimento premium em BH',
+  'Av. Afonso Pena',
+  '1200',
+  'Centro',
+  'Belo Horizonte',
+  'MG',
+  '30130-000',
+  '(31) 98888-2222',
+  'contato@barbaebigodebh.com',
+  NULL,
+  'Luiz Andrade',
+  '456.654.456-11',
+  'luiz@barbaebigodebh.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2',
+  '{"segunda": {"abertura": "09:00", "fechamento": "19:00"}, "terca": {"abertura": "09:00", "fechamento": "19:00"}, "quarta": {"abertura": "09:00", "fechamento": "19:00"}, "quinta": {"abertura": "09:00", "fechamento": "19:00"}, "sexta": {"abertura": "09:00", "fechamento": "19:00"}}',
+  'ativa'
+),
+(
+  '5',
+  'Porto Alegre Barber',
+  'Tradição e estilo no Sul',
+  'Rua dos Andradas',
+  '900',
+  'Centro',
+  'Porto Alegre',
+  'RS',
+  '90020-005',
+  '(51) 97777-3333',
+  'contato@poabarber.com',
+  '(51) 97777-3333',
+  'Marcos Dias',
+  '789.987.789-22',
+  'marcos@poabarber.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2',
+  '{"segunda": {"abertura": "08:30", "fechamento": "18:30"}, "terca": {"abertura": "08:30", "fechamento": "18:30"}, "quarta": {"abertura": "08:30", "fechamento": "18:30"}, "quinta": {"abertura": "08:30", "fechamento": "18:30"}, "sexta": {"abertura": "08:30", "fechamento": "18:30"}, "sabado": {"abertura": "09:00", "fechamento": "14:00"}}',
+  'ativa'
+),
+(
+  '6',
+  'Curitiba Cuts',
+  'Detalhe e precisão em Curitiba',
+  'Rua XV de Novembro',
+  '321',
+  'Centro',
+  'Curitiba',
+  'PR',
+  '80020-310',
+  '(41) 96666-4444',
+  'contato@curitibacuts.com',
+  NULL,
+  'Fábio Souza',
+  '321.123.321-33',
+  'fabio@curitibacuts.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2',
+  '{"segunda": {"abertura": "09:00", "fechamento": "19:00"}, "terca": {"abertura": "09:00", "fechamento": "19:00"}, "quarta": {"abertura": "09:00", "fechamento": "19:00"}, "quinta": {"abertura": "09:00", "fechamento": "19:00"}, "sexta": {"abertura": "09:00", "fechamento": "19:00"}}',
+  'ativa'
+),
+(
+  '7',
+  'Salvador Style',
+  'Cortes com swing baiano',
+  'Av. Sete de Setembro',
+  '777',
+  'Vitória',
+  'Salvador',
+  'BA',
+  '40060-001',
+  '(71) 95555-5555',
+  'contato@salvadorstyle.com',
+  '(71) 95555-5555',
+  'Renato Lima',
+  '654.456.654-44',
+  'renato@salvadorstyle.com',
+  '$2b$10$rWRsQ8zJVx5Gx4U.wGpgI.CZLQPq1MjPcLzJhV6LfPwWvBzqR5Hk2',
+  '{"segunda": {"abertura": "10:00", "fechamento": "19:00"}, "terca": {"abertura": "10:00", "fechamento": "19:00"}, "quarta": {"abertura": "10:00", "fechamento": "19:00"}, "quinta": {"abertura": "10:00", "fechamento": "19:00"}, "sexta": {"abertura": "10:00", "fechamento": "19:00"}, "sabado": {"abertura": "09:00", "fechamento": "13:00"}}',
+  'ativa'
+);
+`;
+
 const insertInitialBarbeiros = `
 INSERT IGNORE INTO barbeiros (
   id, nome, email, telefone, cpf, senha_hash, tipo, porcentagem_comissao, salario_fixo,
@@ -491,7 +600,7 @@ export const initializeTables = async (): Promise<void> => {
     console.log("✂️ Criando tabela servicos...");
     await executeQuery(createServicosTable);
 
-    console.log("🎁 Criando tabela combos...");
+    console.log("�� Criando tabela combos...");
     await executeQuery(createCombosTable);
 
     console.log("🔗 Criando tabela combo_servicos...");
@@ -514,6 +623,9 @@ export const initializeTables = async (): Promise<void> => {
     } else {
       console.log("ℹ️ Dados já existem em barbearias, pulando inserção");
     }
+
+    // Garantir mocks adicionais de barbearias
+    await executeQueryWithRetry(insertMoreBarbearias);
 
     const barbeirosHasData = await checkDataExists("barbeiros");
     if (!barbeirosHasData) {
