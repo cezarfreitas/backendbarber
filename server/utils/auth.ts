@@ -103,10 +103,14 @@ export const verificarAutenticacao = (
     (req as any).usuario = payload; // Nova propriedade mais genérica
     (req as any).user = {
       id: (payload as any).userId || (payload as any).clienteId || null,
-      userType: (payload as any).userType || (payload as any).type || 'cliente',
+      userType: (payload as any).userType || (payload as any).type || "cliente",
       // Para compatibilidade, se for token de barbearia sem barbeariaId setado,
       // usar userId (ou clienteId) como barbeariaId
-      barbeariaId: (payload as any).barbeariaId || (payload as any).userId || (payload as any).clienteId || null,
+      barbeariaId:
+        (payload as any).barbeariaId ||
+        (payload as any).userId ||
+        (payload as any).clienteId ||
+        null,
     };
     next();
   } catch (error) {

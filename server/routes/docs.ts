@@ -1199,7 +1199,10 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
   res.setHeader("Content-Type", "text/html");
   // Sanitize onclick attributes that embed backtick template literals to avoid runtime JS parsing issues
   const fullHtml = html + endpointsHtml + footerHtml;
-  const sanitizedHtml = fullHtml.replace(/onclick="copyToClipboard\(this,[\s\S]*?\)"/g, 'onclick="copyToClipboard(this)"');
+  const sanitizedHtml = fullHtml.replace(
+    /onclick="copyToClipboard\(this,[\s\S]*?\)"/g,
+    'onclick="copyToClipboard(this)"',
+  );
   res.send(sanitizedHtml);
 };
 

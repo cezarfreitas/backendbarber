@@ -13,7 +13,7 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -52,23 +52,23 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
         bairro: barbearia.endereco_bairro,
         cidade: barbearia.endereco_cidade,
         estado: barbearia.endereco_estado,
-        cep: barbearia.endereco_cep
+        cep: barbearia.endereco_cep,
       },
       contato: {
         telefone: barbearia.contato_telefone,
         email: barbearia.contato_email,
-        whatsapp: barbearia.contato_whatsapp
+        whatsapp: barbearia.contato_whatsapp,
       },
       proprietario: {
         nome: barbearia.proprietario_nome,
         cpf: barbearia.proprietario_cpf,
-        email: barbearia.proprietario_email
+        email: barbearia.proprietario_email,
       },
       horarioFuncionamento: (() => {
         try {
-          if (typeof barbearia.horario_funcionamento === 'string') {
+          if (typeof barbearia.horario_funcionamento === "string") {
             return JSON.parse(barbearia.horario_funcionamento);
-          } else if (typeof barbearia.horario_funcionamento === 'object') {
+          } else if (typeof barbearia.horario_funcionamento === "object") {
             return barbearia.horario_funcionamento;
           } else {
             return {};
@@ -80,7 +80,7 @@ export const buscarBarbeariaAdmin: RequestHandler = async (req, res) => {
       status: barbearia.status,
       dataCadastro: barbearia.data_cadastro,
       dataAtualizacao: barbearia.data_atualizacao,
-      ultimoLogin: barbearia.ultimo_login
+      ultimoLogin: barbearia.ultimo_login,
     };
 
     const response: ApiResponse<any> = {
@@ -104,7 +104,7 @@ export const dashboardAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -176,7 +176,7 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -216,7 +216,7 @@ export const criarBarbeiroAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -334,7 +334,7 @@ export const atualizarBarbeiroAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
     const barbeiroId = req.params.id;
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -448,7 +448,7 @@ export const removerBarbeiroAdmin: RequestHandler = async (req, res) => {
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
     const barbeiroId = req.params.id;
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
@@ -502,14 +502,21 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
     const userJWT = (req as any).cliente || (req as any).usuario;
     const barbeariaId = userJWT?.userId; // Para barbearia, userId é o ID da própria barbearia
 
-    if (!userJWT || userJWT.userType !== 'barbearia') {
+    if (!userJWT || userJWT.userType !== "barbearia") {
       return res.status(403).json({
         sucesso: false,
         erro: "Acesso negado. Usuário não é uma barbearia.",
       });
     }
 
-    const { nome, descricao, endereco, contato, proprietario, horarioFuncionamento } = req.body;
+    const {
+      nome,
+      descricao,
+      endereco,
+      contato,
+      proprietario,
+      horarioFuncionamento,
+    } = req.body;
 
     // Se email foi alterado, verificar se não existe
     if (contato?.email) {
@@ -566,9 +573,12 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         proprietario?.email || null,
         (() => {
           try {
-            if (horarioFuncionamento && typeof horarioFuncionamento === 'object') {
+            if (
+              horarioFuncionamento &&
+              typeof horarioFuncionamento === "object"
+            ) {
               return JSON.stringify(horarioFuncionamento);
-            } else if (typeof horarioFuncionamento === 'string') {
+            } else if (typeof horarioFuncionamento === "string") {
               // Se já é string, verifica se é JSON válido
               JSON.parse(horarioFuncionamento);
               return horarioFuncionamento;
@@ -614,23 +624,23 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
         bairro: barbearia.endereco_bairro,
         cidade: barbearia.endereco_cidade,
         estado: barbearia.endereco_estado,
-        cep: barbearia.endereco_cep
+        cep: barbearia.endereco_cep,
       },
       contato: {
         telefone: barbearia.contato_telefone,
         email: barbearia.contato_email,
-        whatsapp: barbearia.contato_whatsapp
+        whatsapp: barbearia.contato_whatsapp,
       },
       proprietario: {
         nome: barbearia.proprietario_nome,
         cpf: barbearia.proprietario_cpf,
-        email: barbearia.proprietario_email
+        email: barbearia.proprietario_email,
       },
       horarioFuncionamento: (() => {
         try {
-          if (typeof barbearia.horario_funcionamento === 'string') {
+          if (typeof barbearia.horario_funcionamento === "string") {
             return JSON.parse(barbearia.horario_funcionamento);
-          } else if (typeof barbearia.horario_funcionamento === 'object') {
+          } else if (typeof barbearia.horario_funcionamento === "object") {
             return barbearia.horario_funcionamento;
           } else {
             return {};
@@ -642,13 +652,13 @@ export const atualizarBarbeariaAdmin: RequestHandler = async (req, res) => {
       status: barbearia.status,
       dataCadastro: barbearia.data_cadastro,
       dataAtualizacao: barbearia.data_atualizacao,
-      ultimoLogin: barbearia.ultimo_login
+      ultimoLogin: barbearia.ultimo_login,
     };
 
     const response: ApiResponse<any> = {
       sucesso: true,
       dados: barbeariaFormatada,
-      mensagem: "Dados da barbearia atualizados com sucesso"
+      mensagem: "Dados da barbearia atualizados com sucesso",
     };
 
     res.json(response);

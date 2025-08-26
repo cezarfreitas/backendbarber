@@ -174,27 +174,15 @@ export function createServer() {
   app.delete("/api/clientes/:id", verificarAutenticacao, excluirCliente);
 
   // Admin Barbearia (Dashboard)
-  app.get(
-    "/api/admin/barbearia",
-    verificarAutenticacao,
-    buscarBarbeariaAdmin,
-  );
+  app.get("/api/admin/barbearia", verificarAutenticacao, buscarBarbeariaAdmin);
   app.get(
     "/api/admin/dashboard",
     verificarAutenticacao,
     verificarAdminBarbearia,
     dashboardAdmin,
   );
-  app.get(
-    "/api/admin/barbeiros",
-    verificarAutenticacao,
-    listarBarbeirosAdmin,
-  );
-  app.post(
-    "/api/admin/barbeiros",
-    verificarAutenticacao,
-    criarBarbeiroAdmin,
-  );
+  app.get("/api/admin/barbeiros", verificarAutenticacao, listarBarbeirosAdmin);
+  app.post("/api/admin/barbeiros", verificarAutenticacao, criarBarbeiroAdmin);
   app.put(
     "/api/admin/barbeiros/:id",
     verificarAutenticacao,
