@@ -1984,6 +1984,101 @@ function generateEndpointsDocumentation(): string {
                     </div>
                 </div>
 
+                <!-- Database Management -->
+                <div class="section" id="endpoints-database-management">
+                    <h2>🗄️ Gerenciamento do Banco de Dados</h2>
+                    <p class="section-description">
+                        <strong>⚠️ ATENÇÃO:</strong> Endpoints críticos para gerenciamento da estrutura do banco de dados.
+                        Use com extrema cautela, pois podem apagar dados permanentemente.
+                    </p>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/admin/database/reset</span>
+                        </div>
+                        <h4>⚠️ Reset Completo do Banco</h4>
+                        <p><strong>CUIDADO:</strong> Remove todas as tabelas e dados, recria a estrutura completa com dados iniciais.</p>
+
+                        <div class="params">
+                            <h4>Headers Obrigatórios</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Header</th>
+                                        <th>Valor</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Authorization</code></td>
+                                        <td>Bearer {jwt_token}</td>
+                                        <td>Token JWT de barbearia autenticada</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X POST "{{baseUrl}}/api/admin/database/reset" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": null,
+  "mensagem": "Banco de dados resetado com sucesso! Todas as tabelas foram recriadas com dados iniciais."
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/admin/database/clear-data</span>
+                        </div>
+                        <h4>🧹 Limpar Dados das Tabelas</h4>
+                        <p>Remove todos os dados das tabelas mas mantém a estrutura. Reinsere dados iniciais.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X POST "{{baseUrl}}/api/admin/database/clear-data" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/admin/database/recreate-tables</span>
+                        </div>
+                        <h4>🔄 Recriar Estrutura das Tabelas</h4>
+                        <p>Força a verificação e recriação da estrutura das tabelas. Não remove dados existentes.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X POST "{{baseUrl}}/api/admin/database/recreate-tables" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Admin Dashboard Endpoints -->
                 <div class="section" id="endpoints-admin-dashboard">
                     <h2>🔧 Admin Dashboard</h2>
