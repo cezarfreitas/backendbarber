@@ -720,7 +720,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     <!-- Barbeiros -->
                     <div class="nav-tree">
                         <div class="nav-tree-item expandable" data-target="barbeiros-tree">
-                            💇‍♂️ Barbeiros
+                            ����‍♂️ Barbeiros
                         </div>
                         <div class="nav-sub-items" id="barbeiros-tree">
                             <a href="#endpoints-barbeiros" class="nav-sub-item">📋 Listar Barbeiros</a>
@@ -852,7 +852,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 
                 <!-- Autenticação -->
                 <div class="section" id="authentication">
-                    <h2>🔐 Autenticação</h2>
+                    <h2>��� Autenticação</h2>
                     <p>A API suporta múltiplos tipos de autenticação usando JWT tokens:</p>
                     
                     <h3>Headers de Autenticação</h3>
@@ -1746,6 +1746,269 @@ function generateEndpointsDocumentation(): string {
                         </div>
                     </div>
                 </div>
+
+                <!-- Admin Dashboard Endpoints -->
+                <div class="section" id="endpoints-admin-dashboard">
+                    <h2>🔧 Admin Dashboard</h2>
+                    <p>APIs exclusivas para administradores (proprietários) de barbearias. Requer autenticação como barbearia.</p>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/admin/dashboard</span>
+                        </div>
+                        <h4>Dashboard com estatísticas</h4>
+                        <p>Retorna estatísticas da barbearia e dados gerais para o dashboard administrativo.</p>
+
+                        <div class="params">
+                            <h4>Headers</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Header</th>
+                                        <th>Valor</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Authorization</code></td>
+                                        <td>Bearer {token}</td>
+                                        <td>Token JWT da barbearia</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  dados: {
+    barbearia: {
+      id: '1',
+      nome: 'Barbearia do João',
+      descricao: 'A melhor barbearia do bairro',
+      status: 'ativa'
+    },
+    estatisticas: {
+      total_barbeiros: 3,
+      total_servicos: 8,
+      total_combos: 4,
+      preco_medio_servicos: 45.50
+    }
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "barbearia": {
+      "id": "1",
+      "nome": "Barbearia do João",
+      "descricao": "A melhor barbearia do bairro",
+      "status": "ativa"
+    },
+    "estatisticas": {
+      "total_barbeiros": 3,
+      "total_servicos": 8,
+      "total_combos": 4,
+      "preco_medio_servicos": 45.50
+    }
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-barbeiros-list">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/admin/barbeiros</span>
+                        </div>
+                        <h4>Listar barbeiros da barbearia</h4>
+                        <p>Lista todos os barbeiros associados à barbearia do administrador logado.</p>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  dados: [
+    {
+      id: '1',
+      nome: 'Carlos Silva',
+      email: 'carlos@barbeariadoroao.com',
+      telefone: '(11) 98888-7777',
+      cpf: '111.222.333-44',
+      tipo: 'comissionado',
+      porcentagem_comissao: 40.00,
+      especialidades: ['Corte masculino', 'Barba', 'Bigode'],
+      status: 'ativo'
+    }
+  ]
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": [
+    {
+      "id": "1",
+      "nome": "Carlos Silva",
+      "email": "carlos@barbeariadoroao.com",
+      "telefone": "(11) 98888-7777",
+      "cpf": "111.222.333-44",
+      "tipo": "comissionado",
+      "porcentagem_comissao": 40.00,
+      "especialidades": ["Corte masculino", "Barba", "Bigode"],
+      "status": "ativo"
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-barbeiros-create">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/admin/barbeiros</span>
+                        </div>
+                        <h4>Criar novo barbeiro</h4>
+                        <p>Adiciona um novo barbeiro à barbearia do administrador.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  nome: 'Pedro Santos',
+  email: 'pedro@barbeariadoroao.com',
+  telefone: '(11) 99999-8888',
+  cpf: '444.555.666-77',
+  senha: 'senha123',
+  tipo: 'funcionario',
+  salario_fixo: 3000.00,
+  especialidades: ['Corte feminino', 'Escova'],
+  horario_trabalho: {
+    segunda: {inicio: '09:00', fim: '18:00'},
+    terca: {inicio: '09:00', fim: '18:00'}
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "nome": "Pedro Santos",
+  "email": "pedro@barbeariadoroao.com",
+  "telefone": "(11) 99999-8888",
+  "cpf": "444.555.666-77",
+  "senha": "senha123",
+  "tipo": "funcionario",
+  "salario_fixo": 3000.00,
+  "especialidades": ["Corte feminino", "Escova"],
+  "horario_trabalho": {
+    "segunda": {"inicio": "09:00", "fim": "18:00"},
+    "terca": {"inicio": "09:00", "fim": "18:00"}
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-barbeiros-update">
+                        <div class="endpoint-header">
+                            <span class="method put">PUT</span>
+                            <span class="url">/api/admin/barbeiros/{id}</span>
+                        </div>
+                        <h4>Atualizar barbeiro</h4>
+                        <p>Atualiza dados de um barbeiro da barbearia.</p>
+
+                        <div class="params">
+                            <h4>Path Parameters</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>id</code></td>
+                                        <td>string</td>
+                                        <td>ID do barbeiro a ser atualizado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-barbeiros-delete">
+                        <div class="endpoint-header">
+                            <span class="method delete">DELETE</span>
+                            <span class="url">/api/admin/barbeiros/{id}</span>
+                        </div>
+                        <h4>Remover barbeiro</h4>
+                        <p>Remove (inativa) um barbeiro da barbearia. Operação de soft delete.</p>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({sucesso: true, dados: null}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": null
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-barbearia-update">
+                        <div class="endpoint-header">
+                            <span class="method put">PUT</span>
+                            <span class="url">/api/admin/barbearia</span>
+                        </div>
+                        <h4>Atualizar dados da barbearia</h4>
+                        <p>Permite ao proprietário atualizar os dados da própria barbearia.</p>
+
+                        <div class="params">
+                            <h4>Body (JSON) - Todos os campos são opcionais</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  nome: 'Barbearia do João - Centro',
+  descricao: 'Nova descrição da barbearia',
+  endereco: {
+    rua: 'Rua das Flores',
+    numero: '125',
+    bairro: 'Centro',
+    cidade: 'São Paulo',
+    estado: 'SP',
+    cep: '01234-567'
+  },
+  contato: {
+    telefone: '(11) 99999-9999',
+    email: 'contato@barbeariadoroao.com',
+    whatsapp: '(11) 99999-9999'
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "nome": "Barbearia do João - Centro",
+  "descricao": "Nova descrição da barbearia",
+  "endereco": {
+    "rua": "Rua das Flores",
+    "numero": "125",
+    "bairro": "Centro",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "01234-567"
+  },
+  "contato": {
+    "telefone": "(11) 99999-9999",
+    "email": "contato@barbeariadoroao.com",
+    "whatsapp": "(11) 99999-9999"
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
   `;
 }
 
@@ -1876,7 +2139,7 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
         ],
       },
       {
-        name: "💇‍♂️ Barbeiros",
+        name: "💇‍♂�� Barbeiros",
         item: [
           {
             name: "Listar Barbeiros",
