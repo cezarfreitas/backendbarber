@@ -3,13 +3,15 @@
 ## ✅ Arquitetura confirmada:
 
 **Express serve API + Frontend na mesma porta:**
+
 - `/` → Frontend (React/Vite buildado)
-- `/api/*` → Backend API  
+- `/api/*` → Backend API
 - **Uma porta (80)** serve tudo
 
 ## 📋 Dockerfiles disponíveis:
 
 ### 1. **`Dockerfile.fullstack`** - Multi-stage otimizado (RECOMENDADO)
+
 ```dockerfile
 # Build stage: npm run build:client + build:server
 # Prod stage: Só node_modules + dist/
@@ -17,6 +19,7 @@
 ```
 
 ### 2. **`Dockerfile.robust`** - Para resolver crashes
+
 ```dockerfile
 # Servidor que nunca sai
 # Só API básica (sem frontend)
@@ -24,6 +27,7 @@
 ```
 
 ### 3. **`Dockerfile.optimized`** - Segurança + otimização
+
 ```dockerfile
 # Multi-stage + usuário não-root
 # Health check integrado
@@ -33,26 +37,30 @@
 ## 🎯 **Recomendação por situação:**
 
 ### 🔥 **Para resolver problema atual:**
+
 ```bash
 Dockerfile: Dockerfile.robust
 # Garante que não sai, depois migra
 ```
 
 ### ⚡ **Para produção completa:**
+
 ```bash
 Dockerfile: Dockerfile.fullstack
 # Serve frontend + API otimizado
 ```
 
 ### 🛡️ **Para produção segura:**
+
 ```bash
-Dockerfile: Dockerfile.optimized  
+Dockerfile: Dockerfile.optimized
 # + Segurança + Health check
 ```
 
 ## 🔧 **Configuração EasyPanel:**
 
 **Para qualquer Dockerfile:**
+
 ```
 Port: 80
 Environment Variables:
