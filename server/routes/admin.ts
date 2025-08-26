@@ -240,10 +240,15 @@ export const listarBarbeirosAdmin: RequestHandler = async (req, res) => {
       return erroPadrao(res, 400, 'INVALID_PAGINATION_VALUES', 'Valores de paginação inválidos');
     }
 
+    console.log(`[DEBUG] Query params: barbeariaId=${barbeariaId}, limiteNum=${limiteNum}, offsetNum=${offsetNum}`);
+    console.log(`[DEBUG] Query params types: barbeariaId=${typeof barbeariaId}, limiteNum=${typeof limiteNum}, offsetNum=${typeof offsetNum}`);
+
     const barbeiros = await executeQuery(
       `SELECT id, nome, email, telefone, cpf, tipo, porcentagem_comissao, salario_fixo, valor_hora, especialidades, horario_trabalho, status, data_cadastro, ultimo_login FROM barbeiros WHERE barbearia_id = ? ORDER BY nome ASC LIMIT ? OFFSET ?`,
       [barbeariaId, limiteNum, offsetNum],
     );
+
+    console.log(`[DEBUG] barbeiros result:`, barbeiros);
 
     const baseUrl = req.protocol + '://' + req.get('host') + req.path;
     const queryParams = { ...req.query } as any;
