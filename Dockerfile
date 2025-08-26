@@ -12,21 +12,25 @@ RUN npm install
 # Copiar todo o restante do código
 COPY . .
 
-# Gerar build do cliente e do servidor
-RUN npm run build:client && npm run build:server
+# Build somente do servidor (backend)
+RUN npm run build:server
 
 # Etapa 2 - Produção
 FROM node:22-alpine
 
 WORKDIR /app
 
+# Utilitários para healthcheck
+RUN apk add --no-cache curl
+
 # Copiar apenas os arquivos essenciais do builder
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
-# Expor a porta usada pelo Express (EasyPanel usa 80)
+# Expor a porta usada pelo Express (80 em produção)
 EXPOSE 80
 
 # Iniciar a aplicação
+ENV NODE_ENV=production
 CMD ["node", "dist/server/production.mjs"]
