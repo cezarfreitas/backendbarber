@@ -1,0 +1,23 @@
+{
+  "nome": "Barbearia Teste Login",
+  "descricao": "Barbearia criada para testar login",
+  "endereco": {
+    "rua": "Rua Teste",
+    "numero": "123",
+    "bairro": "Centro",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "01000-000"
+  },
+  "contato": {
+    "telefone": "(11) 99999-9999",
+    "email": "teste@barbearia.com",
+    "whatsapp": "(11) 99999-9999"
+  },
+  "proprietario": {
+    "nome": "João da Silva",
+    "cpf": "123.456.789-00",
+    "email": "joao@barbearia.com"
+  },
+  "senha": "123456"
+}
