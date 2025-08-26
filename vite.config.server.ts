@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, "server/node-build.ts"),
+      entry: path.resolve(__dirname, "server/production.ts"),
       name: "server",
       fileName: "production",
       formats: ["es"],
@@ -35,10 +35,13 @@ export default defineConfig({
         "mysql2",
         "jsonwebtoken",
         "bcryptjs",
+        "uuid",
+        "dotenv",
+        "zod",
       ],
       output: {
         format: "es",
-        entryFileNames: "[name].mjs",
+        entryFileNames: "production.mjs",
       },
     },
     minify: false, // Keep readable for debugging

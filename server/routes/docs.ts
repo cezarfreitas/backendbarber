@@ -795,6 +795,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                         <div class="nav-sub-items" id="diretorio-tree">
                             <a href="#endpoints-diretorio-barbearias" class="nav-sub-item">🔍 Busca Pública</a>
+                            <a href="#endpoints-diretorio-todas-barbearias" class="nav-sub-item">🏪 Listar Todas</a>
                             <a href="#endpoints-diretorio-cidades" class="nav-sub-item">🏙️ Cidades</a>
                             <a href="#endpoints-diretorio-estatisticas" class="nav-sub-item">📊 Estatísticas</a>
                             <a href="#endpoints-diretorio-sugestoes" class="nav-sub-item">💡 Sugestões</a>
@@ -933,7 +934,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 
   // Continue with the endpoints sections...
   const endpointsHtml = generateEndpointsDocumentation();
-  
+
   const footerHtml = `
             </div>
         </main>
@@ -1113,7 +1114,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
 </html>
   `;
 
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader("Content-Type", "text/html");
   res.send(html + endpointsHtml + footerHtml);
 };
 
@@ -1447,7 +1448,118 @@ function generateEndpointsDocumentation(): string {
                             </div>
                         </div>
                     </div>
-                    
+
+                    <div class="endpoint" id="endpoints-diretorio-todas-barbearias">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/diretorio/barbearias/todas</span>
+                        </div>
+                        <h4>🏪 Listar todas as barbearias</h4>
+                        <p>Lista todas as barbearias ativas do diretório com paginação e ordenação.</p>
+
+                        <div class="params">
+                            <h4>Query Parameters</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Parâmetro</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Exemplo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>limite</code></td>
+                                        <td>number</td>
+                                        <td>Número de registros por página (1-100)</td>
+                                        <td>50</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>pagina</code></td>
+                                        <td>number</td>
+                                        <td>Número da página</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ordenar</code></td>
+                                        <td>string</td>
+                                        <td>Ordenação (nome, data_cadastro, cidade)</td>
+                                        <td>nome</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, \`{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia Central",
+        "descricao": "A melhor barbearia da cidade",
+        "endereco": {
+          "rua": "Rua Principal",
+          "numero": "123",
+          "bairro": "Centro",
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "cep": "01000-000"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999",
+          "email": "contato@barbeariacentral.com",
+          "whatsapp": "(11) 99999-9999"
+        },
+        "data_cadastro": "2024-01-15T10:30:00.000Z",
+        "status": "ativa"
+      }
+    ],
+    "pagina": 1,
+    "limite": 50,
+    "total": 25,
+    "total_paginas": 1
+  }
+}\`)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "barbearias": [
+      {
+        "id": "1",
+        "nome": "Barbearia Central",
+        "descricao": "A melhor barbearia da cidade",
+        "endereco": {
+          "rua": "Rua Principal",
+          "numero": "123",
+          "bairro": "Centro",
+          "cidade": "São Paulo",
+          "estado": "SP",
+          "cep": "01000-000"
+        },
+        "contato": {
+          "telefone": "(11) 99999-9999",
+          "email": "contato@barbeariacentral.com",
+          "whatsapp": "(11) 99999-9999"
+        },
+        "data_cadastro": "2024-01-15T10:30:00.000Z",
+        "status": "ativa"
+      }
+    ],
+    "pagina": 1,
+    "limite": 50,
+    "total": 25,
+    "total_paginas": 1
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="endpoint" id="endpoints-diretorio-cidades">
                         <div class="endpoint-header">
                             <span class="method get">GET</span>
@@ -1628,549 +1740,573 @@ function generateEndpointsDocumentation(): string {
  */
 export const downloadPostmanCollection: RequestHandler = (_req, res) => {
   const collection = {
-    "info": {
-      "name": "API Barbearia SaaS",
-      "description": "Collection completa da API de gestão de barbearias",
-      "version": "1.0.0",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    info: {
+      name: "API Barbearia SaaS",
+      description: "Collection completa da API de gestão de barbearias",
+      version: "1.0.0",
+      schema:
+        "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     },
-    "auth": {
-      "type": "bearer",
-      "bearer": [
+    auth: {
+      type: "bearer",
+      bearer: [
         {
-          "key": "token",
-          "value": "{{auth_token}}",
-          "type": "string"
-        }
-      ]
+          key: "token",
+          value: "{{auth_token}}",
+          type: "string",
+        },
+      ],
     },
-    "variable": [
+    variable: [
       {
-        "key": "baseUrl",
-        "value": "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev",
-        "type": "string"
+        key: "baseUrl",
+        value:
+          "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev",
+        type: "string",
       },
       {
-        "key": "auth_token",
-        "value": "",
-        "type": "string"
-      }
+        key: "auth_token",
+        value: "",
+        type: "string",
+      },
     ],
-    "item": [
+    item: [
       {
-        "name": "🏪 Barbearias",
-        "item": [
+        name: "🏪 Barbearias",
+        item: [
           {
-            "name": "Listar Barbearias",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/barbearias?limite=10&pagina=1",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbearias"],
-                "query": [
-                  {"key": "limite", "value": "10"},
-                  {"key": "pagina", "value": "1"},
-                  {"key": "status", "value": "ativa", "disabled": true},
-                  {"key": "cidade", "value": "São Paulo", "disabled": true}
-                ]
-              }
-            }
-          },
-          {
-            "name": "Buscar Barbearia por ID",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/barbearias/1",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbearias", "1"]
-              }
-            }
-          },
-          {
-            "name": "Criar Barbearia",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"Nova Barbearia\",\n  \"descricao\": \"Descrição da barbearia\",\n  \"endereco\": {\n    \"rua\": \"Rua Exemplo\",\n    \"numero\": \"456\",\n    \"bairro\": \"Bairro\",\n    \"cidade\": \"São Paulo\",\n    \"estado\": \"SP\",\n    \"cep\": \"12345-678\"\n  },\n  \"contato\": {\n    \"telefone\": \"(11) 88888-8888\",\n    \"email\": \"nova@barbearia.com\"\n  },\n  \"proprietario\": {\n    \"nome\": \"João Silva\",\n    \"cpf\": \"123.456.789-00\",\n    \"email\": \"joao@proprietario.com\"\n  }\n}"
+            name: "Listar Barbearias",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/barbearias?limite=10&pagina=1",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbearias"],
+                query: [
+                  { key: "limite", value: "10" },
+                  { key: "pagina", value: "1" },
+                  { key: "status", value: "ativa", disabled: true },
+                  { key: "cidade", value: "São Paulo", disabled: true },
+                ],
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/barbearias",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbearias"]
-              }
-            }
+            },
           },
           {
-            "name": "Atualizar Barbearia",
-            "request": {
-              "method": "PUT",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"Barbearia Atualizada\",\n  \"descricao\": \"Nova descrição\"\n}"
+            name: "Buscar Barbearia por ID",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/barbearias/1",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbearias", "1"],
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/barbearias/1",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbearias", "1"]
-              }
-            }
+            },
           },
           {
-            "name": "Excluir Barbearia",
-            "request": {
-              "method": "DELETE",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/barbearias/1",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbearias", "1"]
-              }
-            }
-          }
-        ]
+            name: "Criar Barbearia",
+            request: {
+              method: "POST",
+              header: [
+                {
+                  key: "Content-Type",
+                  value: "application/json",
+                },
+              ],
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "Nova Barbearia",\n  "descricao": "Descrição da barbearia",\n  "endereco": {\n    "rua": "Rua Exemplo",\n    "numero": "456",\n    "bairro": "Bairro",\n    "cidade": "São Paulo",\n    "estado": "SP",\n    "cep": "12345-678"\n  },\n  "contato": {\n    "telefone": "(11) 88888-8888",\n    "email": "nova@barbearia.com"\n  },\n  "proprietario": {\n    "nome": "João Silva",\n    "cpf": "123.456.789-00",\n    "email": "joao@proprietario.com"\n  }\n}',
+              },
+              url: {
+                raw: "{{baseUrl}}/api/barbearias",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbearias"],
+              },
+            },
+          },
+          {
+            name: "Atualizar Barbearia",
+            request: {
+              method: "PUT",
+              header: [
+                {
+                  key: "Content-Type",
+                  value: "application/json",
+                },
+              ],
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "Barbearia Atualizada",\n  "descricao": "Nova descrição"\n}',
+              },
+              url: {
+                raw: "{{baseUrl}}/api/barbearias/1",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbearias", "1"],
+              },
+            },
+          },
+          {
+            name: "Excluir Barbearia",
+            request: {
+              method: "DELETE",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/barbearias/1",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbearias", "1"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "💇‍♂️ Barbeiros",
-        "item": [
+        name: "💇‍♂️ Barbeiros",
+        item: [
           {
-            "name": "Listar Barbeiros",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/barbeiros",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbeiros"]
-              }
-            }
-          },
-          {
-            "name": "Buscar Barbeiro por ID",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/barbeiros/1",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbeiros", "1"]
-              }
-            }
-          },
-          {
-            "name": "Criar Barbeiro",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"Carlos Silva\",\n  \"email\": \"carlos@barbearia.com\",\n  \"telefone\": \"(11) 99999-9999\",\n  \"cpf\": \"111.222.333-44\",\n  \"tipo\": \"comissionado\",\n  \"porcentagemComissao\": 40,\n  \"barbeariaId\": \"1\",\n  \"especialidades\": [\"Corte masculino\", \"Barba\"]\n}"
+            name: "Listar Barbeiros",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/barbeiros",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbeiros"],
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/barbeiros",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "barbeiros"]
-              }
-            }
-          }
-        ]
+            },
+          },
+          {
+            name: "Buscar Barbeiro por ID",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/barbeiros/1",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbeiros", "1"],
+              },
+            },
+          },
+          {
+            name: "Criar Barbeiro",
+            request: {
+              method: "POST",
+              header: [
+                {
+                  key: "Content-Type",
+                  value: "application/json",
+                },
+              ],
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "Carlos Silva",\n  "email": "carlos@barbearia.com",\n  "telefone": "(11) 99999-9999",\n  "cpf": "111.222.333-44",\n  "tipo": "comissionado",\n  "porcentagemComissao": 40,\n  "barbeariaId": "1",\n  "especialidades": ["Corte masculino", "Barba"]\n}',
+              },
+              url: {
+                raw: "{{baseUrl}}/api/barbeiros",
+                host: ["{{baseUrl}}"],
+                path: ["api", "barbeiros"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "✂️ Serviços",
-        "item": [
+        name: "✂️ Serviços",
+        item: [
           {
-            "name": "Listar Serviços",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/servicos",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "servicos"]
-              }
-            }
+            name: "Listar Serviços",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/servicos",
+                host: ["{{baseUrl}}"],
+                path: ["api", "servicos"],
+              },
+            },
           },
           {
-            "name": "Criar Serviço",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Criar Serviço",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"Corte + Barba\",\n  \"descricao\": \"Pacote completo de corte e barba\",\n  \"preco\": 55.00,\n  \"duracaoMinutos\": 75,\n  \"barbeariaId\": \"1\",\n  \"categoria\": \"combo\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "Corte + Barba",\n  "descricao": "Pacote completo de corte e barba",\n  "preco": 55.00,\n  "duracaoMinutos": 75,\n  "barbeariaId": "1",\n  "categoria": "combo"\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/servicos",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "servicos"]
-              }
-            }
-          }
-        ]
+              url: {
+                raw: "{{baseUrl}}/api/servicos",
+                host: ["{{baseUrl}}"],
+                path: ["api", "servicos"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "🎁 Combos",
-        "item": [
+        name: "🎁 Combos",
+        item: [
           {
-            "name": "Listar Combos",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/combos",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "combos"]
-              }
-            }
+            name: "Listar Combos",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/combos",
+                host: ["{{baseUrl}}"],
+                path: ["api", "combos"],
+              },
+            },
           },
           {
-            "name": "Criar Combo",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Criar Combo",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"Combo Completo\",\n  \"descricao\": \"Corte + barba + sobrancelha\",\n  \"barbeariaId\": \"1\",\n  \"servicoIds\": [\"1\", \"2\", \"4\"],\n  \"tipoDesconto\": \"percentual\",\n  \"valorDesconto\": 15.00\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "Combo Completo",\n  "descricao": "Corte + barba + sobrancelha",\n  "barbeariaId": "1",\n  "servicoIds": ["1", "2", "4"],\n  "tipoDesconto": "percentual",\n  "valorDesconto": 15.00\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/combos",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "combos"]
-              }
-            }
-          }
-        ]
+              url: {
+                raw: "{{baseUrl}}/api/combos",
+                host: ["{{baseUrl}}"],
+                path: ["api", "combos"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "👥 Clientes",
-        "item": [
+        name: "👥 Clientes",
+        item: [
           {
-            "name": "Listar Clientes",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/clientes",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "clientes"]
-              }
-            }
-          },
-          {
-            "name": "Criar Cliente",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"nome\": \"João Silva\",\n  \"celular\": \"11987654321\",\n  \"senha\": \"minhasenha123\",\n  \"email\": \"joao@email.com\",\n  \"tipoLogin\": \"celular\"\n}"
+            name: "Listar Clientes",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/clientes",
+                host: ["{{baseUrl}}"],
+                path: ["api", "clientes"],
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/clientes",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "clientes"]
-              }
-            }
+            },
           },
           {
-            "name": "Perfil do Cliente (Me)",
-            "request": {
-              "method": "GET",
-              "header": [
+            name: "Criar Cliente",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Authorization",
-                  "value": "Bearer {{auth_token}}"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "url": {
-                "raw": "{{baseUrl}}/api/clientes/me",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "clientes", "me"]
-              }
-            }
-          }
-        ]
+              body: {
+                mode: "raw",
+                raw: '{\n  "nome": "João Silva",\n  "celular": "11987654321",\n  "senha": "minhasenha123",\n  "email": "joao@email.com",\n  "tipoLogin": "celular"\n}',
+              },
+              url: {
+                raw: "{{baseUrl}}/api/clientes",
+                host: ["{{baseUrl}}"],
+                path: ["api", "clientes"],
+              },
+            },
+          },
+          {
+            name: "Perfil do Cliente (Me)",
+            request: {
+              method: "GET",
+              header: [
+                {
+                  key: "Authorization",
+                  value: "Bearer {{auth_token}}",
+                },
+              ],
+              url: {
+                raw: "{{baseUrl}}/api/clientes/me",
+                host: ["{{baseUrl}}"],
+                path: ["api", "clientes", "me"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "🔐 Autenticação",
-        "item": [
+        name: "🔐 Autenticação",
+        item: [
           {
-            "name": "Login por Celular",
-            "event": [
+            name: "Login por Celular",
+            event: [
               {
-                "listen": "test",
-                "script": {
-                  "exec": [
+                listen: "test",
+                script: {
+                  exec: [
                     "if (pm.response.code === 200) {",
                     "    const response = pm.response.json();",
                     "    if (response.sucesso && response.dados.token) {",
                     "        pm.collectionVariables.set('auth_token', response.dados.token);",
                     "        console.log('Token salvo automaticamente');",
                     "    }",
-                    "}"
+                    "}",
                   ],
-                  "type": "text/javascript"
-                }
-              }
+                  type: "text/javascript",
+                },
+              },
             ],
-            "request": {
-              "method": "POST",
-              "header": [
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"celular\": \"11987654321\",\n  \"senha\": \"minhasenha123\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "celular": "11987654321",\n  "senha": "minhasenha123"\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/login/celular",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "login", "celular"]
-              }
-            }
+              url: {
+                raw: "{{baseUrl}}/api/auth/login/celular",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "login", "celular"],
+              },
+            },
           },
           {
-            "name": "Login Google",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Login Google",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"googleToken\": \"google_oauth_token_aqui\",\n  \"googleId\": \"google_user_id_123\",\n  \"email\": \"usuario@gmail.com\",\n  \"nome\": \"Nome do Usuario\",\n  \"foto\": \"https://lh3.googleusercontent.com/...\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "googleToken": "google_oauth_token_aqui",\n  "googleId": "google_user_id_123",\n  "email": "usuario@gmail.com",\n  "nome": "Nome do Usuario",\n  "foto": "https://lh3.googleusercontent.com/..."\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/login/google",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "login", "google"]
-              }
-            }
+              url: {
+                raw: "{{baseUrl}}/api/auth/login/google",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "login", "google"],
+              },
+            },
           },
           {
-            "name": "Login Barbearia",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Login Barbearia",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"email\": \"admin@barbeariadoroao.com\",\n  \"senha\": \"senha123\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "email": "admin@barbeariadoroao.com",\n  "senha": "senha123"\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/login/barbearia",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "login", "barbearia"]
-              }
-            }
+              url: {
+                raw: "{{baseUrl}}/api/auth/login/barbearia",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "login", "barbearia"],
+              },
+            },
           },
           {
-            "name": "Login Barbeiro",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Login Barbeiro",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"email\": \"carlos@barbeariadoroao.com\",\n  \"senha\": \"senha123\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "email": "carlos@barbeariadoroao.com",\n  "senha": "senha123"\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/login/barbeiro",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "login", "barbeiro"]
-              }
-            }
+              url: {
+                raw: "{{baseUrl}}/api/auth/login/barbeiro",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "login", "barbeiro"],
+              },
+            },
           },
           {
-            "name": "Verificar Token",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Verificar Token",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"token\": \"{{auth_token}}\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "token": "{{auth_token}}"\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/verificar-token",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "verificar-token"]
-              }
-            }
+              url: {
+                raw: "{{baseUrl}}/api/auth/verificar-token",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "verificar-token"],
+              },
+            },
           },
           {
-            "name": "Refresh Token",
-            "request": {
-              "method": "POST",
-              "header": [
+            name: "Refresh Token",
+            request: {
+              method: "POST",
+              header: [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
+                  key: "Content-Type",
+                  value: "application/json",
+                },
               ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"refreshToken\": \"rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+              body: {
+                mode: "raw",
+                raw: '{\n  "refreshToken": "rt_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."\n}',
               },
-              "url": {
-                "raw": "{{baseUrl}}/api/auth/refresh-token",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "auth", "refresh-token"]
-              }
-            }
-          }
-        ]
+              url: {
+                raw: "{{baseUrl}}/api/auth/refresh-token",
+                host: ["{{baseUrl}}"],
+                path: ["api", "auth", "refresh-token"],
+              },
+            },
+          },
+        ],
       },
       {
-        "name": "📂 APIs de Diretório",
-        "item": [
+        name: "📂 APIs de Diretório",
+        item: [
           {
-            "name": "Busca Pública de Barbearias",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/barbearias?q=João&cidade=São Paulo&ordenar=relevancia&limite=10",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "barbearias"],
-                "query": [
-                  {"key": "q", "value": "João"},
-                  {"key": "cidade", "value": "São Paulo"},
-                  {"key": "estado", "value": "SP", "disabled": true},
-                  {"key": "ordenar", "value": "relevancia"},
-                  {"key": "limite", "value": "10"},
-                  {"key": "pagina", "value": "1", "disabled": true}
-                ]
-              }
-            }
+            name: "Busca Pública de Barbearias",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/barbearias?q=João&cidade=São Paulo&ordenar=relevancia&limite=10",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "barbearias"],
+                query: [
+                  { key: "q", value: "João" },
+                  { key: "cidade", value: "São Paulo" },
+                  { key: "estado", value: "SP", disabled: true },
+                  { key: "ordenar", value: "relevancia" },
+                  { key: "limite", value: "10" },
+                  { key: "pagina", value: "1", disabled: true },
+                ],
+              },
+            },
           },
           {
-            "name": "Listar Cidades",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/cidades",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "cidades"]
-              }
-            }
+            name: "Listar Todas as Barbearias",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/barbearias/todas?limite=50&pagina=1&ordenar=nome",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "barbearias", "todas"],
+                query: [
+                  { key: "limite", value: "50" },
+                  { key: "pagina", value: "1" },
+                  {
+                    key: "ordenar",
+                    value: "nome",
+                    description: "nome, data_cadastro, cidade",
+                  },
+                ],
+              },
+            },
           },
           {
-            "name": "Estatísticas do Diretório",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/estatisticas",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "estatisticas"]
-              }
-            }
+            name: "Listar Cidades",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/cidades",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "cidades"],
+              },
+            },
           },
           {
-            "name": "Sugestões de Busca",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/sugestoes?q=bar",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "sugestoes"],
-                "query": [
-                  {"key": "q", "value": "bar"}
-                ]
-              }
-            }
+            name: "Estatísticas do Diretório",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/estatisticas",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "estatisticas"],
+              },
+            },
           },
           {
-            "name": "Detalhes da Barbearia",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/barbearia/1/detalhes",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "barbearia", "1", "detalhes"]
-              }
-            }
+            name: "Sugestões de Busca",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/sugestoes?q=bar",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "sugestoes"],
+                query: [{ key: "q", value: "bar" }],
+              },
+            },
           },
           {
-            "name": "Promoções Ativas",
-            "request": {
-              "method": "GET",
-              "header": [],
-              "url": {
-                "raw": "{{baseUrl}}/api/diretorio/promocoes?cidade=São Paulo",
-                "host": ["{{baseUrl}}"],
-                "path": ["api", "diretorio", "promocoes"],
-                "query": [
-                  {"key": "cidade", "value": "São Paulo"},
-                  {"key": "estado", "value": "SP", "disabled": true}
-                ]
-              }
-            }
-          }
-        ]
-      }
-    ]
+            name: "Detalhes da Barbearia",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/barbearia/1/detalhes",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "barbearia", "1", "detalhes"],
+              },
+            },
+          },
+          {
+            name: "Promoções Ativas",
+            request: {
+              method: "GET",
+              header: [],
+              url: {
+                raw: "{{baseUrl}}/api/diretorio/promocoes?cidade=São Paulo",
+                host: ["{{baseUrl}}"],
+                path: ["api", "diretorio", "promocoes"],
+                query: [
+                  { key: "cidade", value: "São Paulo" },
+                  { key: "estado", value: "SP", disabled: true },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
   };
 
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Content-Disposition', 'attachment; filename="Barbearia-API-Collection.json"');
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader(
+    "Content-Disposition",
+    'attachment; filename="Barbearia-API-Collection.json"',
+  );
   res.json(collection);
 };

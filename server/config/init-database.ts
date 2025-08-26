@@ -4,6 +4,43 @@ import { executeQuery, initDatabase } from "./database";
  * Script para criar e inicializar as tabelas do banco de dados
  */
 
+/**
+ * Executa query com retry em caso de deadlock
+ */
+const executeQueryWithRetry = async (
+  sql: string,
+  maxRetries = 3,
+): Promise<any> => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await executeQuery(sql);
+    } catch (error: any) {
+      if (error.code === "ER_LOCK_DEADLOCK" && attempt < maxRetries) {
+        console.log(
+          `⚠️ Deadlock detectado, tentativa ${attempt}/${maxRetries}. Aguardando ${attempt * 1000}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
+/**
+ * Verifica se dados já existem na tabela antes de inserir
+ */
+const checkDataExists = async (tableName: string): Promise<boolean> => {
+  try {
+    const result = await executeQuery(
+      `SELECT COUNT(*) as count FROM ${tableName} LIMIT 1`,
+    );
+    return (result as any[])[0]?.count > 0;
+  } catch (error) {
+    return false;
+  }
+};
+
 // SQL para criar tabela de barbearias
 const createBarbeariasTable = `
 CREATE TABLE IF NOT EXISTS barbearias (
@@ -439,6 +476,22 @@ INSERT IGNORE INTO clientes (
 export const initializeTables = async (): Promise<void> => {
   try {
     console.log("🗄️ Inicializando estrutura do banco de dados...");
+<<<<<<< HEAD
+=======
+
+    // Verificar se já há dados para evitar execução desnecessária
+    const hasData =
+      (await checkDataExists("barbearias")) &&
+      (await checkDataExists("barbeiros")) &&
+      (await checkDataExists("servicos"));
+
+    if (hasData) {
+      console.log(
+        "ℹ️ Dados já existem no banco, pulando inicialização completa para evitar conflitos",
+      );
+      return;
+    }
+>>>>>>> refs/remotes/origin/main
 
     // Migrar tabelas existentes PRIMEIRO, antes de criar novas
     console.log("🔄 Verificando e migrando tabelas para autenticação...");
@@ -467,6 +520,7 @@ export const initializeTables = async (): Promise<void> => {
     console.log("🔄 Verificando campos de autenticação novamente...");
     await migrarTabelasParaAutenticacao();
 
+<<<<<<< HEAD
     // Inserir dados iniciais na ordem correta
     console.log("📝 Inserindo dados iniciais...");
     try {
@@ -507,6 +561,63 @@ export const initializeTables = async (): Promise<void> => {
       error.message,
     );
     // Não lançar erro para evitar que o servidor caia
+=======
+    // Inserir dados iniciais na ordem correta (com verificação)
+    console.log("📝 Inserindo dados iniciais...");
+
+    const barbeariasHasData = await checkDataExists("barbearias");
+    if (!barbeariasHasData) {
+      console.log("📝 Inserindo barbearias...");
+      await executeQueryWithRetry(insertInitialBarbearias);
+    } else {
+      console.log("ℹ️ Dados já existem em barbearias, pulando inserção");
+    }
+
+    const barbeirosHasData = await checkDataExists("barbeiros");
+    if (!barbeirosHasData) {
+      console.log("📝 Inserindo barbeiros...");
+      await executeQueryWithRetry(insertInitialBarbeiros);
+    } else {
+      console.log("ℹ️ Dados já existem em barbeiros, pulando inserção");
+    }
+
+    const servicosHasData = await checkDataExists("servicos");
+    if (!servicosHasData) {
+      console.log("📝 Inserindo serviços...");
+      await executeQueryWithRetry(insertInitialServicos);
+    } else {
+      console.log("ℹ️ Dados já existem em servicos, pulando inserção");
+    }
+
+    const combosHasData = await checkDataExists("combos");
+    if (!combosHasData) {
+      console.log("📝 Inserindo combos...");
+      await executeQueryWithRetry(insertInitialCombos);
+    } else {
+      console.log("ℹ️ Dados já existem em combos, pulando inserção");
+    }
+
+    const comboServicosHasData = await checkDataExists("combo_servicos");
+    if (!comboServicosHasData) {
+      console.log("📝 Inserindo relações combo-serviços...");
+      await executeQueryWithRetry(insertInitialComboServicos);
+    } else {
+      console.log("ℹ️ Dados já existem em combo_servicos, pulando inserção");
+    }
+
+    const clientesHasData = await checkDataExists("clientes");
+    if (!clientesHasData) {
+      console.log("📝 Inserindo clientes...");
+      await executeQueryWithRetry(insertInitialClientes);
+    } else {
+      console.log("ℹ️ Dados já existem em clientes, pulando inserção");
+    }
+
+    console.log("✅ Banco de dados inicializado com sucesso!");
+  } catch (error) {
+    console.error("❌ Erro ao inicializar banco de dados:", error);
+    throw error;
+>>>>>>> refs/remotes/origin/main
   }
 };
 
