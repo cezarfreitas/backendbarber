@@ -1446,7 +1446,7 @@ function generateEndpointsDocumentation(): string {
                             <span class="url">/api/diretorio/barbearias</span>
                         </div>
                         <h4>Busca pública de barbearias</h4>
-                        <p>API pública para buscar barbearias com filtros avan��ados.</p>
+                        <p>API pública para buscar barbearias com filtros avançados.</p>
                         
                         <div class="params">
                             <h4>Query Parameters</h4>
@@ -2208,7 +2208,7 @@ function generateEndpointsDocumentation(): string {
                                         <th>Parâmetro</th>
                                         <th>Tipo</th>
                                         <th>Padrão</th>
-                                        <th>Descrição</th>
+                                        <th>Descriç��o</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2430,39 +2430,364 @@ function generateEndpointsDocumentation(): string {
                             <span class="method post">POST</span>
                             <span class="url">/api/admin/barbeiros</span>
                         </div>
-                        <h4>Criar novo barbeiro</h4>
-                        <p>Adiciona um novo barbeiro à barbearia do administrador.</p>
+                        <h4>➕ Criar Novo Barbeiro</h4>
+                        <p>Adiciona um novo barbeiro à barbearia do administrador. Permite diferentes tipos de remuneração e configurações personalizadas.</p>
 
                         <div class="params">
-                            <h4>Body (JSON)</h4>
+                            <h4>Headers Obrigatórios</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Header</th>
+                                        <th>Valor</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Authorization</code></td>
+                                        <td>Bearer {jwt_token}</td>
+                                        <td>Token JWT da barbearia autenticada</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Content-Type</code></td>
+                                        <td>application/json</td>
+                                        <td>Tipo de conteúdo da requisição</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Body (JSON) - Campos Obrigatórios</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Validação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>nome</code></td>
+                                        <td>string</td>
+                                        <td>Nome completo do barbeiro</td>
+                                        <td>Mínimo 2 caracteres</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>email</code></td>
+                                        <td>string</td>
+                                        <td>Email único do barbeiro</td>
+                                        <td>Formato de email válido, único no sistema</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>telefone</code></td>
+                                        <td>string</td>
+                                        <td>Telefone de contato</td>
+                                        <td>Formato brasileiro: (XX) XXXXX-XXXX</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>cpf</code></td>
+                                        <td>string</td>
+                                        <td>CPF único do barbeiro</td>
+                                        <td>Formato: XXX.XXX.XXX-XX, único no sistema</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>tipo</code></td>
+                                        <td>enum</td>
+                                        <td>Tipo de contratação</td>
+                                        <td>'comissionado', 'funcionario', 'freelancer'</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Campos Condicionais (dependem do tipo)</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Obrigatório Para</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>porcentagem_comissao</code></td>
+                                        <td>number</td>
+                                        <td>comissionado</td>
+                                        <td>Percentual de comissão (0-100)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>salario_fixo</code></td>
+                                        <td>number</td>
+                                        <td>funcionario</td>
+                                        <td>Salário fixo mensal em reais</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>valor_hora</code></td>
+                                        <td>number</td>
+                                        <td>freelancer</td>
+                                        <td>Valor por hora em reais</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h4>Campos Opcionais</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>senha</code></td>
+                                        <td>string</td>
+                                        <td>Senha para login do barbeiro (opcional)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>especialidades</code></td>
+                                        <td>array[string]</td>
+                                        <td>Lista de especialidades do barbeiro</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>horario_trabalho</code></td>
+                                        <td>object</td>
+                                        <td>Horários de trabalho por dia da semana</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="example-usage">
+                            <h4>Exemplos de Uso</h4>
+
+                            <h5>Barbeiro Comissionado</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  nome: 'Carlos Silva',
+  email: 'carlos@barbeariapremium.com',
+  telefone: '(11) 98888-7777',
+  cpf: '111.222.333-44',
+  senha: 'senhaSegura123',
+  tipo: 'comissionado',
+  porcentagem_comissao: 45.0,
+  especialidades: ['Corte masculino', 'Barba', 'Bigode'],
+  horario_trabalho: {
+    segunda: {inicio: '08:00', fim: '18:00'},
+    terca: {inicio: '08:00', fim: '18:00'},
+    quarta: {inicio: '08:00', fim: '18:00'},
+    quinta: {inicio: '08:00', fim: '18:00'},
+    sexta: {inicio: '08:00', fim: '18:00'},
+    sabado: {inicio: '08:00', fim: '16:00'}
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "nome": "Carlos Silva",
+  "email": "carlos@barbeariapremium.com",
+  "telefone": "(11) 98888-7777",
+  "cpf": "111.222.333-44",
+  "senha": "senhaSegura123",
+  "tipo": "comissionado",
+  "porcentagem_comissao": 45.0,
+  "especialidades": ["Corte masculino", "Barba", "Bigode"],
+  "horario_trabalho": {
+    "segunda": {"inicio": "08:00", "fim": "18:00"},
+    "terca": {"inicio": "08:00", "fim": "18:00"},
+    "quarta": {"inicio": "08:00", "fim": "18:00"},
+    "quinta": {"inicio": "08:00", "fim": "18:00"},
+    "sexta": {"inicio": "08:00", "fim": "18:00"},
+    "sabado": {"inicio": "08:00", "fim": "16:00"}
+  }
+}</pre>
+                            </div>
+
+                            <h5>Funcionário CLT</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  nome: 'Ana Costa',
+  email: 'ana@barbeariapremium.com',
+  telefone: '(11) 97777-6666',
+  cpf: '222.333.444-55',
+  tipo: 'funcionario',
+  salario_fixo: 3500.00,
+  especialidades: ['Corte feminino', 'Coloração', 'Tratamentos'],
+  horario_trabalho: {
+    terca: {inicio: '09:00', fim: '19:00'},
+    quarta: {inicio: '09:00', fim: '19:00'},
+    quinta: {inicio: '09:00', fim: '19:00'},
+    sexta: {inicio: '09:00', fim: '19:00'},
+    sabado: {inicio: '09:00', fim: '17:00'}
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "nome": "Ana Costa",
+  "email": "ana@barbeariapremium.com",
+  "telefone": "(11) 97777-6666",
+  "cpf": "222.333.444-55",
+  "tipo": "funcionario",
+  "salario_fixo": 3500.00,
+  "especialidades": ["Corte feminino", "Coloração", "Tratamentos"],
+  "horario_trabalho": {
+    "terca": {"inicio": "09:00", "fim": "19:00"},
+    "quarta": {"inicio": "09:00", "fim": "19:00"},
+    "quinta": {"inicio": "09:00", "fim": "19:00"},
+    "sexta": {"inicio": "09:00", "fim": "19:00"},
+    "sabado": {"inicio": "09:00", "fim": "17:00"}
+  }
+}</pre>
+                            </div>
+
+                            <h5>Freelancer</h5>
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
   nome: 'Pedro Santos',
-  email: 'pedro@barbeariadoroao.com',
-  telefone: '(11) 99999-8888',
-  cpf: '444.555.666-77',
-  senha: 'senha123',
-  tipo: 'funcionario',
-  salario_fixo: 3000.00,
-  especialidades: ['Corte feminino', 'Escova'],
+  email: 'pedro@barbeariapremium.com',
+  telefone: '(11) 96666-5555',
+  cpf: '333.444.555-66',
+  tipo: 'freelancer',
+  valor_hora: 80.00,
+  especialidades: ['Corte premium', 'Design de sobrancelhas'],
   horario_trabalho: {
-    segunda: {inicio: '09:00', fim: '18:00'},
-    terca: {inicio: '09:00', fim: '18:00'}
+    segunda: {inicio: '10:00', fim: '16:00'},
+    quarta: {inicio: '10:00', fim: '16:00'},
+    sexta: {inicio: '10:00', fim: '16:00'}
   }
 }, null, 2))">📋 Copiar</button>
                                 <pre>{
   "nome": "Pedro Santos",
-  "email": "pedro@barbeariadoroao.com",
-  "telefone": "(11) 99999-8888",
-  "cpf": "444.555.666-77",
-  "senha": "senha123",
-  "tipo": "funcionario",
-  "salario_fixo": 3000.00,
-  "especialidades": ["Corte feminino", "Escova"],
+  "email": "pedro@barbeariapremium.com",
+  "telefone": "(11) 96666-5555",
+  "cpf": "333.444.555-66",
+  "tipo": "freelancer",
+  "valor_hora": 80.00,
+  "especialidades": ["Corte premium", "Design de sobrancelhas"],
   "horario_trabalho": {
-    "segunda": {"inicio": "09:00", "fim": "18:00"},
-    "terca": {"inicio": "09:00", "fim": "18:00"}
+    "segunda": {"inicio": "10:00", "fim": "16:00"},
+    "quarta": {"inicio": "10:00", "fim": "16:00"},
+    "sexta": {"inicio": "10:00", "fim": "16:00"}
   }
+}</pre>
+                            </div>
+
+                            <h5>cURL Example</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, 'curl -X POST \"{{baseUrl}}/api/admin/barbeiros\" \\\n  -H \"Authorization: Bearer seu_jwt_token\" \\\n  -H \"Content-Type: application/json\" \\\n  -d \'{\n    \"nome\": \"Carlos Silva\",\n    \"email\": \"carlos@barbeariapremium.com\",\n    \"telefone\": \"(11) 98888-7777\",\n    \"cpf\": \"111.222.333-44\",\n    \"tipo\": \"comissionado\",\n    \"porcentagem_comissao\": 45.0\n  }\'')">📋 Copiar</button>
+                                <pre>curl -X POST "{{baseUrl}}/api/admin/barbeiros" \
+  -H "Authorization: Bearer seu_jwt_token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Carlos Silva",
+    "email": "carlos@barbeariapremium.com",
+    "telefone": "(11) 98888-7777",
+    "cpf": "111.222.333-44",
+    "tipo": "comissionado",
+    "porcentagem_comissao": 45.0
+  }'</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso (201)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  dados: {
+    id: 'b3f9e345-67f8-901g-defa-123456789bcd',
+    nome: 'Carlos Silva',
+    email: 'carlos@barbeariapremium.com',
+    telefone: '(11) 98888-7777',
+    cpf: '111.222.333-44',
+    tipo: 'comissionado',
+    porcentagem_comissao: 45.00,
+    salario_fixo: null,
+    valor_hora: null,
+    especialidades: ['Corte masculino', 'Barba', 'Bigode'],
+    horario_trabalho: {
+      segunda: { inicio: '08:00', fim: '18:00' },
+      terca: { inicio: '08:00', fim: '18:00' },
+      quarta: { inicio: '08:00', fim: '18:00' },
+      quinta: { inicio: '08:00', fim: '18:00' },
+      sexta: { inicio: '08:00', fim: '18:00' },
+      sabado: { inicio: '08:00', fim: '16:00' }
+    },
+    status: 'ativo',
+    data_cadastro: '2024-03-15T10:30:00Z'
+  },
+  mensagem: 'Barbeiro cadastrado com sucesso'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "id": "b3f9e345-67f8-901g-defa-123456789bcd",
+    "nome": "Carlos Silva",
+    "email": "carlos@barbeariapremium.com",
+    "telefone": "(11) 98888-7777",
+    "cpf": "111.222.333-44",
+    "tipo": "comissionado",
+    "porcentagem_comissao": 45.00,
+    "salario_fixo": null,
+    "valor_hora": null,
+    "especialidades": ["Corte masculino", "Barba", "Bigode"],
+    "horario_trabalho": {
+      "segunda": {"inicio": "08:00", "fim": "18:00"},
+      "terca": {"inicio": "08:00", "fim": "18:00"},
+      "quarta": {"inicio": "08:00", "fim": "18:00"},
+      "quinta": {"inicio": "08:00", "fim": "18:00"},
+      "sexta": {"inicio": "08:00", "fim": "18:00"},
+      "sabado": {"inicio": "08:00", "fim": "16:00"}
+    },
+    "status": "ativo",
+    "data_cadastro": "2024-03-15T10:30:00Z"
+  },
+  "mensagem": "Barbeiro cadastrado com sucesso"
+}</pre>
+                            </div>
+
+                            <h4>Erros de Validação (400)</h4>
+
+                            <h5>Campos obrigatórios ausentes</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: false,
+  codigo: 'MISSING_FIELDS',
+  erro: 'Campos obrigatórios: nome, email, telefone, cpf, tipo'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": false,
+  "codigo": "MISSING_FIELDS",
+  "erro": "Campos obrigatórios: nome, email, telefone, cpf, tipo"
+}</pre>
+                            </div>
+
+                            <h5>Email duplicado</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: false,
+  codigo: 'DUPLICATED_EMAIL',
+  erro: 'Email já cadastrado no sistema'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": false,
+  "codigo": "DUPLICATED_EMAIL",
+  "erro": "Email já cadastrado no sistema"
+}</pre>
+                            </div>
+
+                            <h5>CPF duplicado</h5>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: false,
+  codigo: 'DUPLICATED_CPF',
+  erro: 'CPF já cadastrado no sistema'
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": false,
+  "codigo": "DUPLICATED_CPF",
+  "erro": "CPF já cadastrado no sistema"
 }</pre>
                             </div>
                         </div>
