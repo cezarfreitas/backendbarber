@@ -1051,6 +1051,17 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         
         // Copy to Clipboard (robust: tenta fallback primeiro, depois Clipboard API)
         async function copyToClipboard(button, text) {
+            // Se text não fornecido, tentar extrair do <pre> adjacente
+            if (typeof text === 'undefined' || text === null) {
+                try {
+                    const pre = button.parentElement ? button.parentElement.querySelector('pre') : null;
+                    if (pre) text = pre.innerText || pre.textContent || '';
+                    else text = '';
+                } catch (e) {
+                    text = '';
+                }
+            }
+
             // Função fallback síncrona
             function tryFallbackCopy(value) {
                 try {
