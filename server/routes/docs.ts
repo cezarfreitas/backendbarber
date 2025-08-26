@@ -2875,7 +2875,7 @@ function generateEndpointsDocumentation(): string {
 
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar (GET)</button>
-                                <pre>curl -X GET "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev/api/admin/barbearia" \
+                                <pre>curl -X GET "{{baseUrl}}/api/admin/barbearia" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"</pre>
                             </div>
 
