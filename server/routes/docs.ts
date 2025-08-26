@@ -821,7 +821,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         <div class="nav-tree-item expandable" data-target="admin-tree">
                             🔧 Admin Dashboard
                         </div>
-                        <div class="nav-tree-item" onclick="scrollToSection('endpoints-admin-servicos')">
+                        <div class="nav-tree-item">
                             <a href="#endpoints-admin-servicos">✂️ Admin - Serviços</a>
                         </div>
                         <div class="nav-sub-items" id="admin-tree">
