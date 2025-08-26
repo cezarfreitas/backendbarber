@@ -1120,7 +1120,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                 const ok = tryFallbackCopy(text);
                 if (ok) {
                     const originalText = button.innerHTML;
-                    button.innerHTML = '�� Copiado!';
+                    button.innerHTML = '✅ Copiado!';
                     button.classList.add('copied');
                     showCopyFeedback();
                     setTimeout(() => {
@@ -1188,6 +1188,21 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                     }, 2000);
                 } catch (e) {
                     // Se nem isso funcionar, não fazer nada para não quebrar a página
+                }
+            }
+            } catch (globalError) {
+                console.error('Erro geral na função copyToClipboard:', globalError);
+                // Em caso de erro crítico, tentar pelo menos mostrar um feedback
+                try {
+                    if (button && button.innerHTML) {
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '❌ Erro';
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                        }, 2000);
+                    }
+                } catch (e) {
+                    // Se falhar completamente, não fazer nada
                 }
             }
         }
@@ -1561,7 +1576,7 @@ function generateEndpointsDocumentation(): string {
                                     <tr>
                                         <td><code>ordenar</code></td>
                                         <td>string</td>
-                                        <td>Ordena��ão (relevancia, distancia, avaliacao)</td>
+                                        <td>Ordenação (relevancia, distancia, avaliacao)</td>
                                         <td>relevancia</td>
                                     </tr>
                                 </tbody>
@@ -2163,7 +2178,7 @@ function generateEndpointsDocumentation(): string {
                 <div class="section" id="endpoints-admin-dashboard">
                     <h2>🔧 Admin Dashboard</h2>
                     <p class="section-description">
-                        APIs exclusivas para administradores (proprietários) de barbearias. Fornece acesso completo às funcionalidades de gestão de negócio, incluindo estatísticas, gerenciamento de barbeiros, configurações da barbearia e muito mais.
+                        APIs exclusivas para administradores (propriet��rios) de barbearias. Fornece acesso completo às funcionalidades de gestão de negócio, incluindo estatísticas, gerenciamento de barbeiros, configurações da barbearia e muito mais.
                     </p>
 
                     <!-- Autenticação Admin -->
@@ -2226,7 +2241,7 @@ function generateEndpointsDocumentation(): string {
                                 <tr>
                                     <td><code>403</code></td>
                                     <td><code>FORBIDDEN</code></td>
-                                    <td>Usuário não é uma barbearia ou não tem permiss��o</td>
+                                    <td>Usuário não é uma barbearia ou não tem permissão</td>
                                 </tr>
                                 <tr>
                                     <td><code>404</code></td>
