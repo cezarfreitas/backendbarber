@@ -784,7 +784,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-auth-barbearia" class="nav-sub-item">🏪 Login Barbearia</a>
                             <a href="#endpoints-auth-barbeiro" class="nav-sub-item">💇‍♂️ Login Barbeiro</a>
                             <a href="#endpoints-auth-verify" class="nav-sub-item">✅ Verificar Token</a>
-                            <a href="#endpoints-auth-refresh" class="nav-sub-item">🔄 Refresh Token</a>
+                            <a href="#endpoints-auth-refresh" class="nav-sub-item">���� Refresh Token</a>
                         </div>
                     </div>
                     
@@ -906,7 +906,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <tr>
                                 <td><code>Barbeiro</code></td>
                                 <td><code>POST /api/auth/login/barbeiro</code></td>
-                                <td>Login de barbeiros funcionários</td>
+                                <td>Login de barbeiros funcion��rios</td>
                             </tr>
                         </tbody>
                     </table>
@@ -3035,6 +3035,171 @@ function generateEndpointsDocumentation(): string {
                                 <pre>{
   "sucesso": true,
   "dados": null
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gestão de Serviços -->
+                    <div class="endpoint" id="endpoints-admin-servicos-list">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/admin/servicos</span>
+                        </div>
+                        <h4>✂️ Listar Serviços da Barbearia</h4>
+                        <p>Lista todos os serviços da barbearia do administrador logado, com suporte completo à paginação e filtros.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X GET "{{baseUrl}}/api/admin/servicos?categoria=corte&ativo=true" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso (200)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "servicos": [
+      {
+        "id": "serv123-456",
+        "nome": "Corte Masculino Tradicional",
+        "descricao": "Corte clássico masculino com acabamento na navalha",
+        "preco": 35.00,
+        "duracao_minutos": 45,
+        "categoria": "corte",
+        "ativo": true,
+        "data_cadastro": "2024-01-15T10:30:00Z",
+        "data_atualizacao": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "total": 8,
+    "pagina": 1,
+    "totalPaginas": 1
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-servicos-create">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="url">/api/admin/servicos</span>
+                        </div>
+                        <h4>➕ Criar Novo Serviço</h4>
+                        <p>Cria um novo serviço na barbearia do administrador logado.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X POST "{{baseUrl}}/api/admin/servicos" \
+  -H "Authorization: Bearer seu_jwt_token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Corte Moderno",
+    "descricao": "Corte moderno com design personalizado",
+    "preco": 45.00,
+    "duracao_minutos": 60,
+    "categoria": "corte"
+  }'</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso (201)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "id": "serv789-012",
+    "nome": "Corte Moderno",
+    "descricao": "Corte moderno com design personalizado",
+    "preco": 45.00,
+    "duracao_minutos": 60,
+    "categoria": "corte",
+    "ativo": true
+  },
+  "mensagem": "Serviço criado com sucesso"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-servicos-update">
+                        <div class="endpoint-header">
+                            <span class="method put">PUT</span>
+                            <span class="url">/api/admin/servicos/:id</span>
+                        </div>
+                        <h4>✏️ Atualizar Serviço</h4>
+                        <p>Atualiza um serviço específico da barbearia do administrador logado.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X PUT "{{baseUrl}}/api/admin/servicos/serv123-456" \
+  -H "Authorization: Bearer seu_jwt_token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "preco": 40.00,
+    "duracao_minutos": 50
+  }'</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso (200)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "id": "serv123-456",
+    "nome": "Corte Masculino Tradicional",
+    "preco": 40.00,
+    "duracao_minutos": 50,
+    "categoria": "corte",
+    "ativo": true
+  },
+  "mensagem": "Serviço atualizado com sucesso"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint" id="endpoints-admin-servicos-delete">
+                        <div class="endpoint-header">
+                            <span class="method delete">DELETE</span>
+                            <span class="url">/api/admin/servicos/:id</span>
+                        </div>
+                        <h4>🗑️ Remover Serviço</h4>
+                        <p>Remove (desativa) um serviço específico da barbearia do administrador logado.</p>
+
+                        <div class="example-usage">
+                            <h4>Exemplo de Uso</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>curl -X DELETE "{{baseUrl}}/api/admin/servicos/serv123-456" \
+  -H "Authorization: Bearer seu_jwt_token"</pre>
+                            </div>
+                        </div>
+
+                        <div class="response">
+                            <h4>Resposta de Sucesso (200)</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": null,
+  "mensagem": "Serviço removido com sucesso"
 }</pre>
                             </div>
                         </div>
