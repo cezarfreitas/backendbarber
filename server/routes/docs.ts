@@ -2124,6 +2124,101 @@ function generateEndpointsDocumentation(): string {
                         </div>
                     </div>
 
+                    <div class="endpoint" id="endpoints-admin-barbearia-get">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="url">/api/admin/barbearia</span>
+                        </div>
+                        <h4>Buscar dados da barbearia</h4>
+                        <p>Retorna os dados completos da barbearia do proprietário logado.</p>
+
+                        <div class="headers">
+                            <h4>Headers Obrigatórios</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Header</th>
+                                        <th>Valor</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Authorization</code></td>
+                                        <td><code>Bearer TOKEN_JWT</code></td>
+                                        <td>Token JWT de autenticação da barbearia</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="response">
+                            <h4>Exemplo de Resposta</h4>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyToClipboard(this, JSON.stringify({
+  sucesso: true,
+  dados: {
+    id: 'c48db985-4ab2-431a-8e42-ecf60048e261',
+    nome: 'Barbearia Teste Login',
+    descricao: 'Barbearia criada especificamente para testar o sistema de login',
+    endereco: {
+      rua: 'Rua Teste',
+      numero: '123',
+      bairro: 'Centro',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '01000-000'
+    },
+    contato: {
+      telefone: '(11) 99999-9999',
+      email: 'teste@barbearia.com',
+      whatsapp: '(11) 99999-9999'
+    },
+    proprietario: {
+      nome: 'João da Silva',
+      cpf: '123.456.789-00',
+      email: 'joao@barbearia.com'
+    },
+    horarioFuncionamento: {},
+    status: 'ativa',
+    dataCadastro: '2025-08-26T13:58:10.000Z',
+    dataAtualizacao: '2025-08-26T14:03:00.000Z'
+  }
+}, null, 2))">📋 Copiar</button>
+                                <pre>{
+  "sucesso": true,
+  "dados": {
+    "id": "c48db985-4ab2-431a-8e42-ecf60048e261",
+    "nome": "Barbearia Teste Login",
+    "descricao": "Barbearia criada especificamente para testar o sistema de login",
+    "endereco": {
+      "rua": "Rua Teste",
+      "numero": "123",
+      "bairro": "Centro",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01000-000"
+    },
+    "contato": {
+      "telefone": "(11) 99999-9999",
+      "email": "teste@barbearia.com",
+      "whatsapp": "(11) 99999-9999"
+    },
+    "proprietario": {
+      "nome": "João da Silva",
+      "cpf": "123.456.789-00",
+      "email": "joao@barbearia.com"
+    },
+    "horarioFuncionamento": {},
+    "status": "ativa",
+    "dataCadastro": "2025-08-26T13:58:10.000Z",
+    "dataAtualizacao": "2025-08-26T14:03:00.000Z"
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="endpoint" id="endpoints-admin-barbearia-update">
                         <div class="endpoint-header">
                             <span class="method put">PUT</span>
