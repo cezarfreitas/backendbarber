@@ -3149,7 +3149,7 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
       {
         key: "baseUrl",
         value:
-          "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev",
+          "https://ide-teste3.jzo3qo.easypanel.host",
         type: "string",
       },
       {
