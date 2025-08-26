@@ -3148,8 +3148,7 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
     variable: [
       {
         key: "baseUrl",
-        value:
-          "https://ide-teste3.jzo3qo.easypanel.host",
+        value: "https://ide-teste3.jzo3qo.easypanel.host",
         type: "string",
       },
       {
@@ -3262,8 +3261,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 path: ["api", "barbeiros"],
                 query: [
                   { key: "pagina", value: "1" },
-                  { key: "limite", value: "10" }
-                ]
+                  { key: "limite", value: "10" },
+                ],
               },
             },
             response: [
@@ -3275,42 +3274,44 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   url: {
                     raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "barbeiros"]
-                  }
+                    path: ["api", "barbeiros"],
+                  },
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [
-                  { key: "Content-Type", value: "application/json" }
-                ],
-                body: JSON.stringify({
-                  sucesso: true,
-                  dados: {
-                    barbeiros: [
-                      {
-                        id: "1",
-                        nome: "Carlos Silva",
-                        email: "carlos@barbeariadoroao.com",
-                        telefone: "(11) 98888-7777",
-                        cpf: "111.222.333-44",
-                        tipo: "comissionado",
-                        porcentagemComissao: 40,
-                        especialidades: ["Corte masculino", "Barba"],
-                        status: "ativo"
-                      }
-                    ],
-                    total: 1,
-                    pagina: 1,
-                    totalPaginas: 1
+                header: [{ key: "Content-Type", value: "application/json" }],
+                body: JSON.stringify(
+                  {
+                    sucesso: true,
+                    dados: {
+                      barbeiros: [
+                        {
+                          id: "1",
+                          nome: "Carlos Silva",
+                          email: "carlos@barbeariadoroao.com",
+                          telefone: "(11) 98888-7777",
+                          cpf: "111.222.333-44",
+                          tipo: "comissionado",
+                          porcentagemComissao: 40,
+                          especialidades: ["Corte masculino", "Barba"],
+                          status: "ativo",
+                        },
+                      ],
+                      total: 1,
+                      pagina: 1,
+                      totalPaginas: 1,
+                    },
+                    meta: {
+                      total: 1,
+                      pagina: 1,
+                      totalPaginas: 1,
+                      limite: 10,
+                    },
                   },
-                  meta: {
-                    total: 1,
-                    pagina: 1,
-                    totalPaginas: 1,
-                    limite: 10
-                  }
-                }, null, 2)
+                  null,
+                  2,
+                ),
               },
               {
                 name: "Exemplo - nenhum resultado",
@@ -3320,33 +3321,36 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   url: {
                     raw: "{{baseUrl}}/api/barbeiros?pagina=1&limite=10&barbeariaId=999",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "barbeiros"]
-                  }
+                    path: ["api", "barbeiros"],
+                  },
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [
-                  { key: "Content-Type", value: "application/json" }
-                ],
-                body: JSON.stringify({
-                  sucesso: true,
-                  dados: {
-                    barbeiros: [],
-                    total: 0,
-                    pagina: 1,
-                    totalPaginas: 0
+                header: [{ key: "Content-Type", value: "application/json" }],
+                body: JSON.stringify(
+                  {
+                    sucesso: true,
+                    dados: {
+                      barbeiros: [],
+                      total: 0,
+                      pagina: 1,
+                      totalPaginas: 0,
+                    },
+                    meta: {
+                      total: 0,
+                      pagina: 1,
+                      totalPaginas: 0,
+                      limite: 10,
+                    },
+                    mensagem:
+                      "Nenhum barbeiro encontrado para os filtros informados",
                   },
-                  meta: {
-                    total: 0,
-                    pagina: 1,
-                    totalPaginas: 0,
-                    limite: 10
-                  },
-                  mensagem: "Nenhum barbeiro encontrado para os filtros informados"
-                }, null, 2)
-              }
-            ]
+                  null,
+                  2,
+                ),
+              },
+            ],
           },
           {
             name: "Buscar Barbeiro por ID",
@@ -3775,7 +3779,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
       },
       {
         name: "🔧 Admin Dashboard",
-        description: "APIs exclusivas para administradores de barbearias - requer autenticação como barbearia",
+        description:
+          "APIs exclusivas para administradores de barbearias - requer autenticação como barbearia",
         item: [
           {
             name: "Dashboard - Estatísticas",
@@ -3785,13 +3790,13 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
-                }
+                  type: "text",
+                },
               ],
               url: {
                 raw: "{{baseUrl}}/api/admin/dashboard",
                 host: ["{{baseUrl}}"],
-                path: ["api", "admin", "dashboard"]
+                path: ["api", "admin", "dashboard"],
               },
             },
             response: [
@@ -3803,44 +3808,46 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                     {
                       key: "Authorization",
                       value: "Bearer {{auth_token}}",
-                      type: "text"
-                    }
+                      type: "text",
+                    },
                   ],
                   url: {
                     raw: "{{baseUrl}}/api/admin/dashboard",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "admin", "dashboard"]
-                  }
+                    path: ["api", "admin", "dashboard"],
+                  },
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [
-                  { key: "Content-Type", value: "application/json" }
-                ],
-                body: JSON.stringify({
-                  sucesso: true,
-                  dados: {
-                    estatisticas: {
-                      totalBarbeiros: 5,
-                      barbeirosAtivos: 4,
-                      agendamentosHoje: 12,
-                      receitaHoje: 850.50,
-                      agendamentosMes: 340,
-                      receitaMes: 12540.75
+                header: [{ key: "Content-Type", value: "application/json" }],
+                body: JSON.stringify(
+                  {
+                    sucesso: true,
+                    dados: {
+                      estatisticas: {
+                        totalBarbeiros: 5,
+                        barbeirosAtivos: 4,
+                        agendamentosHoje: 12,
+                        receitaHoje: 850.5,
+                        agendamentosMes: 340,
+                        receitaMes: 12540.75,
+                      },
+                      barbeiros: [
+                        {
+                          id: "1",
+                          nome: "Carlos Silva",
+                          status: "ativo",
+                          agendamentosHoje: 4,
+                        },
+                      ],
                     },
-                    barbeiros: [
-                      {
-                        id: "1",
-                        nome: "Carlos Silva",
-                        status: "ativo",
-                        agendamentosHoje: 4
-                      }
-                    ]
-                  }
-                }, null, 2)
-              }
-            ]
+                  },
+                  null,
+                  2,
+                ),
+              },
+            ],
           },
           {
             name: "Buscar Dados da Barbearia",
@@ -3850,15 +3857,15 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
-                }
+                  type: "text",
+                },
               ],
               url: {
                 raw: "{{baseUrl}}/api/admin/barbearia",
                 host: ["{{baseUrl}}"],
-                path: ["api", "admin", "barbearia"]
+                path: ["api", "admin", "barbearia"],
               },
-            }
+            },
           },
           {
             name: "Atualizar Dados da Barbearia",
@@ -3868,47 +3875,51 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
+                  type: "text",
                 },
                 {
                   key: "Content-Type",
-                  value: "application/json"
-                }
+                  value: "application/json",
+                },
               ],
               body: {
                 mode: "raw",
-                raw: JSON.stringify({
-                  nome: "Barbearia do João - Centro Atualizada",
-                  descricao: "A melhor barbearia do centro da cidade",
-                  endereco: {
-                    rua: "Rua das Flores",
-                    numero: "125",
-                    bairro: "Centro",
-                    cidade: "São Paulo",
-                    estado: "SP",
-                    cep: "01234-567"
+                raw: JSON.stringify(
+                  {
+                    nome: "Barbearia do João - Centro Atualizada",
+                    descricao: "A melhor barbearia do centro da cidade",
+                    endereco: {
+                      rua: "Rua das Flores",
+                      numero: "125",
+                      bairro: "Centro",
+                      cidade: "São Paulo",
+                      estado: "SP",
+                      cep: "01234-567",
+                    },
+                    contato: {
+                      telefone: "(11) 99999-9999",
+                      email: "contato@barbeariadoroao.com",
+                      whatsapp: "(11) 99999-9999",
+                    },
+                    horarioFuncionamento: {
+                      segunda: { abertura: "10:00", fechamento: "19:00" },
+                      terca: { abertura: "10:00", fechamento: "19:00" },
+                      quarta: { abertura: "10:00", fechamento: "19:00" },
+                      quinta: { abertura: "10:00", fechamento: "19:00" },
+                      sexta: { abertura: "10:00", fechamento: "19:00" },
+                      sabado: { abertura: "09:00", fechamento: "13:00" },
+                    },
                   },
-                  contato: {
-                    telefone: "(11) 99999-9999",
-                    email: "contato@barbeariadoroao.com",
-                    whatsapp: "(11) 99999-9999"
-                  },
-                  horarioFuncionamento: {
-                    segunda: { abertura: "10:00", fechamento: "19:00" },
-                    terca: { abertura: "10:00", fechamento: "19:00" },
-                    quarta: { abertura: "10:00", fechamento: "19:00" },
-                    quinta: { abertura: "10:00", fechamento: "19:00" },
-                    sexta: { abertura: "10:00", fechamento: "19:00" },
-                    sabado: { abertura: "09:00", fechamento: "13:00" }
-                  }
-                }, null, 2)
+                  null,
+                  2,
+                ),
               },
               url: {
                 raw: "{{baseUrl}}/api/admin/barbearia",
                 host: ["{{baseUrl}}"],
-                path: ["api", "admin", "barbearia"]
+                path: ["api", "admin", "barbearia"],
               },
-            }
+            },
           },
           {
             name: "Listar Barbeiros da Barbearia",
@@ -3918,8 +3929,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
-                }
+                  type: "text",
+                },
               ],
               url: {
                 raw: "{{baseUrl}}/api/admin/barbeiros?pagina=1&limite=10",
@@ -3928,8 +3939,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 query: [
                   { key: "pagina", value: "1" },
                   { key: "limite", value: "10" },
-                  { key: "status", value: "ativo", disabled: true }
-                ]
+                  { key: "status", value: "ativo", disabled: true },
+                ],
               },
             },
             response: [
@@ -3941,55 +3952,57 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                     {
                       key: "Authorization",
                       value: "Bearer {{auth_token}}",
-                      type: "text"
-                    }
+                      type: "text",
+                    },
                   ],
                   url: {
                     raw: "{{baseUrl}}/api/admin/barbeiros?pagina=1&limite=10",
                     host: ["{{baseUrl}}"],
-                    path: ["api", "admin", "barbeiros"]
-                  }
+                    path: ["api", "admin", "barbeiros"],
+                  },
                 },
                 status: "OK",
                 code: 200,
                 _postman_previewlanguage: "json",
-                header: [
-                  { key: "Content-Type", value: "application/json" }
-                ],
-                body: JSON.stringify({
-                  sucesso: true,
-                  dados: {
-                    barbeiros: [
-                      {
-                        id: "1",
-                        nome: "Carlos Silva",
-                        email: "carlos@barbeariadoroao.com",
-                        telefone: "(11) 98888-7777",
-                        cpf: "111.222.333-44",
-                        tipo: "comissionado",
-                        porcentagemComissao: 40,
-                        especialidades: ["Corte masculino", "Barba"],
-                        horarioTrabalho: {
-                          segunda: { inicio: "09:00", fim: "18:00" },
-                          terca: { inicio: "09:00", fim: "18:00" }
+                header: [{ key: "Content-Type", value: "application/json" }],
+                body: JSON.stringify(
+                  {
+                    sucesso: true,
+                    dados: {
+                      barbeiros: [
+                        {
+                          id: "1",
+                          nome: "Carlos Silva",
+                          email: "carlos@barbeariadoroao.com",
+                          telefone: "(11) 98888-7777",
+                          cpf: "111.222.333-44",
+                          tipo: "comissionado",
+                          porcentagemComissao: 40,
+                          especialidades: ["Corte masculino", "Barba"],
+                          horarioTrabalho: {
+                            segunda: { inicio: "09:00", fim: "18:00" },
+                            terca: { inicio: "09:00", fim: "18:00" },
+                          },
+                          status: "ativo",
+                          dataCriacao: "2024-01-15T10:00:00Z",
                         },
-                        status: "ativo",
-                        dataCriacao: "2024-01-15T10:00:00Z"
-                      }
-                    ],
-                    total: 1,
-                    pagina: 1,
-                    totalPaginas: 1
+                      ],
+                      total: 1,
+                      pagina: 1,
+                      totalPaginas: 1,
+                    },
+                    meta: {
+                      total: 1,
+                      pagina: 1,
+                      totalPaginas: 1,
+                      limite: 10,
+                    },
                   },
-                  meta: {
-                    total: 1,
-                    pagina: 1,
-                    totalPaginas: 1,
-                    limite: 10
-                  }
-                }, null, 2)
-              }
-            ]
+                  null,
+                  2,
+                ),
+              },
+            ],
           },
           {
             name: "Criar Novo Barbeiro",
@@ -3999,40 +4012,44 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
+                  type: "text",
                 },
                 {
                   key: "Content-Type",
-                  value: "application/json"
-                }
+                  value: "application/json",
+                },
               ],
               body: {
                 mode: "raw",
-                raw: JSON.stringify({
-                  nome: "Marcos Oliveira",
-                  email: "marcos@barbeariadoroao.com",
-                  telefone: "(11) 97777-6666",
-                  cpf: "222.333.444-55",
-                  senha: "senha123",
-                  tipo: "comissionado",
-                  porcentagemComissao: 45,
-                  especialidades: ["Corte masculino", "Barba", "Bigode"],
-                  horarioTrabalho: {
-                    segunda: { inicio: "09:00", fim: "18:00" },
-                    terca: { inicio: "09:00", fim: "18:00" },
-                    quarta: { inicio: "09:00", fim: "18:00" },
-                    quinta: { inicio: "09:00", fim: "18:00" },
-                    sexta: { inicio: "09:00", fim: "18:00" },
-                    sabado: { inicio: "08:00", fim: "14:00" }
-                  }
-                }, null, 2)
+                raw: JSON.stringify(
+                  {
+                    nome: "Marcos Oliveira",
+                    email: "marcos@barbeariadoroao.com",
+                    telefone: "(11) 97777-6666",
+                    cpf: "222.333.444-55",
+                    senha: "senha123",
+                    tipo: "comissionado",
+                    porcentagemComissao: 45,
+                    especialidades: ["Corte masculino", "Barba", "Bigode"],
+                    horarioTrabalho: {
+                      segunda: { inicio: "09:00", fim: "18:00" },
+                      terca: { inicio: "09:00", fim: "18:00" },
+                      quarta: { inicio: "09:00", fim: "18:00" },
+                      quinta: { inicio: "09:00", fim: "18:00" },
+                      sexta: { inicio: "09:00", fim: "18:00" },
+                      sabado: { inicio: "08:00", fim: "14:00" },
+                    },
+                  },
+                  null,
+                  2,
+                ),
               },
               url: {
                 raw: "{{baseUrl}}/api/admin/barbeiros",
                 host: ["{{baseUrl}}"],
-                path: ["api", "admin", "barbeiros"]
+                path: ["api", "admin", "barbeiros"],
               },
-            }
+            },
           },
           {
             name: "Atualizar Barbeiro",
@@ -4042,29 +4059,33 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
+                  type: "text",
                 },
                 {
                   key: "Content-Type",
-                  value: "application/json"
-                }
+                  value: "application/json",
+                },
               ],
               body: {
                 mode: "raw",
-                raw: JSON.stringify({
-                  nome: "Carlos Silva Atualizado",
-                  telefone: "(11) 98888-8888",
-                  porcentagemComissao: 50,
-                  especialidades: ["Corte masculino", "Barba", "Sobrancelha"],
-                  horarioTrabalho: {
-                    segunda: { inicio: "08:30", fim: "17:30" },
-                    terca: { inicio: "08:30", fim: "17:30" },
-                    quarta: { inicio: "08:30", fim: "17:30" },
-                    quinta: { inicio: "08:30", fim: "17:30" },
-                    sexta: { inicio: "08:30", fim: "17:30" }
+                raw: JSON.stringify(
+                  {
+                    nome: "Carlos Silva Atualizado",
+                    telefone: "(11) 98888-8888",
+                    porcentagemComissao: 50,
+                    especialidades: ["Corte masculino", "Barba", "Sobrancelha"],
+                    horarioTrabalho: {
+                      segunda: { inicio: "08:30", fim: "17:30" },
+                      terca: { inicio: "08:30", fim: "17:30" },
+                      quarta: { inicio: "08:30", fim: "17:30" },
+                      quinta: { inicio: "08:30", fim: "17:30" },
+                      sexta: { inicio: "08:30", fim: "17:30" },
+                    },
+                    status: "ativo",
                   },
-                  status: "ativo"
-                }, null, 2)
+                  null,
+                  2,
+                ),
               },
               url: {
                 raw: "{{baseUrl}}/api/admin/barbeiros/:id",
@@ -4074,11 +4095,11 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   {
                     key: "id",
                     value: "1",
-                    description: "ID do barbeiro a ser atualizado"
-                  }
-                ]
+                    description: "ID do barbeiro a ser atualizado",
+                  },
+                ],
               },
-            }
+            },
           },
           {
             name: "Remover Barbeiro",
@@ -4088,8 +4109,8 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                 {
                   key: "Authorization",
                   value: "Bearer {{auth_token}}",
-                  type: "text"
-                }
+                  type: "text",
+                },
               ],
               url: {
                 raw: "{{baseUrl}}/api/admin/barbeiros/:id",
@@ -4099,12 +4120,12 @@ export const downloadPostmanCollection: RequestHandler = (_req, res) => {
                   {
                     key: "id",
                     value: "1",
-                    description: "ID do barbeiro a ser removido"
-                  }
-                ]
+                    description: "ID do barbeiro a ser removido",
+                  },
+                ],
               },
-            }
-          }
+            },
+          },
         ],
       },
     ],
