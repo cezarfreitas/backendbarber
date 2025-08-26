@@ -80,6 +80,10 @@ import {
   resetDatabaseAdmin,
   clearDatabaseDataAdmin,
   recreateTablesAdmin,
+  listarServicosAdmin,
+  criarServicoAdmin,
+  atualizarServicoAdmin,
+  removerServicoAdmin,
 } from "./routes/admin";
 
 export function createServer() {
