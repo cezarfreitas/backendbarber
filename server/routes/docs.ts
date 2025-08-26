@@ -804,6 +804,18 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                         </div>
                     </div>
 
+                    <!-- Database Management -->
+                    <div class="nav-tree">
+                        <div class="nav-tree-item expandable" data-target="database-tree">
+                            🗄️ Database Management
+                        </div>
+                        <div class="nav-sub-items" id="database-tree">
+                            <a href="#endpoints-database-management" class="nav-sub-item">⚠️ Reset Completo</a>
+                            <a href="#endpoints-database-management" class="nav-sub-item">🧹 Limpar Dados</a>
+                            <a href="#endpoints-database-management" class="nav-sub-item">🔄 Recriar Tabelas</a>
+                        </div>
+                    </div>
+
                     <!-- Admin Dashboard -->
                     <div class="nav-tree">
                         <div class="nav-tree-item expandable" data-target="admin-tree">
@@ -814,7 +826,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
                             <a href="#endpoints-admin-barbearia-get" class="nav-sub-item">🏪 Buscar Barbearia</a>
                             <a href="#endpoints-admin-barbearia-update" class="nav-sub-item">✏️ Atualizar Barbearia</a>
                             <a href="#endpoints-admin-barbeiros-list" class="nav-sub-item">📋 Listar Barbeiros</a>
-                            <a href="#endpoints-admin-barbeiros-create" class="nav-sub-item">➕ Criar Barbeiro</a>
+                            <a href="#endpoints-admin-barbeiros-create" class="nav-sub-item">�� Criar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-update" class="nav-sub-item">✏️ Atualizar Barbeiro</a>
                             <a href="#endpoints-admin-barbeiros-delete" class="nav-sub-item">🗑️ Remover Barbeiro</a>
                         </div>
