@@ -1187,7 +1187,19 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
         
         // Download Postman Collection
         function downloadPostmanCollection() {
-            window.location.href = '/api/docs/postman-collection';
+            try {
+                // Usar uma nova requisição para evitar problemas de clonagem
+                const link = document.createElement('a');
+                link.href = '/api/docs/postman-collection';
+                link.download = 'barbearia-api-collection.json';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.warn('Fallback: redirecionando para download');
+                window.location.href = '/api/docs/postman-collection';
+            }
         }
         
         // Smooth Scrolling
