@@ -469,18 +469,18 @@ export const initializeTables = async (): Promise<void> => {
 
     // Inserir dados iniciais na ordem correta
     console.log('📝 Inserindo dados iniciais...');
-    await executeQuery(insertInitialBarbearias);
-    await executeQuery(insertInitialBarbeiros);
-    await executeQuery(insertInitialServicos);
-    await executeQuery(insertInitialCombos);
-    await executeQuery(insertInitialComboServicos);
-    await executeQuery(insertInitialClientes);
+    try { await executeQuery(insertInitialBarbearias); } catch (e:any) { console.warn('⚠️ Seed barbearias ignorado:', e.message); }
+    try { await executeQuery(insertInitialBarbeiros); } catch (e:any) { console.warn('⚠️ Seed barbeiros ignorado:', e.message); }
+    try { await executeQuery(insertInitialServicos); } catch (e:any) { console.warn('⚠️ Seed servicos ignorado:', e.message); }
+    try { await executeQuery(insertInitialCombos); } catch (e:any) { console.warn('⚠️ Seed combos ignorado:', e.message); }
+    try { await executeQuery(insertInitialComboServicos); } catch (e:any) { console.warn('⚠️ Seed combo_servicos ignorado:', e.message); }
+    try { await executeQuery(insertInitialClientes); } catch (e:any) { console.warn('⚠️ Seed clientes ignorado:', e.message); }
 
     console.log('✅ Banco de dados inicializado com sucesso!');
 
-  } catch (error) {
-    console.error('❌ Erro ao inicializar banco de dados:', error);
-    throw error;
+  } catch (error:any) {
+    console.error('❌ Erro ao inicializar banco de dados (não fatal):', error.message);
+    // Não lançar erro para evitar que o servidor caia
   }
 };
 
