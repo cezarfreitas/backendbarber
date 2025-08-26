@@ -690,7 +690,7 @@ export const mostrarDocumentacao: RequestHandler = (_req, res) => {
             </div>
             
             <button class="postman-download" onclick="downloadPostmanCollection()">
-                📥 Baixar Collection Postman
+                ���� Baixar Collection Postman
             </button>
             
             <div class="sidebar-nav">
@@ -2881,7 +2881,7 @@ function generateEndpointsDocumentation(): string {
 
                             <div class="code-block">
                                 <button class="copy-button" onclick="copyToClipboard(this)">📋 Copiar (PUT)</button>
-                                <pre>curl -X PUT "https://16b54ed7d945437b9ae24bfeca3d4937-f9a6c65b45c74b1aa5cd36a9a.fly.dev/api/admin/barbearia" \
+                                <pre>curl -X PUT "{{baseUrl}}/api/admin/barbearia" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"nome":"Barbearia Atualizada","descricao":"Descriç��o atualizada via curl","endereco":{"rua":"Rua Teste","numero":"123","bairro":"Centro","cidade":"São Paulo","estado":"SP","cep":"01000-000"},"contato":{"telefone":"(11) 99999-9999","email":"teste@barbearia.com","whatsapp":"(11) 99999-9999"},"horarioFuncionamento":{"segunda":{"abertura":"10:00","fechamento":"19:00"},"terca":{"abertura":"10:00","fechamento":"19:00"},"quarta":{"abertura":"10:00","fechamento":"19:00"},"quinta":{"abertura":"10:00","fechamento":"19:00"},"sexta":{"abertura":"10:00","fechamento":"19:00"},"sabado":{"abertura":"09:00","fechamento":"13:00"}}}'</pre>
