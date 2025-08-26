@@ -828,3 +828,103 @@ export const checkTables = async (): Promise<boolean> => {
     return false;
   }
 };
+
+/**
+ * Função para reset completo do banco - Remove e recria todas as tabelas
+ * ⚠️ CUIDADO: Esta função apaga TODOS os dados!
+ */
+export const resetDatabase = async (): Promise<void> => {
+  try {
+    console.log("🗑️ INICIANDO RESET COMPLETO DO BANCO DE DADOS...");
+    console.log("⚠️ ATENÇÃO: Todos os dados serão perdidos!");
+
+    // Desabilitar verificações de foreign key temporariamente
+    await executeQuery('SET FOREIGN_KEY_CHECKS = 0');
+
+    // Dropar tabelas na ordem inversa (para respeitar foreign keys)
+    const tablesToDrop = [
+      'combo_servicos',
+      'combos',
+      'servicos',
+      'barbeiros',
+      'clientes',
+      'barbearias'
+    ];
+
+    for (const table of tablesToDrop) {
+      try {
+        console.log(`🗑️ Removendo tabela ${table}...`);
+        await executeQuery(`DROP TABLE IF EXISTS ${table}`);
+        console.log(`✅ Tabela ${table} removida`);
+      } catch (error: any) {
+        console.error(`❌ Erro ao remover tabela ${table}:`, error.message);
+      }
+    }
+
+    // Reabilitar verificações de foreign key
+    await executeQuery('SET FOREIGN_KEY_CHECKS = 1');
+
+    console.log("✅ Todas as tabelas foram removidas com sucesso!");
+    console.log("🔄 Recriando estrutura do banco...");
+
+    // Recriar toda a estrutura
+    await initializeTables();
+
+    console.log("✅ RESET COMPLETO CONCLUÍDO! Banco de dados recriado com dados iniciais.");
+  } catch (error) {
+    console.error("❌ Erro durante o reset do banco:", error);
+    throw error;
+  }
+};
+
+/**
+ * Função para limpar apenas os dados (manter estrutura das tabelas)
+ */
+export const clearData = async (): Promise<void> => {
+  try {
+    console.log("🧹 Limpando dados das tabelas...");
+
+    // Desabilitar verificações de foreign key temporariamente
+    await executeQuery('SET FOREIGN_KEY_CHECKS = 0');
+
+    // Limpar tabelas na ordem correta
+    const tablesToClear = [
+      'combo_servicos',
+      'combos',
+      'servicos',
+      'barbeiros',
+      'clientes',
+      'barbearias'
+    ];
+
+    for (const table of tablesToClear) {
+      try {
+        console.log(`🧹 Limpando dados da tabela ${table}...`);
+        await executeQuery(`DELETE FROM ${table}`);
+        console.log(`✅ Dados da tabela ${table} removidos`);
+      } catch (error: any) {
+        console.error(`❌ Erro ao limpar tabela ${table}:`, error.message);
+      }
+    }
+
+    // Reabilitar verificações de foreign key
+    await executeQuery('SET FOREIGN_KEY_CHECKS = 1');
+
+    console.log("✅ Dados removidos com sucesso!");
+    console.log("🔄 Inserindo dados iniciais...");
+
+    // Reinserir dados iniciais
+    await executeQueryWithRetry(insertInitialBarbearias);
+    await executeQueryWithRetry(insertMoreBarbearias);
+    await executeQueryWithRetry(insertInitialBarbeiros);
+    await executeQueryWithRetry(insertInitialServicos);
+    await executeQueryWithRetry(insertInitialCombos);
+    await executeQueryWithRetry(insertInitialComboServicos);
+    await executeQueryWithRetry(insertInitialClientes);
+
+    console.log("✅ DADOS RESTAURADOS! Banco recriado com dados iniciais.");
+  } catch (error) {
+    console.error("❌ Erro durante a limpeza dos dados:", error);
+    throw error;
+  }
+};
